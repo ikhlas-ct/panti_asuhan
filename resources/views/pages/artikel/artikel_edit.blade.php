@@ -109,7 +109,7 @@
                                 <label for="gambar" class="form-label">Gambar</label>
                                 @if ($artikel->gambar)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="Gambar"
+                                        <img src="{{ asset($artikel->gambar) }}" alt="Gambar"
                                             class="img-fluid" style="max-height: 200px;">
                                     </div>
                                 @endif

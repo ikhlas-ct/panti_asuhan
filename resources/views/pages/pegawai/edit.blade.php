@@ -198,7 +198,7 @@
                                             <div class="col-auto">
                                                 <div class="current-photo">
                                                     <p class="text-muted mb-2">Foto Saat Ini:</p>
-                                                    <img src="{{ asset('storage/' . $pegawai->foto_profil) }}"
+                                                    <img src="{{ asset($pegawai->foto_profil) }}"
                                                         class="img-thumbnail rounded-circle"
                                                         style="width: 120px; height: 120px; object-fit: cover;">
                                                 </div>

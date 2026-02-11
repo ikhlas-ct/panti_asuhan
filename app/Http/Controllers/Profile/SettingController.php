@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Profile;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
@@ -34,10 +34,12 @@ class SettingController extends Controller
 
         // Handle upload logo
         if ($request->hasFile('logo')) {
-            if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
-                Storage::disk('public')->delete($settings->logo);
+            if ($settings->logo && file_exists(public_path($settings->logo))) {
+                unlink(public_path($settings->logo));
             }
-            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+            $filename = time() . '_' . Str::slug($request->file('logo')->getClientOriginalName());
+            $request->file('logo')->move(public_path('uploads/logos'), $filename);
+            $validated['logo'] = 'uploads/logos/' . $filename;
         }
 
         $settings->fill($validated);
@@ -64,10 +66,12 @@ class SettingController extends Controller
         $settings = WebsiteSetting::firstOrCreate([]);
 
         if ($request->hasFile('gambar_pengantar')) {
-            if ($settings->gambar_pengantar && Storage::disk('public')->exists($settings->gambar_pengantar)) {
-                Storage::disk('public')->delete($settings->gambar_pengantar);
+            if ($settings->gambar_pengantar && file_exists(public_path($settings->gambar_pengantar))) {
+                unlink(public_path($settings->gambar_pengantar));
             }
-            $validated['gambar_pengantar'] = $request->file('gambar_pengantar')->store('settings', 'public');
+            $filename = time() . '_' . Str::slug($request->file('gambar_pengantar')->getClientOriginalName());
+            $request->file('gambar_pengantar')->move(public_path('uploads/settings'), $filename);
+            $validated['gambar_pengantar'] = 'uploads/settings/' . $filename;
         }
 
         $settings->fill($validated);

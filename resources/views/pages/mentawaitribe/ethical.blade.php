@@ -57,7 +57,7 @@
                                     <i class="far fa-calendar"></i> {{ $ethical->duration ?? 'Custom Duration' }}
                                 </div>
                             </div>
-                            <img src="{{ asset('storage/' . $ethical->gambar) }}" alt="{{ $ethical->judul }}"
+                            <img src="{{ asset($ethical->gambar) }}" alt="{{ $ethical->judul }}"
                                 class="tour-image">
                             <div class="tour-body">
                                 <p class="tour-description">{{ $ethical->ringkasan }}</p>
@@ -113,6 +113,7 @@
     </section>
 
 @endsection
+
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -283,6 +284,3 @@
         });
     </script>
 @endsection
-</body>
-
-</html>

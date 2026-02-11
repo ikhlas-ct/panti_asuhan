@@ -33,19 +33,28 @@
                             <!-- Dynamic Blog Post -->
                             <div class="col-lg-6 col-md-12 mb-4">
                                 <article class="blog-card">
-                                    <img src="{{ asset('storage/' . $konten->gambar) }}" alt="{{ $konten->judul }}" class="blog-card-img">
+                                    <img
+                                        src="{{ asset($konten->gambar) }}"
+                                        alt="{{ $konten->judul }}"
+                                        class="blog-card-img">
+
                                     <div class="blog-card-body">
                                         <span class="blog-card-category">{{ $konten->kategori->nama_kategori }}</span>
                                         <h3 class="blog-card-title">{{ $konten->judul }}</h3>
                                         <p class="blog-card-text">{{ $konten->ringkasan ?? Str::limit(strip_tags($konten->isi), 150) }}</p>
                                         <div class="blog-card-meta">
                                             <div class="blog-card-author">
-                                                <img src="{{ asset('storage/' . ($konten->user->pegawai->foto_profil ?? 'https://randomuser.me/api/portraits/men/32.jpg')) }}" alt="Author" class="author-avatar">
+                                                <img
+                                                    src="{{ $konten->user->pegawai->foto_profil
+                                                        ? asset($konten->user->pegawai->foto_profil)
+                                                        : 'https://randomuser.me/api/portraits/men/32.jpg' }}"
+                                                    alt="Author"
+                                                    class="author-avatar">
                                                 <span>{{ $konten->user->pegawai->nama }}</span>
                                             </div>
                                             <span>{{ $konten->tanggal_publikasi->format('d F Y') }}</span>
                                         </div>
-                                        <a href="{{ route('blog.show', ['jenis' => $jenis, 'slug' => $konten->slug]) }}" class="tribal-btn mt-3">Read More</a> <!-- Assuming route named blog.show with parameters jenis and slug -->
+                                        <a href="{{ route('blog.show', ['jenis' => $jenis, 'slug' => $konten->slug]) }}" class="tribal-btn mt-3">Read More</a>
                                     </div>
                                 </article>
                             </div>
@@ -56,7 +65,7 @@
 
                     <!-- Pagination -->
                     <nav aria-label="Blog pagination" class="blog-pagination">
-                        {{ $kontens->links('pagination::bootstrap-4') }} <!-- Use Laravel pagination -->
+                        {{ $kontens->links('pagination::bootstrap-4') }}
                     </nav>
                 </div>
 
@@ -72,7 +81,7 @@
                         <ul class="categories-list">
                             @foreach ($kategoris as $kategori)
                                 <li>
-                                    <a href="{{ route('blog.category', ['jenis' => $jenis, 'slug' => $kategori->slug]) }}"> <!-- Assuming route named blog.category with parameters jenis and slug -->
+                                    <a href="{{ route('blog.category', ['jenis' => $jenis, 'slug' => $kategori->slug]) }}">
                                         {{ $kategori->nama_kategori }}
                                         <span class="count">{{ $kategori->konten()->where('jenis_konten', $jenis)->count() }}</span>
                                     </a>
@@ -123,7 +132,6 @@
                                 behavior: 'smooth'
                             });
 
-                            // Collapse mobile navbar after clicking link
                             const navbarToggler = document.querySelector('.navbar-toggler');
                             const navbarCollapse = document.querySelector('.navbar-collapse');
                             if (navbarCollapse && navbarCollapse.classList.contains('show')) {
@@ -186,7 +194,6 @@
 
             // Mobile touch improvements
             if ('ontouchstart' in window) {
-                // Add touch feedback for cards
                 blogCards.forEach(card => {
                     card.addEventListener('touchstart', function() {
                         this.style.transition = 'transform 0.1s';
@@ -199,7 +206,6 @@
                     });
                 });
 
-                // Improve button touch feedback
                 const buttons = document.querySelectorAll('.tribal-btn, .page-link, .categories-list a');
                 buttons.forEach(button => {
                     button.addEventListener('touchstart', function() {
@@ -212,7 +218,6 @@
                 });
             }
 
-            // Device detection and logging (for debugging)
             const ua = navigator.userAgent;
             const deviceType =
                 /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua) ? 'Mobile' :
@@ -221,9 +226,7 @@
             console.log(`Device detected: ${deviceType}, Screen width: ${window.innerWidth}px`);
         });
 
-        // Handle window resize for responsive adjustments
         window.addEventListener('resize', function() {
-            // Update any responsive elements if needed
             const currentWidth = window.innerWidth;
             console.log(`Window resized to: ${currentWidth}px`);
         });

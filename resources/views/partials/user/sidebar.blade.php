@@ -3,7 +3,7 @@
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
         <a href="index.html" class="logo d-flex align-items-center">
-            <img src="{{ $settings?->logo ? asset('storage/' . $settings->logo) : asset('user/img/kaiadmin/logo_light.svg') }}"
+            <img src="{{ $settings?->logo ? asset($settings->logo) : asset('default-image/default-logo.png') }}"
                 alt="navbar brand" class="navbar-brand" height="50" />
             <span class="ms-2 text-white">{{ $settings->nama ?? 'Nama Website' }}</span>
         </a>

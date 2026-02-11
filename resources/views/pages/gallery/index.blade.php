@@ -29,7 +29,7 @@
                                     <td>{{ $galleries->firstItem() + $index }}</td>
                                     <td class="text-center">
                                         @if($item->image)
-                                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}" style="width:150px; height:auto;">
+                                            <img src="{{ asset( $item->image) }}" alt="{{ $item->title }}" style="width:150px; height:auto;">
                                         @endif
                                     </td>
                                     <td>{{ $item->title }}</td>

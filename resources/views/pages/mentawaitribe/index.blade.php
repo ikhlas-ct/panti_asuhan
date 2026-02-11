@@ -7,7 +7,7 @@
         <div class="carousel-slides">
             @forelse($heroSlides as $slide)
                 <div class="carousel-slide">
-                    <img src="{{ $slide->image ? asset('storage/' . $slide->image) : 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80' }}"
+                    <img src="{{ $slide->image ? asset($slide->image) : 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80' }}"
                         alt="{{ $slide->title ?? 'Mentawai' }}">
                     <div class="slide-content">
                         <h2>{{ $slide->title ?? 'The Last Mentawai' }}</h2>
@@ -55,7 +55,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
                     <div class="culture-image">
-                        <img src="{{ $settings->gambar_pengantar ? asset('storage/' . $settings->gambar_pengantar) : '../mentawai/mentawai_cover.jpg' }}"
+                        <img src="{{ $settings->gambar_pengantar ? asset($settings->gambar_pengantar) : '../mentawai/mentawai_cover.jpg' }}"
                             alt="Mentawai Family" class="img-fluid rounded">
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                 @forelse($activities as $activity)
                     <div class="activity-slide">
                         <div class="activity-image">
-                            <img src="{{ $activity->gambar ? asset('storage/' . $activity->gambar) : '../mentawai/tradional.jpg' }}"
+                            <img src="{{ $activity->gambar ? asset($activity->gambar) : '../mentawai/tradional.jpg' }}"
                                 alt="{{ $activity->judul }}">
                         </div>
                         <div class="activity-content">
@@ -104,7 +104,6 @@
                             <a href="#gallery" class="tribal-btn">View Weaving Gallery</a>
                         </div>
                     </div>
-                    <!-- Add other fallbacks if needed -->
                 @endforelse
             </div>
 
@@ -203,8 +202,6 @@
                     </div>
                 @endforelse
             </div>
-
-
         </div>
     </section>
 
@@ -226,7 +223,7 @@
                     @forelse($teamMembers as $member)
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="{{ $member->foto_profil ? asset('storage/' . $member->foto_profil) : '../mentawai/default-team.jpg' }}"
+                                <img src="{{ $member->foto_profil ? asset($member->foto_profil) : '../mentawai/default-team.jpg' }}"
                                     alt="{{ $member->nama }}">
                             </div>
                             <h3>{{ $member->nama }}</h3>
@@ -283,7 +280,7 @@
             <div class="tribal-grid">
                 @forelse($galleries as $item)
                     <div class="tribal-item">
-                        <img src="{{ $item->image ? asset('storage/' . $item->image) : 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}"
+                        <img src="{{ $item->image ? asset($item->image) : 'https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}"
                             alt="{{ $item->title }}">
                         <div class="item-overlay">
                             <h3>{{ $item->title }}</h3>

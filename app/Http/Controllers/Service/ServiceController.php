@@ -83,8 +83,12 @@ class ServiceController extends Controller
 
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('service', 'public');
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('service'), $filename);
+            $gambarPath = 'service/' . $filename;
         }
+
 
         // Generate unique order per type
         $order = $this->generateUniqueOrder($type, $validated['order'] ?? null);
@@ -143,11 +147,19 @@ class ServiceController extends Controller
 
         $gambarPath = $service->gambar;
         if ($request->hasFile('gambar')) {
-            if ($service->gambar && Storage::disk('public')->exists($service->gambar)) {
-                Storage::disk('public')->delete($service->gambar);
+
+            // Hapus file lama
+            if ($service->gambar && file_exists(public_path($service->gambar))) {
+                unlink(public_path($service->gambar));
             }
-            $gambarPath = $request->file('gambar')->store('service', 'public');
+
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('service'), $filename);
+            $gambarPath = 'service/' . $filename;
         }
+
+
 
         // Generate unique order per type
         $order = $this->generateUniqueOrder($type, $validated['order'] ?? null, $service->id);
@@ -177,9 +189,10 @@ class ServiceController extends Controller
 
         $service = Service::where('type', $type)->findOrFail($id);
 
-        if ($service->gambar && Storage::disk('public')->exists($service->gambar)) {
-            Storage::disk('public')->delete($service->gambar);
+        if ($service->gambar && file_exists(public_path($service->gambar))) {
+            unlink(public_path($service->gambar));
         }
+
 
         $service->steps()->delete();
         $service->delete();

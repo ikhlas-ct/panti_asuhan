@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HeroSlide;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
@@ -36,7 +35,9 @@ class HeroslideController extends Controller
         ]);
 
         // Upload gambar
-        $imagePath = $request->file('image')->store('heroslide', 'public');
+        $filename = time() . '_' . Str::slug($request->file('image')->getClientOriginalName());
+        $request->file('image')->move(public_path('uploads/heroslide'), $filename);
+        $imagePath = 'uploads/heroslide/' . $filename;
 
         HeroSlide::create([
             'title'       => $request->title,
@@ -47,7 +48,7 @@ class HeroslideController extends Controller
         ]);
 
         return redirect()->route('camat.settings.heroslide')
-                         ->with('success', 'Hero slide berhasil dibuat.');
+            ->with('success', 'Hero slide berhasil dibuat.');
     }
 
 
@@ -73,11 +74,12 @@ class HeroslideController extends Controller
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
-            if ($slide->image && Storage::disk('public')->exists($slide->image)) {
-                Storage::disk('public')->delete($slide->image);
+            if ($slide->image && file_exists(public_path($slide->image))) {
+                unlink(public_path($slide->image));
             }
-            $imagePath = $request->file('image')->store('heroslide', 'public');
-            $slide->image = $imagePath;
+            $filename = time() . '_' . Str::slug($request->file('image')->getClientOriginalName());
+            $request->file('image')->move(public_path('uploads/heroslide'), $filename);
+            $slide->image = 'uploads/heroslide/' . $filename;
         }
         $slide->title       = $request->title;
         $slide->description = $request->description;
@@ -86,7 +88,7 @@ class HeroslideController extends Controller
         $slide->save();
 
         return redirect()->route('camat.settings.heroslide')
-                         ->with('success', 'Hero slide berhasil diperbarui.');
+            ->with('success', 'Hero slide berhasil diperbarui.');
     }
 
     // Menghapus slide
@@ -95,13 +97,13 @@ class HeroslideController extends Controller
         $slide = HeroSlide::findOrFail($id);
 
         // Hapus gambar dari storage
-        if ($slide->image && Storage::disk('public')->exists($slide->image)) {
-            Storage::disk('public')->delete($slide->image);
+        if ($slide->image && file_exists(public_path($slide->image))) {
+            unlink(public_path($slide->image));
         }
 
         $slide->delete();
 
         return redirect()->route('camat.settings.heroslide')
-                         ->with('success', 'Hero slide berhasil dihapus.');
+            ->with('success', 'Hero slide berhasil dihapus.');
     }
 }

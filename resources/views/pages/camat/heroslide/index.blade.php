@@ -31,7 +31,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" style="width: 150px;">
+                                    <img src="{{ asset( $slide->image) }}" alt="{{ $slide->title }}" style="width: 150px;">
                                 </td>
                                 <td>{{ $slide->title }}</td>
                                 <td>{{ Str::limit($slide->description, 100) }}</td>

@@ -23,7 +23,7 @@
                                         <label for="gambar_pengantar" class="form-label">Gambar Pengantar</label>
                                         <input type="file" class="form-control" id="gambar_pengantar" name="gambar_pengantar" accept="image/*">
                                         @if($settings->gambar_pengantar)
-                                            <img src="{{ asset('storage/' . $settings->gambar_pengantar) }}" alt="Gambar Pengantar" class="img-fluid mt-2" style="height: 150px; object-fit: cover;">
+                                            <img src="{{ asset( $settings->gambar_pengantar) }}" alt="Gambar Pengantar" class="img-fluid mt-2" style="height: 150px; object-fit: cover;">
                                         @endif
                                         @error('gambar_pengantar')
                                             <div class="text-danger small">{{ $message }}</div>

@@ -19,7 +19,7 @@
 
                         <div class="text-center mb-4">
                             <img
-                                src="{{ $profil->foto_profil ? asset('storage/' . $profil->foto_profil) : asset('default-image/default-user.png') }}"
+                                src="{{ $profil->foto_profil ? asset($profil->foto_profil) : asset('default-image/default-user.png') }}"
                                 alt="Foto Profil"
                                 class="rounded-circle img-thumbnail"
                                 style="width: 150px; height: 150px; object-fit: cover;">
