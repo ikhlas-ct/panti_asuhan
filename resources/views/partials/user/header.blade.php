@@ -1,10 +1,9 @@
 <div class="main-header-logo">
     <div class="logo-header" data-background-color="dark">
         <a href="{{ route('dashboard') }}" class="logo">
-            <img src="{{ !empty($settings->logo) && file_exists(public_path($settings->logo))
-                ? asset($settings->logo)
-                : asset('default-image/default-logo.png') }}" alt="navbar brand" class="navbar-brand"
-                height="20" />
+            <img src="{{ $settings->logo ? asset($settings->logo) : asset('default-image/default-logo.png') }}"
+                alt="Logo" height="20">
+
         </a>
         <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>

@@ -19,7 +19,7 @@
 
 
   <!-- Favicons -->
-  <link rel="icon" href="{{ $settings->logo ? asset('storage/' . $settings->logo) : asset('home/img/favicon.png') }}">
+  <link rel="icon" href="{{ $settings->logo ? asset( $settings->logo) : asset('default-image/default-logo.png') }}">
 
 
 

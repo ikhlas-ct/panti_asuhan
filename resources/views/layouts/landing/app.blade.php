@@ -8,7 +8,7 @@
         <meta name="keywords"
             content="Mentawai, Budaya, Wisata, Tradisi, Indonesia, Etnis, Suku, Pulau Mentawai, Pariwisata, Adat Istiadat">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" href="{{ asset('storage/' . ($settings->logo ?? 'default-logo.png')) }}"
+        <link rel="icon" href="{{ asset(($settings->logo ?? 'default-image/default-logo.png')) }}"
             type="image/x-icon">
 
         <title>
@@ -24,7 +24,7 @@
 
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        
+
 
         <link rel="stylesheet" href="{{ asset('landing/css/main.css') }}">
         @yield('styles')
