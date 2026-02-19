@@ -50,7 +50,7 @@
                                     <tr>
                                         <td>{{ $konten->firstItem() + $index }}</td>
                                         <td>
-                                            {{ $item->user->pegawai->nama ?? ($item->user->masyarakat->nama_masyarakat ?? 'Tidak Diketahui') }}
+                                            {{ $item->user->pegawai->nama ?? 'Tidak Diketahui' }}
                                         </td>
                                         <td>{{ $item->judul ?? '-' }}</td>
                                         <td>{!! Str::limit(strip_tags($item->ringkasan ?? '-'), 100) !!}</td>
@@ -63,11 +63,13 @@
                                         @endif
                                         <td>
                                             @if ($item->gambar)
-                                                <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}" width="100">
+                                                <img src="{{ asset( $item->gambar) }}"
+                                                    alt="{{ $item->judul }}" width="100">
                                             @else
                                                 Tidak Ada Gambar
                                             @endif
                                         </td>
+
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal_publikasi)->format('d M Y') }}</td>
                                         <td>
                                             <a href="{{ route('blog.show', ['jenis' => $item->jenis_konten, 'slug' => $item->slug]) }}"
@@ -87,7 +89,8 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="{{ $jenis == 'ethical' ? 10 : ($jenis == 'aktivitas' ? 8 : 7) }}" class="text-center py-4">
+                                        <td colspan="{{ $jenis == 'ethical' ? 10 : ($jenis == 'aktivitas' ? 8 : 7) }}"
+                                            class="py-4 text-center">
                                             <i class="fas fa-inbox fa-3x text-muted mb-2"></i>
                                             <p class="mb-0">Belum ada data {{ $jenis }}.</p>
                                         </td>

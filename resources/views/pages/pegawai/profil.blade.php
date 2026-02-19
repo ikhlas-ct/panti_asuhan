@@ -19,7 +19,7 @@
 
                         <div class="text-center mb-4">
                             <img
-                                src="{{ $profil->foto_profil ? asset($profil->foto_profil) : asset('default-image/default-user.png') }}"
+                                src="{{ optional($profil)->foto_profil ? asset(optional($profil)->foto_profil) : asset('default-image/default-user.png') }}"
                                 alt="Foto Profil"
                                 class="rounded-circle img-thumbnail"
                                 style="width: 150px; height: 150px; object-fit: cover;">
@@ -39,7 +39,7 @@
                             <div class="col-12">
                                 <label for="nama" class="form-label fw-bold">Nama Pegawai <span class="text-danger">*</span></label>
                                 <input type="text" name="nama" id="nama" class="form-control @error('nama') is-invalid @enderror"
-                                       value="{{ old('nama', $profil->nama) }}" required>
+                                       value="{{ old('nama', optional($profil)->nama ?? '') }}" required>
                                 @error('nama')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -49,7 +49,7 @@
                             <div class="col-md-6">
                                 <label for="posisi" class="form-label fw-bold">Posisi</label>
                                 <input type="text" name="posisi" id="posisi" class="form-control @error('posisi') is-invalid @enderror"
-                                       value="{{ old('posisi', $profil->posisi) }}">
+                                       value="{{ old('posisi', optional($profil)->posisi ?? '') }}">
                                 @error('posisi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -59,7 +59,7 @@
                             <div class="col-md-6">
                                 <label for="alamat" class="form-label fw-bold">Alamat</label>
                                 <input type="text" name="alamat" id="alamat" class="form-control @error('alamat') is-invalid @enderror"
-                                       value="{{ old('alamat', $profil->alamat) }}">
+                                       value="{{ old('alamat', optional($profil)->alamat ?? '') }}">
                                 @error('alamat')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -69,7 +69,7 @@
                             <div class="col-md-6">
                                 <label for="nohp" class="form-label fw-bold">Nomor HP</label>
                                 <input type="text" name="nohp" id="nohp" class="form-control @error('nohp') is-invalid @enderror"
-                                       value="{{ old('nohp', $profil->nohp) }}" maxlength="15">
+                                       value="{{ old('nohp', optional($profil)->nohp ?? '') }}" maxlength="15">
                                 @error('nohp')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -79,7 +79,7 @@
                             <div class="col-md-6">
                                 <label for="email" class="form-label fw-bold">Email</label>
                                 <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
-                                       value="{{ old('email', $profil->email) }}">
+                                       value="{{ old('email', optional($profil)->email ?? '') }}">
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -88,7 +88,7 @@
                             <!-- Deskripsi -->
                             <div class="col-12">
                                 <label for="deskripsi" class="form-label fw-bold">Deskripsi</label>
-                                <textarea name="deskripsi" id="deskripsi" rows="5" class="form-control @error('deskripsi') is-invalid @enderror">{{ old('deskripsi', $profil->deskripsi) }}</textarea>
+                                <textarea name="deskripsi" id="deskripsi" rows="5" class="form-control @error('deskripsi') is-invalid @enderror">{{ old('deskripsi', optional($profil)->deskripsi ?? '') }}</textarea>
                                 <small class="text-muted">Deskripsi ini akan ditampilkan di konten Anda.</small>
                                 @error('deskripsi')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -99,7 +99,7 @@
                             <div class="col-md-4">
                                 <label for="instagram" class="form-label fw-bold">Instagram</label>
                                 <input type="text" name="instagram" id="instagram" class="form-control @error('instagram') is-invalid @enderror"
-                                       value="{{ old('instagram', $profil->instagram) }}">
+                                       value="{{ old('instagram', optional($profil)->instagram ?? '') }}">
                                 @error('instagram')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -107,7 +107,7 @@
                             <div class="col-md-4">
                                 <label for="twitter" class="form-label fw-bold">Twitter</label>
                                 <input type="text" name="twitter" id="twitter" class="form-control @error('twitter') is-invalid @enderror"
-                                       value="{{ old('twitter', $profil->twitter) }}">
+                                       value="{{ old('twitter', optional($profil)->twitter ?? '') }}">
                                 @error('twitter')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -115,7 +115,7 @@
                             <div class="col-md-4">
                                 <label for="facebook" class="form-label fw-bold">Facebook</label>
                                 <input type="text" name="facebook" id="facebook" class="form-control @error('facebook') is-invalid @enderror"
-                                       value="{{ old('facebook', $profil->facebook) }}">
+                                       value="{{ old('facebook', optional($profil)->facebook ?? '') }}">
                                 @error('facebook')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

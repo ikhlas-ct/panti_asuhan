@@ -33,33 +33,36 @@
                             <!-- Dynamic Blog Post -->
                             <div class="col-lg-6 col-md-12 mb-4">
                                 <article class="blog-card">
+                                    @if($konten->gambar)
                                     <img
                                         src="{{ asset($konten->gambar) }}"
-                                        alt="{{ $konten->judul }}"
+                                        alt="{{ $konten->judul ?? '' }}"
                                         class="blog-card-img">
+                                    @endif
 
                                     <div class="blog-card-body">
-                                        <span class="blog-card-category">{{ $konten->kategori->nama_kategori }}</span>
-                                        <h3 class="blog-card-title">{{ $konten->judul }}</h3>
-                                        <p class="blog-card-text">{{ $konten->ringkasan ?? Str::limit(strip_tags($konten->isi), 150) }}</p>
+                                        @if(optional($konten->kategori)->nama_kategori)
+                                        <span class="blog-card-category">{{ optional($konten->kategori)->nama_kategori ?? '' }}</span>
+                                        @endif
+                                        <h3 class="blog-card-title">{{ $konten->judul ?? '' }}</h3>
+                                        <p class="blog-card-text">{{ $konten->ringkasan ?? Str::limit(strip_tags($konten->isi ?? ''), 150) }}</p>
                                         <div class="blog-card-meta">
                                             <div class="blog-card-author">
                                                 <img
-                                                    src="{{ $konten->user->pegawai->foto_profil
-                                                        ? asset($konten->user->pegawai->foto_profil)
+                                                    src="{{ optional($konten->user->pegawai)->foto_profil
+                                                        ? asset(optional($konten->user->pegawai)->foto_profil)
                                                         : 'https://randomuser.me/api/portraits/men/32.jpg' }}"
                                                     alt="Author"
                                                     class="author-avatar">
-                                                <span>{{ $konten->user->pegawai->nama }}</span>
+                                                <span>{{ optional($konten->user->pegawai)->nama ?? '' }}</span>
                                             </div>
-                                            <span>{{ $konten->tanggal_publikasi->format('d F Y') }}</span>
+                                            <span>{{ $konten->tanggal_publikasi ? $konten->tanggal_publikasi->format('d F Y') : '' }}</span>
                                         </div>
-                                        <a href="{{ route('blog.show', ['jenis' => $jenis, 'slug' => $konten->slug]) }}" class="tribal-btn mt-3">Read More</a>
+                                        <a href="{{ route('blog.show', ['jenis' => $jenis, 'slug' => $konten->slug ?? '']) }}" class="tribal-btn mt-3">Read More</a>
                                     </div>
                                 </article>
                             </div>
                         @empty
-                            <p>No {{ $jenis }} available at this time.</p>
                         @endforelse
                     </div>
 
@@ -70,6 +73,7 @@
                 </div>
 
                 <div class="col-lg-4 col-md-5">
+                    @if(!$kategoris->isEmpty())
                     <div class="sidebar-widget">
                         @if ($jenis == 'artikel')
                             <h3 class="widget-title">Article Categories</h3>
@@ -81,14 +85,15 @@
                         <ul class="categories-list">
                             @foreach ($kategoris as $kategori)
                                 <li>
-                                    <a href="{{ route('blog.category', ['jenis' => $jenis, 'slug' => $kategori->slug]) }}">
-                                        {{ $kategori->nama_kategori }}
+                                    <a href="{{ route('blog.category', ['jenis' => $jenis, 'slug' => $kategori->slug ?? '']) }}">
+                                        {{ $kategori->nama_kategori ?? '' }}
                                         <span class="count">{{ $kategori->konten()->where('jenis_konten', $jenis)->count() }}</span>
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
+                    @endif
 
                     <!-- About Widget -->
                     <div class="sidebar-widget">
