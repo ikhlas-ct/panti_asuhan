@@ -3,7 +3,7 @@
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
         <a href="index.html" class="logo d-flex align-items-center">
-            <img src="{{ $settings?->logo ? asset('storage/' . $settings->logo) : asset('user/img/kaiadmin/logo_light.svg') }}"
+            <img src="{{ $settings?->logo ? asset($settings->logo) : asset('default-image/default-logo.png') }}"
                 alt="navbar brand" class="navbar-brand" height="50" />
             <span class="ms-2 text-white">{{ $settings->nama ?? 'Nama Website' }}</span>
         </a>
@@ -63,7 +63,6 @@
                 </a>
             </li>
 
-
             <!-- Website Profil -->
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">
@@ -88,7 +87,7 @@
                                 <span class="sub-item">tema</span>
                             </a>
                         </li>
-                            <li>
+                        <li>
                             <a href="{{ route('service.index', 'layanan') }}">
                                 <span class="sub-item">Layanan Aktivitas</span>
                             </a>
@@ -158,6 +157,12 @@
                 <a href="{{ route('konten.index', 'aktivitas') }}">
                     <i class="fas fa-calendar-check"></i>
                     <p>Aktivitas</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('gallery.index') }}">
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <p>Galeri</p>
                 </a>
             </li>
 

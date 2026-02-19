@@ -22,7 +22,10 @@
         <div class="transportation-grid" id="transportation-grid">
             @forelse ($transportations as $transportation)
                 <div class="transportation-card" data-category="{{ Str::slug($transportation->kategori->nama_kategori ?? 'uncategorized') }}">
-                    <img src="{{ asset('storage/' . $transportation->gambar ?? '../mentawai/trans.jpg') }}" alt="{{ $transportation->title }}" class="card-image"> <!-- Assume add image field in model, or hardcoded -->
+                    <img
+                        src="{{ $transportation->gambar ? asset($transportation->gambar) : '../mentawai/trans.jpg' }}"
+                        alt="{{ $transportation->title }}"
+                        class="card-image">
                     <div class="card-content">
                         <span class="card-category">{{ $transportation->kategori->nama_kategori ?? 'Uncategorized' }}</span>
                         <h3 class="card-title">{{ $transportation->title }}</h3>

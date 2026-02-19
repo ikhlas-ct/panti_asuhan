@@ -32,9 +32,9 @@
 
                                         <div class="col-md-6 text-end">
                                             @if($settings->logo)
-                                                <img src="{{ asset('storage/' . $settings->logo) }}" alt="Logo" class="img-fluid rounded-2 border border-secondary" style="object-fit: cover; height: 150px;">
+                                                <img src="{{ asset($settings->logo) }}" alt="Logo" class="img-fluid rounded-2 border border-secondary" style="object-fit: cover; height: 150px;">
                                             @else
-                                                <img src="{{ asset('user/img/default-logo.png') }}" alt="Default Logo" class="img-fluid rounded-2 border border-secondary" style="object-fit: cover; height: 150px;">
+                                                <img src="{{ asset('default-image/default-logo.png') }}" alt="Default Logo" class="img-fluid rounded-2 border border-secondary" style="object-fit: cover; height: 150px;">
                                             @endif
                                         </div>
                                     </div>

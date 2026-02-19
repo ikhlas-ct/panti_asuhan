@@ -33,7 +33,9 @@
                                     <td>{{ $pegawais->firstItem() + $index }}</td>
                                     <td>
                                         @if ($pegawai->foto_profil)
-                                            <img src="{{ asset('storage/' . $pegawai->foto_profil) }}" alt="{{ $pegawai->nama }}" style="width: 100px; height: 100px; object-fit: cover;">
+                                            <img src="{{ asset($pegawai->foto_profil) }}"
+                                                 alt="{{ $pegawai->nama }}"
+                                                 style="width: 100px; height: 100px; object-fit: cover;">
                                         @else
                                             Tidak Ada Foto
                                         @endif

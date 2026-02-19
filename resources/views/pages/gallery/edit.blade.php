@@ -30,7 +30,7 @@
                         <label for="image" class="form-label">Gambar</label>
                         @if($gallery->image)
                             <div class="mb-2">
-                                <img src="{{ asset('storage/' . $gallery->image) }}" alt="{{ $gallery->title }}" class="img-fluid" style="max-height:200px;">
+                                <img src="{{ asset($gallery->image) }}" alt="{{ $gallery->title }}" class="img-fluid" style="max-height:200px;">
                             </div>
                         @endif
                         <input type="file" name="image" id="image" class="form-control" accept="image/*">

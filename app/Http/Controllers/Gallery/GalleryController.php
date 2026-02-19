@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Gallery;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
-use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
@@ -23,18 +22,29 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'image' => 'required|image|max:10000',
-            'title' => 'nullable|string|max:191',
+            'image'       => 'required|image|max:10000',
+            'title'       => 'nullable|string|max:191',
             'description' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
-            'button_url' => 'nullable|url|max:191',
+            'button_url'  => 'nullable|url|max:191',
         ]);
 
-        $path = $request->file('image')->store('galleries', 'public');
+        $image = $request->file('image');
 
-        Gallery::create(array_merge($validated, ['image' => $path]));
+        // Buat folder jika belum ada
+        if (!file_exists(public_path('galleries'))) {
+            mkdir(public_path('galleries'), 0755, true);
+        }
 
-        return redirect()->route('gallery.index')->with('success', 'Gallery berhasil dibuat.');
+        $filename = $image->hashName();                    // nama unik + extension
+        $image->move(public_path('galleries'), $filename);
+
+        $validated['image'] = 'galleries/' . $filename;
+
+        Gallery::create($validated);
+
+        return redirect()->route('gallery.index')
+            ->with('success', 'Gallery berhasil dibuat.');
     }
 
     public function edit($id)
@@ -48,36 +58,48 @@ class GalleryController extends Controller
         $gallery = Gallery::findOrFail($id);
 
         $validated = $request->validate([
-            'image' => 'nullable|image|max:10000',
-            'title' => 'nullable|string|max:191',
+            'image'       => 'nullable|image|max:10000',
+            'title'       => 'nullable|string|max:191',
             'description' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
-            'button_url' => 'nullable|url|max:191',
+            'button_url'  => 'nullable|url|max:191',
         ]);
 
         if ($request->hasFile('image')) {
-            // delete old image
-            if ($gallery->image) {
-                Storage::disk('public')->delete($gallery->image);
+            $image = $request->file('image');
+
+            if (!file_exists(public_path('galleries'))) {
+                mkdir(public_path('galleries'), 0755, true);
             }
-            $path = $request->file('image')->store('galleries', 'public');
-            $validated['image'] = $path;
+
+            $filename = $image->hashName();
+            $image->move(public_path('galleries'), $filename);
+
+            // Hapus gambar lama
+            if ($gallery->image && file_exists(public_path($gallery->image))) {
+                unlink(public_path($gallery->image));
+            }
+
+            $validated['image'] = 'galleries/' . $filename;
         }
 
         $gallery->update($validated);
 
-        return redirect()->route('gallery.index')->with('success', 'Gallery berhasil diperbarui.');
+        return redirect()->route('gallery.index')
+            ->with('success', 'Gallery berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $gallery = Gallery::findOrFail($id);
-        if ($gallery->image) {
-            Storage::disk('public')->delete($gallery->image);
+
+        if ($gallery->image && file_exists(public_path($gallery->image))) {
+            unlink(public_path($gallery->image));
         }
+
         $gallery->delete();
-        return redirect()->route('gallery.index')->with('success', 'Gallery berhasil dihapus.');
+
+        return redirect()->route('gallery.index')
+            ->with('success', 'Gallery berhasil dihapus.');
     }
 }
-
-

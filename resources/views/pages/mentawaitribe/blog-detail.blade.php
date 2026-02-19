@@ -10,7 +10,12 @@
                     <h1 class="article-title">{{ $konten->judul }}</h1>
                     <div class="article-meta">
                         <div class="article-author">
-                            <img src="{{ asset('storage/' . ($konten->user->pegawai->foto_profil ?? 'https://randomuser.me/api/portraits/women/44.jpg')) }}" alt="{{ $konten->user->pegawai->nama ?? 'Author' }}" class="article-author-img">
+                            <img
+                                src="{{ $konten->user->pegawai->foto_profil
+                                    ? asset($konten->user->pegawai->foto_profil)
+                                    : 'https://randomuser.me/api/portraits/women/44.jpg' }}"
+                                alt="{{ $konten->user->pegawai->nama ?? 'Author' }}"
+                                class="article-author-img">
                             <span>{{ $konten->user->pegawai->nama ?? 'Author' }}</span>
                         </div>
                         <span>{{ $konten->tanggal_publikasi->format('d F Y') }}</span>
@@ -22,7 +27,10 @@
         </section>
 
         <section class="article-container">
-            <img src="{{ asset('storage/' . $konten->gambar) }}" alt="{{ $konten->judul }}" class="article-image">
+            <img
+                src="{{ asset($konten->gambar) }}"
+                alt="{{ $konten->judul }}"
+                class="article-image">
 
             <div class="article-content">
                 {!! $konten->isi !!}
@@ -76,7 +84,6 @@
                                 behavior: 'smooth'
                             });
 
-                            // Collapse navbar mobile after clicking link
                             const navbarToggler = document.querySelector('.navbar-toggler');
                             const navbarCollapse = document.querySelector('.navbar-collapse');
                             if (navbarCollapse && navbarCollapse.classList.contains('show')) {
@@ -114,13 +121,9 @@
                         </div>
                     `;
 
-                    // Remove existing modal
                     const existingModal = document.getElementById('imageModal');
-                    if (existingModal) {
-                        existingModal.remove();
-                    }
+                    if (existingModal) existingModal.remove();
 
-                    // Add new modal
                     document.body.insertAdjacentHTML('beforeend', modal);
                     const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
                     imageModal.show();

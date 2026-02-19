@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProfilpegawaiController extends Controller
 {
@@ -53,10 +53,12 @@ class ProfilpegawaiController extends Controller
 
         // Upload foto profil baru jika ada
         if ($request->hasFile('foto_profil')) {
-            if ($profil->foto_profil) {
-                Storage::disk('public')->delete($profil->foto_profil);
+            if ($profil->foto_profil && file_exists(public_path($profil->foto_profil))) {
+                unlink(public_path($profil->foto_profil));
             }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil', 'public');
+            $filename = time() . '_' . Str::slug($request->file('foto_profil')->getClientOriginalName());
+            $request->file('foto_profil')->move(public_path('uploads/profil'), $filename);
+            $data['foto_profil'] = 'uploads/profil/' . $filename;
         }
 
         // Update data profil pegawai

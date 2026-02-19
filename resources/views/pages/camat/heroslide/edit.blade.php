@@ -52,7 +52,7 @@
                             <label for="image" class="form-label">Gambar <span class="text-danger">*</span></label>
                             @if(isset($slide->image))
                                 <div class="mb-2">
-                                    <img src="{{ asset('storage/' . $slide->image) }}" alt="{{ $slide->title }}" class="img-fluid" style="max-height: 200px;">
+                                    <img src="{{ asset($slide->image) }}" alt="{{ $slide->title }}" class="img-fluid" style="max-height: 200px;">
                                 </div>
                             @endif
                             <input type="file" class="form-control" id="image" name="image" accept="image/*" {{ $slide->image ? '' : 'required' }}>

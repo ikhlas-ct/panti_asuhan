@@ -2,7 +2,11 @@
         <div class="container">
             <div class="logo">
                 @if ($settings->logo ?? false)
-                    <img src="{{ asset('storage/' . $settings->logo) }}" alt="{{ $settings->nama ?? 'MENTAWAI ETHICAL TOURS' }}" class="logo-image" style="max-height: 60px; margin-right: 10px;">
+                    <img src="{{ !empty($settings->logo) && file_exists(public_path($settings->logo))
+                        ? asset($settings->logo)
+                        : asset('images/default-logo.png') }}"
+                        alt="{{ $settings->nama ?? 'MENTAWAI ETHICAL TOURS' }}" class="logo-image"
+                        style="max-height: 60px; margin-right: 10px;">
                 @else
                     <div class="tribal-symbol"></div>
                 @endif

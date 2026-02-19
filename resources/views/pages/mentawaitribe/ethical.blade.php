@@ -5,7 +5,7 @@
     <section class="ethical-hero">
         <div class="container">
             <div class="ethical-badge">
-                <i class="fas fa-leaf"></i> {{ $setting->slogan ?? '100% SUSTAINABLE TOURISM' }}
+                <i class="fas fa-leaf"></i> {{ $setting->slogan ?? '' }}
             </div>
             <h1>Ethical Tourism Mentawai</h1>
             <p>Explore the beauty of Mentawai culture in a responsible way. Every journey is designed to support local communities, preserve culture, and protect the environment.</p>
@@ -25,10 +25,10 @@
                 @foreach ($principles as $principle)
                     <div class="principle-card">
                         <div class="principle-icon">
-                            <i class="{{ $principle->kategori->icon ?? 'fas fa-question' }}"></i>
+                            <i class="{{ $principle->kategori->icon ?? '' }}"></i>
                         </div>
-                        <h3>{{ $principle->title }}</h3>
-                        <p>{{ $principle->description }}</p>
+                        <h3>{{ $principle->title ?? '' }}</h3>
+                        <p>{{ $principle->description ?? '' }}</p>
                     </div>
                 @endforeach
             </div>
@@ -49,29 +49,29 @@
                         <div class="tour-card">
                             <div class="tour-header">
                                 @if ($ethical->badge)
-                                    <div class="tour-badge badge-{{ strtolower($ethical->badge) }}">{{ $ethical->badge }}
+                                    <div class="tour-badge badge-{{ strtolower($ethical->badge) }}">{{ $ethical->badge ?? '' }}
                                     </div>
                                 @endif
-                                <h3 class="tour-title">{{ $ethical->judul }}</h3>
+                                <h3 class="tour-title">{{ $ethical->judul ?? '' }}</h3>
                                 <div class="tour-duration">
-                                    <i class="far fa-calendar"></i> {{ $ethical->duration ?? 'Custom Duration' }}
+                                    <i class="far fa-calendar"></i> {{ $ethical->duration ?? '' }}
                                 </div>
                             </div>
-                            <img src="{{ asset('storage/' . $ethical->gambar) }}" alt="{{ $ethical->judul }}"
+                            <img src="{{ asset($ethical->gambar ?? '') }}" alt="{{ $ethical->judul ?? '' }}"
                                 class="tour-image">
                             <div class="tour-body">
-                                <p class="tour-description">{{ $ethical->ringkasan }}</p>
+                                <p class="tour-description">{{ $ethical->ringkasan ?? '' }}</p>
                                 <div class="tour-footer">
                                     <div class="tour-price">
-                                        {{ $ethical->price ?? 'Custom' }} <span>/person</span>
+                                        {{ $ethical->price ?? '' }} <span>/person</span>
                                     </div>
                                     <div class="tour-actions">
-                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->nomor_telepon ?? '6281261513662') }}?text={{ urlencode('Hello, I am interested in the package: ' . $ethical->judul . '. Please provide more details.') }}"
+                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $setting->nomor_telepon ?? '') }}?text={{ urlencode('Hello, I am interested in the package: ' . ($ethical->judul ?? '') . '. Please provide more details.') }}"
                                             class="tribal-btn btn-small" target="_blank">
                                             <i class="fas fa-calendar-check"></i> Book Now
                                         </a>
 
-                                        <a href="{{ route('blog.show', ['jenis' => 'ethical', 'slug' => $ethical->slug]) }}"
+                                        <a href="{{ route('blog.show', ['jenis' => 'ethical', 'slug' => $ethical->slug ?? '']) }}"
                                             class="tribal-btn btn-small">
                                             <i class="fas fa-book-open"></i> Read More
                                         </a>
@@ -93,18 +93,18 @@
         <div class="container">
             <div class="section-title">
                 <h2>Why Choose Us?</h2>
-                <p>{{ $setting->why_choose_us ?? 'Advantages that make your experience different' }}</p>
+                <p>{{ $setting->why_choose_us ?? '' }}</p>
             </div>
 
             <div class="benefits-grid">
                 @foreach ($benefits as $benefit)
                     <div class="benefit-item">
                         <div class="benefit-icon">
-                            <i class="{{ $benefit->kategori->icon ?? 'fas fa-question' }}"></i>
+                            <i class="{{ $benefit->kategori->icon ?? '' }}"></i>
                         </div>
                         <div class="benefit-content">
-                            <h3>{{ $benefit->title }}</h3>
-                            <p>{{ $benefit->description }}</p>
+                            <h3>{{ $benefit->title ?? '' }}</h3>
+                            <p>{{ $benefit->description ?? '' }}</p>
                         </div>
                     </div>
                 @endforeach
@@ -113,6 +113,7 @@
     </section>
 
 @endsection
+
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -283,6 +284,3 @@
         });
     </script>
 @endsection
-</body>
-
-</html>

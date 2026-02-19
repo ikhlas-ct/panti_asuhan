@@ -62,7 +62,7 @@
                                 <label class="form-label">Gambar Saat Ini</label>
                                 @if ($service->gambar)
                                     <div class="mb-3">
-                                        <img src="{{ asset('storage/' . $service->gambar) }}" alt="Current Image"
+                                        <img src="{{ asset( $service->gambar) }}" alt="Current Image"
                                             class="img-thumbnail" style="max-height: 200px; object-fit: cover;">
                                         <small class="d-block text-muted mt-1">Gambar lama. Biarkan kosong jika tidak ingin mengganti.</small>
                                     </div>

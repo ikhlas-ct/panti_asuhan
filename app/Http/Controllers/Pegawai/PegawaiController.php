@@ -7,7 +7,6 @@ use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PegawaiController extends Controller
@@ -45,7 +44,9 @@ class PegawaiController extends Controller
         ]);
 
         if ($request->hasFile('foto_profil')) {
-            $pegawaiData['foto_profil'] = $request->file('foto_profil')->store('pegawai', 'public');
+            $filename = time() . '_' . Str::slug($request->file('foto_profil')->getClientOriginalName());
+            $request->file('foto_profil')->move(public_path('uploads/pegawai'), $filename);
+            $pegawaiData['foto_profil'] = 'uploads/pegawai/' . $filename;
         }
 
         $pegawaiData['id_user'] = null;
@@ -95,10 +96,12 @@ class PegawaiController extends Controller
         ]);
 
         if ($request->hasFile('foto_profil')) {
-            if ($pegawai->foto_profil && Storage::disk('public')->exists($pegawai->foto_profil)) {
-                Storage::disk('public')->delete($pegawai->foto_profil);
+            if ($pegawai->foto_profil && file_exists(public_path($pegawai->foto_profil))) {
+                unlink(public_path($pegawai->foto_profil));
             }
-            $pegawaiData['foto_profil'] = $request->file('foto_profil')->store('pegawai', 'public');
+            $filename = time() . '_' . Str::slug($request->file('foto_profil')->getClientOriginalName());
+            $request->file('foto_profil')->move(public_path('uploads/pegawai'), $filename);
+            $pegawaiData['foto_profil'] = 'uploads/pegawai/' . $filename;
         }
 
         // Handle User
@@ -135,8 +138,8 @@ class PegawaiController extends Controller
     public function destroy($id)
     {
         $pegawai = Pegawai::findOrFail($id);
-        if ($pegawai->foto_profil && Storage::disk('public')->exists($pegawai->foto_profil)) {
-            Storage::disk('public')->delete($pegawai->foto_profil);
+        if ($pegawai->foto_profil && file_exists(public_path($pegawai->foto_profil))) {
+            unlink(public_path($pegawai->foto_profil));
         }
         // Note: User tidak dihapus, hanya unlink id_user jika diperlukan
         $pegawai->delete();

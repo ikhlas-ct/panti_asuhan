@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"></head>
-    <link rel="icon" href="{{ $settings->logo ? asset('storage/' . $settings->logo) : asset('storage/defaultimage/defaull_logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ $settings->logo ? asset('public/' . $settings->logo) : asset('public/defaultimage/defaull_logo.png') }}" type="image/png">
 <body>
 <!-- Login 13 - Bootstrap Brain Component -->
 <section class="bg-light py-3 py-md-5">
@@ -19,7 +19,7 @@
               <div class="text-center mb-3">
                 <h2 class="mb-2">{{ $settings->nama ?? 'Tidak ada nama ' }}</h2>
                 <a href="#!">
-                    <img src="{{ $settings->logo ? asset('storage/' . $settings->logo) : asset('storage/defaultimage/defaull_logo.png') }}" alt="Logo"  height="80">
+                    <img src="{{ $settings->logo ? asset( $settings->logo) : asset('public/defaultimage/defaull_logo.png') }}" alt="Logo"  height="80">
 
 
                 </a>
@@ -56,7 +56,7 @@
                             @enderror
                         </div>
                     </div>
-          
+
                     <div class="col-12">
                         <div class="d-grid my-3">
                             <button class="btn btn-primary btn-lg" type="submit">Log in</button>
