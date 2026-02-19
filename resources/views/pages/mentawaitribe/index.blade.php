@@ -285,6 +285,15 @@
                         <div class="item-overlay">
                             <h3>{{ $item->title }}</h3>
                             <p>{{ $item->description }}</p>
+                            
+                @if($item->button_text && $item->button_url)
+                    <a href="{{ $item->button_url }}" 
+                       class="btn btn-warning btn-sm mt-2"
+                       target="_blank">
+                        <i class="fa-solid fa-camera me-1"></i>
+                        {{ $item->button_text }}
+                    </a>
+                @endif
                         </div>
                     </div>
                 @empty

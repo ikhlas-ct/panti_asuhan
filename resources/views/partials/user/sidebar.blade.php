@@ -63,7 +63,6 @@
                 </a>
             </li>
 
-
             <!-- Website Profil -->
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">
@@ -88,7 +87,7 @@
                                 <span class="sub-item">tema</span>
                             </a>
                         </li>
-                            <li>
+                        <li>
                             <a href="{{ route('service.index', 'layanan') }}">
                                 <span class="sub-item">Layanan Aktivitas</span>
                             </a>
@@ -158,6 +157,12 @@
                 <a href="{{ route('konten.index', 'aktivitas') }}">
                     <i class="fas fa-calendar-check"></i>
                     <p>Aktivitas</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('gallery.index') }}">
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <p>Galeri</p>
                 </a>
             </li>
 
