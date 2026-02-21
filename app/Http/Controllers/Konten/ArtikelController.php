@@ -13,7 +13,7 @@ class ArtikelController extends Controller
 {
     public function index(Request $request, $jenis)
     {
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 
@@ -41,7 +41,7 @@ class ArtikelController extends Controller
 
     public function create($jenis)
     {
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 
@@ -51,7 +51,7 @@ class ArtikelController extends Controller
 
     public function store(Request $request, $jenis)
     {
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 
@@ -118,7 +118,7 @@ class ArtikelController extends Controller
 
     public function edit($jenis, $slug)
     {
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 
@@ -132,7 +132,7 @@ class ArtikelController extends Controller
 
     public function update(Request $request, $jenis, $id_konten)
     {
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 
@@ -202,7 +202,7 @@ class ArtikelController extends Controller
 
     public function destroy($jenis, $id_konten)
     {
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 

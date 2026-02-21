@@ -62,7 +62,7 @@
             </div>
         </div>
     </section>
-    <!-- Activities Carousel (Dynamic from Content with jenis_konten 'aktivitas') -->
+    <!-- Activities Carousel (Dynamic from Content with jenis_konten 'curated-journey') -->
     <section id="activities" class="py-5">
         <div class="container-fluid">
             <div class="section-title">
@@ -80,7 +80,7 @@
                         <div class="activity-content">
                             <h3>{{ $activity->judul ?? '' }}</h3>
                             <p>{{ Str::limit(strip_tags($activity->ringkasan ?? ''), 150) }}</p>
-                            <a href="{{ route('blog.show', ['jenis' => 'aktivitas', 'slug' => $activity->slug ?? '']) }}" class="tribal-btn mt-3">Read More</a>
+                            <a href="{{ route('blog.show', ['jenis' => 'curated-journey', 'slug' => $activity->slug ?? '']) }}" class="tribal-btn mt-3">Read More</a>
                         </div>
                     </div>
                 @empty

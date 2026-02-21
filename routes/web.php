@@ -23,9 +23,9 @@ Route::get('/ethical-blog', function () {
 
 
 
-Route::get('/blog/{jenis?}', [LandingController::class, 'blog'])->where('jenis', 'artikel|aktivitas')->name('landing.blog');
-Route::get('/blog/{jenis}/category/{slug}', [LandingController::class, 'category'])->where('jenis', 'artikel|aktivitas')->name('blog.category');
-Route::get('/blog/{jenis}/{slug}', [LandingController::class, 'show'])->where('jenis', 'artikel|aktivitas|ethical')->name('blog.show');
+Route::get('/blog/{jenis?}', [LandingController::class, 'blog'])->where('jenis', 'artikel|curated-journey')->name('landing.blog');
+Route::get('/blog/{jenis}/category/{slug}', [LandingController::class, 'category'])->where('jenis', 'artikel|curated-journey')->name('blog.category');
+Route::get('/blog/{jenis}/{slug}', [LandingController::class, 'show'])->where('jenis', 'artikel|curated-journey|ethical')->name('blog.show');
 
 Route::get('/ethical', [LandingController::class, 'ethical'])->name('landing.ethical');
 Route::get('/transportasi', [LandingController::class, 'transportasi'])->name('landing.transportasi');
@@ -55,26 +55,26 @@ Route::middleware('auth')->group(function () {
     Route::prefix('konten/{jenis}')->group(function () {
         Route::get('/', [ArtikelController::class, 'index'])
             ->name('konten.index')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::get('/create', [ArtikelController::class, 'create'])
             ->name('konten.create')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
         Route::post('/', [ArtikelController::class, 'store'])
             ->name('konten.store')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::get('/{slug}/edit', [ArtikelController::class, 'edit'])
             ->name('konten.edit')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::put('/{id_konten}', [ArtikelController::class, 'update'])
             ->name('konten.update')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::delete('/{id_konten}', [ArtikelController::class, 'destroy'])
             ->name('konten.destroy')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
     });
 
     // Route upload & delete image tetap shared (tidak perlu constraint jenis)

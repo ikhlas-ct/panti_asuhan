@@ -33,7 +33,7 @@
                                     <th>Nama Pembuat</th>
                                     <th>Judul</th>
                                     <th>Ringkasan {{ ucfirst($jenis) }}</th>
-                                    @if ($jenis == 'aktivitas')
+                                    @if ($jenis == 'curated-journey')
                                         <th>Kategori</th>
                                     @elseif ($jenis == 'ethical')
                                         <th>Duration</th>
@@ -54,7 +54,7 @@
                                         </td>
                                         <td>{{ $item->judul ?? '-' }}</td>
                                         <td>{!! Str::limit(strip_tags($item->ringkasan ?? '-'), 100) !!}</td>
-                                        @if ($jenis == 'aktivitas')
+                                        @if ($jenis == 'curated-journey')
                                             <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
                                         @elseif ($jenis == 'ethical')
                                             <td>{{ $item->duration ?? '-' }}</td>
@@ -89,7 +89,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="{{ $jenis == 'ethical' ? 10 : ($jenis == 'aktivitas' ? 8 : 7) }}"
+                                        <td colspan="{{ $jenis == 'ethical' ? 10 : ($jenis == 'curated-journey' ? 8 : 7) }}"
                                             class="py-4 text-center">
                                             <i class="fas fa-inbox fa-3x text-muted mb-2"></i>
                                             <p class="mb-0">Belum ada data {{ $jenis }}.</p>

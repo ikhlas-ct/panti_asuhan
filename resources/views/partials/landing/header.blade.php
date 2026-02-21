@@ -30,7 +30,7 @@
                         <a class="nav-link" href="{{ route('landing.blog', ['jenis' => 'artikel']) }}">Articles</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('landing.blog', ['jenis' => 'aktivitas']) }}">Activities</a>
+                        <a class="nav-link" href="{{ route('landing.blog', ['jenis' => 'curated-journey']) }}">Curated Journey</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('landing.ethical') }}">Ethical Tourism</a>

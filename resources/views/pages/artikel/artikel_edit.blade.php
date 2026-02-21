@@ -49,8 +49,8 @@
                             @enderror
                         </div>
 
-                        <!-- Kategori (untuk aktivitas dan berita) -->
-                        @if (in_array($jenis, ['aktivitas', 'berita']))
+                        <!-- Kategori (untuk curated-journey dan berita) -->
+                        @if (in_array($jenis, ['curated-journey', 'berita']))
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <div class="input-group mb-3">

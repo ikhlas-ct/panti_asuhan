@@ -6,9 +6,9 @@
             @if ($jenis == 'artikel')
                 <h1>Mentawai Culture Blog</h1>
                 <p>Discover stories, traditions, and daily life of the Mentawai Tribe through in-depth writings from cultural writers and researchers.</p>
-            @elseif ($jenis == 'aktivitas')
-                <h1>Mentawai Cultural Activities</h1>
-                <p>Explore various traditional and modern activities that reflect the daily life of the Mentawai Tribe, from ceremonies to community activities.</p>
+            @elseif ($jenis == 'curated-journey')
+                <h1>Mentawai Cultural curated-journey</h1>
+                <p>Explore various traditional and modern curated-journey that reflect the daily life of the Mentawai Tribe, from ceremonies to community curated-journey.</p>
             @elseif ($jenis == 'ethical')
                 <h1>Mentawai Cultural Ethics</h1>
                 <p>Understand the ethical principles, values, and moral guidelines firmly held by the Mentawai Tribe in maintaining harmony with nature and fellow beings.</p>
@@ -77,8 +77,8 @@
                     <div class="sidebar-widget">
                         @if ($jenis == 'artikel')
                             <h3 class="widget-title">Article Categories</h3>
-                        @elseif ($jenis == 'aktivitas')
-                            <h3 class="widget-title">Activity Categories</h3>
+                        @elseif ($jenis == 'curated-journey')
+                            <h3 class="widget-title">Curated Journey Categories</h3>
                         @elseif ($jenis == 'ethical')
                             <h3 class="widget-title">Ethical Categories</h3>
                         @endif
@@ -101,10 +101,10 @@
                             <h3 class="widget-title">About This Blog</h3>
                             <p>This blog is dedicated to documenting and preserving the cultural richness of the Mentawai Tribe. Each article is written with in-depth research and respect for the original traditions.</p>
                             <p>We are committed to presenting accurate and beneficial information about the life, traditions, and local wisdom of Mentawai.</p>
-                        @elseif ($jenis == 'aktivitas')
-                            <h3 class="widget-title">About These Activities</h3>
-                            <p>This page is dedicated to showcasing various cultural activities of the Mentawai Tribe. Each activity description is created with in-depth research and respect for the original practices.</p>
-                            <p>We are committed to presenting accurate and beneficial information about the activities, traditions, and daily life of Mentawai.</p>
+                        @elseif ($jenis == 'curated-journey')
+                            <h3 class="widget-title">About These Curated-Journey</h3>
+                            <p>This page is dedicated to showcasing various cultural curated-journey of the Mentawai Tribe. Each activity description is created with in-depth research and respect for the original practices.</p>
+                            <p>We are committed to presenting accurate and beneficial information about the curated-journey, traditions, and daily life of Mentawai.</p>
                         @elseif ($jenis == 'ethical')
                             <h3 class="widget-title">About This Ethics</h3>
                             <p>This page is dedicated to discussing the ethical principles and cultural values of the Mentawai Tribe. Each ethics content is created with in-depth research and respect for the original norms.</p>

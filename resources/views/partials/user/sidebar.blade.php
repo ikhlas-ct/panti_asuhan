@@ -89,7 +89,7 @@
                         </li>
                         <li>
                             <a href="{{ route('service.index', 'layanan') }}">
-                                <span class="sub-item">Layanan Aktivitas</span>
+                                <span class="sub-item">Layanan curated-journey</span>
                             </a>
                         </li>
 
@@ -154,9 +154,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('konten.index', 'aktivitas') }}">
+                <a href="{{ route('konten.index', 'curated-journey') }}">
                     <i class="fas fa-calendar-check"></i>
-                    <p>Aktivitas</p>
+                    <p>Curated-Journey</p>
                 </a>
             </li>
             <li class="nav-item">
