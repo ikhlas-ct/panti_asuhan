@@ -21,7 +21,7 @@ class SettingController extends Controller
             'nama'              => 'nullable|string|max:255',
             'alamat'            => 'nullable|string',
             'email'             => 'nullable|email|max:255',
-            'nomor_telepon'     => 'nullable|string|max:20', // bisa ditambah regex jika ingin format nomor HP
+            'nomor_telepon'     => 'nullable|string|max:20', 
             'logo'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'slogan'            => 'nullable|string|max:255',
             'social_facebook'   => 'nullable|url|max:255',

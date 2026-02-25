@@ -97,6 +97,12 @@
                 </div>
             </li>
             <li class="nav-item">
+                <a href="{{ route('about') }}">
+                    <i class="fas fa-info-circle"></i>
+                    <p>About Us</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#ethical">
                     <i class="fas fa-balance-scale"></i>
                     <p>Ethical</p>

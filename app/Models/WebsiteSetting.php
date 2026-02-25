@@ -17,6 +17,7 @@ class WebsiteSetting extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'karyawan_id',
         'nama',
         'alamat',
         'email',
@@ -39,5 +40,9 @@ class WebsiteSetting extends Model
     public static function getInstance()
     {
         return self::firstOrCreate([]);
+    }
+    public function karyawan()
+    {
+        return $this->belongsTo(Pegawai::class, 'karyawan_id', 'id_pegawai');
     }
 }

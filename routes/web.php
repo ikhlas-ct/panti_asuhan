@@ -1,20 +1,18 @@
 <?php
 
-use App\Http\Controllers\Landing\LandingController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Service\ServiceController;
-use App\Http\Controllers\Login\AuthController;
-
-use App\Http\Controllers\Profile\CamatController;
-use App\Http\Controllers\Konten\ArtikelController;
+use App\Http\Controllers\About\AboutController;
 use App\Http\Controllers\Gallery\GalleryController;
+use App\Http\Controllers\Konten\ArtikelController;
+use App\Http\Controllers\Landing\LandingController;
+use App\Http\Controllers\Login\AuthController;
 use App\Http\Controllers\Pegawai\PegawaiController;
-use App\Http\Controllers\Profile\SettingController;
-
-// =================== Pegawai dan camat ===================
-use App\Http\Controllers\Profile\KategoriController;
-use App\Http\Controllers\Profile\HeroslideController;
 use App\Http\Controllers\Pegawai\ProfilpegawaiController;
+use App\Http\Controllers\Profile\CamatController;
+use App\Http\Controllers\Profile\HeroslideController;
+use App\Http\Controllers\Profile\KategoriController;
+use App\Http\Controllers\Profile\SettingController;
+use App\Http\Controllers\Service\ServiceController;
+use Illuminate\Support\Facades\Route;
 
 
 Route::get('/ethical-blog', function () {
@@ -81,7 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/blog/upload', [ArtikelController::class, 'uploadImage'])->name('blog.upload.image');
     Route::post('/blog/imagedelete', [ArtikelController::class, 'deleteImage'])->name('blog.delete.image');
 
+    Route::get('about', [AboutController::class, 'edit'])
+        ->name('about');
 
+    Route::put('about', [AboutController::class, 'update'])
+        ->name('admin.about.update');
 
 
     // Settings

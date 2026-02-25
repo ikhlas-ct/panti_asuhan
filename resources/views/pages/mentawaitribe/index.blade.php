@@ -5,13 +5,11 @@
         <div class="carousel-slides">
             @forelse($heroSlides as $slide)
                 <div class="carousel-slide">
-                    <img src="{{ asset($slide->image ?? '') }}"
-                        alt="{{ $slide->title ?? '' }}">
+                    <img src="{{ asset($slide->image ?? '') }}" alt="{{ $slide->title ?? '' }}">
                     <div class="slide-content">
                         <h2>{{ $slide->title ?? '' }}</h2>
                         <p>{{ $slide->description ?? '' }}</p>
-                        <a href="{{ $slide->button_link ?? '' }}"
-                            class="tribal-btn">{{ $slide->button_text ?? '' }}</a>
+                        <a href="{{ $slide->button_link ?? '' }}" class="tribal-btn">{{ $slide->button_text ?? '' }}</a>
                     </div>
                 </div>
             @empty
@@ -49,8 +47,8 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
                     <div class="culture-image">
-                        <img src="{{ asset($settings->gambar_pengantar ?? '') }}"
-                            alt="Mentawai Family" class="img-fluid rounded">
+                        <img src="{{ asset($settings->gambar_pengantar ?? '') }}" alt="Mentawai Family"
+                            class="img-fluid rounded">
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12">
@@ -74,13 +72,13 @@
                 @forelse($activities as $activity)
                     <div class="activity-slide">
                         <div class="activity-image">
-                            <img src="{{ asset($activity->gambar ?? '') }}"
-                                alt="{{ $activity->judul ?? '' }}">
+                            <img src="{{ asset($activity->gambar ?? '') }}" alt="{{ $activity->judul ?? '' }}">
                         </div>
                         <div class="activity-content">
                             <h3>{{ $activity->judul ?? '' }}</h3>
                             <p>{{ Str::limit(strip_tags($activity->ringkasan ?? ''), 150) }}</p>
-                            <a href="{{ route('blog.show', ['jenis' => 'curated-journey', 'slug' => $activity->slug ?? '']) }}" class="tribal-btn mt-3">Read More</a>
+                            <a href="{{ route('blog.show', ['jenis' => 'curated-journey', 'slug' => $activity->slug ?? '']) }}"
+                                class="tribal-btn mt-3">Read More</a>
                         </div>
                     </div>
                 @empty
@@ -106,49 +104,56 @@
         </div>
     </section>
     <!-- Travel Themes Section (Dynamic from Service type 'tema') -->
-    <section id="themes" class="themes-section">
-        <div class="container-fluid">
-            <div class="section-title">
-                <h2>Our Travel Themes</h2>
-                <p class="mt-3 text-center" style="max-width: 800px; margin: 0 auto;">Choose a travel experience that
-                    matches your interests and needs. Each theme is designed to provide a deep, authentic experience.</p>
-            </div>
-            <div class="row g-4">
-                @forelse($services->where('type', 'tema') as $theme)
-                    <div class="col-lg-4 col-md-6">
-                        <div class="theme-card">
-                            <div class="theme-icon">
-                                <i class="{{ $theme->getIconClassAttribute() ?? '' }}"></i>
-                            </div>
-                            <h3>{{ $theme->title ?? '' }}</h3>
-                            <p>{{ $theme->description ?? '' }}</p>
-                            <ul class="culture-features icon-list">
-                                @foreach ($theme->steps as $step)
-                                    <li>
-                                        <i class="{{ $step->kategori->icon ?? '' }}"></i>
-                                        <span>{{ $step->title ?? '' }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @empty
-                    <!-- Fallback if no themes in DB -->
-                    <div class="col-lg-4 col-md-6">
-                        <div class="theme-card">
-                            <div class="theme-icon"><i class="fas fa-mountain"></i></div>
-                            <h3>Wild Nature Adventure</h3>
-                            <p>Exploration of tropical forests...</p>
-                            <ul class="culture-features">
-                                <li>Trekking to Mentawai forest</li>
-                                <li>Camping in the open nature</li>
-                            </ul>
-                        </div>
-                    </div>
-                @endforelse
-            </div>
+ <section id="themes" class="themes-section">
+    <div class="container-fluid">
+        <div class="section-title">
+            <h2>Our Travel Themes</h2>
+            <p class="mt-3 text-center" style="max-width: 800px; margin: 0 auto;">Choose a travel experience that
+                matches your interests and needs. Each theme is designed to provide a deep, authentic experience.</p>
         </div>
-    </section>
+        <div class="row g-4">
+            @forelse($services->where('type', 'tema') as $theme)
+                <div class="col-lg-4 col-md-6">
+                    <div class="theme-card">
+                        <div class="theme-icon">
+                            <i class="{{ $theme->getIconClassAttribute() ?? '' }}"></i>
+                        </div>
+                        <h3>{{ $theme->title ?? '' }}</h3>
+
+                        <!-- Deskripsi & List jadi justify -->
+                        <p style="text-align: justify;">
+                            {{ $theme->description ?? '' }}
+                        </p>
+                        <ul class="culture-features icon-list" style="text-align: justify;">
+                            @foreach ($theme->steps as $step)
+                                <li>
+                                    <i class="{{ $step->kategori->icon ?? '' }}"></i>
+                                    <span>{{ $step->title ?? '' }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @empty
+                <!-- Fallback -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="theme-card">
+                        <div class="theme-icon"><i class="fas fa-mountain"></i></div>
+                        <h3>Wild Nature Adventure</h3>
+
+                        <p style="text-align: justify;">
+                            Exploration of tropical forests, rivers, and untouched nature in Mentawai.
+                        </p>
+                        <ul class="culture-features" style="text-align: justify;">
+                            <li>Trekking to Mentawai forest</li>
+                            <li>Camping in the open nature</li>
+                        </ul>
+                    </div>
+                </div>
+            @endforelse
+        </div>
+    </div>
+</section>
     <!-- Our Services Section (Dynamic from Service type 'layanan') -->
     <section id="services" class="services-section">
         <div class="container-fluid">
@@ -205,14 +210,20 @@
                     @forelse($teamMembers as $member)
                         <div class="team-card">
                             <div class="team-img-container">
-                                <img src="{{ asset($member->foto_profil ?? '') }}"
-                                    alt="{{ $member->nama ?? '' }}">
+                                <img src="{{ asset($member->foto_profil ?? '') }}" alt="{{ $member->nama ?? '' }}">
                             </div>
                             <h3>{{ $member->nama ?? '' }}</h3>
                             <span class="position">{{ $member->posisi ?? '' }}</span>
-                            <span class="location"><i class="fas fa-map-marker-alt me-1"></i>
-                                {{ $member->alamat ?? '' }}</span>
-                            <p>{{ $member->deskripsi ?? '' }}</p>
+
+                            <span class="location" title="{{ $member->alamat ?? '' }}">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ \Illuminate\Support\Str::words($member->alamat ?? '', 7, '...') }}
+                            </span>
+
+                            <p title="{{ $member->deskripsi ?? '' }}">
+                                {{ \Illuminate\Support\Str::words($member->deskripsi ?? '', 7, '...') }}
+                            </p>
+
                             <div class="team-social">
                                 @if ($member->facebook)
                                     <a href="{{ $member->facebook }}" aria-label="Facebook"><i
@@ -249,7 +260,7 @@
             </div>
         </div>
     </section>
-       <!-- Gallery Section -->
+    <!-- Gallery Section -->
     <section id="gallery" class="py-5">
         <div class="container-fluid">
             <div class="section-title">
@@ -258,20 +269,17 @@
             <div class="tribal-grid">
                 @forelse($galleries as $item)
                     <div class="tribal-item">
-                        <img src="{{ asset($item->image ?? '') }}"
-                            alt="{{ $item->title ?? '' }}">
+                        <img src="{{ asset($item->image ?? '') }}" alt="{{ $item->title ?? '' }}">
                         <div class="item-overlay">
                             <h3>{{ $item->title ?? '' }}</h3>
                             <p>{{ $item->description ?? '' }}</p>
-                           
-                @if($item->button_text && $item->button_url)
-                    <a href="{{ $item->button_url }}"
-                       class="btn btn-warning btn-sm mt-2"
-                       target="_blank">
-                        <i class="fa-solid fa-camera me-1"></i>
-                        {{ $item->button_text }}
-                    </a>
-                @endif
+
+                            @if ($item->button_text && $item->button_url)
+                                <a href="{{ $item->button_url }}" class="btn btn-warning btn-sm mt-2" target="_blank">
+                                    <i class="fa-solid fa-camera me-1"></i>
+                                    {{ $item->button_text }}
+                                </a>
+                            @endif
                         </div>
                     </div>
                 @empty
@@ -305,15 +313,18 @@
                 slide.style.width = `${100 / totalHeroSlides}%`;
                 slide.style.flex = `0 0 ${100 / totalHeroSlides}%`;
             });
+
             function updateHeroCarousel() {
                 if (!heroSlidesElem) return;
                 heroSlidesElem.style.transform = `translateX(-${currentHeroSlide * (100 / totalHeroSlides)}%)`;
                 heroIndicators.forEach((ind, idx) => ind.classList.toggle('active', idx === currentHeroSlide));
             }
+
             function nextHeroSlide() {
                 currentHeroSlide = (currentHeroSlide + 1) % totalHeroSlides;
                 updateHeroCarousel();
             }
+
             function prevHeroSlide() {
                 currentHeroSlide = (currentHeroSlide - 1 + totalHeroSlides) % totalHeroSlides;
                 updateHeroCarousel();
@@ -335,14 +346,17 @@
             const activityNext = document.querySelector('.activity-next');
             let currentActivitySlide = 0;
             const totalActivitySlides = document.querySelectorAll('.activity-slide').length || 3;
+
             function updateActivityCarousel() {
                 activitySlidesElem.style.transform =
                     `translateX(-${currentActivitySlide * 100}%)`;
             }
+
             function nextActivitySlide() {
                 currentActivitySlide = (currentActivitySlide + 1) % totalActivitySlides;
                 updateActivityCarousel();
             }
+
             function prevActivitySlide() {
                 currentActivitySlide = (currentActivitySlide - 1 + totalActivitySlides) % totalActivitySlides;
                 updateActivityCarousel();
@@ -356,6 +370,7 @@
             const teamPrevBtn = document.querySelector('.team-prev');
             const teamNextBtn = document.querySelector('.team-next');
             const teamIndicatorsContainer = document.querySelector('.team-carousel-indicators');
+
             function getVisibleCardsCount() {
                 const container = document.querySelector('.team-carousel-container');
                 if (!container) return 1;
@@ -371,6 +386,7 @@
             let currentTeamIndex = 0;
             let visibleCardsCount = getVisibleCardsCount();
             const totalTeamCards = teamCards.length;
+
             function createIndicators() {
                 teamIndicatorsContainer.innerHTML = '';
                 const totalIndicators = Math.ceil(totalTeamCards / visibleCardsCount);
@@ -390,6 +406,7 @@
                     teamIndicatorsContainer.appendChild(indicator);
                 }
             }
+
             function updateTeamCarousel() {
                 if (teamCards.length === 0) return;
                 const cardWidth = teamCards[0].offsetWidth + 25;
@@ -400,12 +417,14 @@
                 teamPrevBtn.disabled = currentTeamIndex === 0;
                 teamNextBtn.disabled = currentTeamIndex + visibleCardsCount >= totalTeamCards;
             }
+
             function nextTeamSlide() {
                 if (currentTeamIndex + visibleCardsCount < totalTeamCards) {
                     currentTeamIndex += visibleCardsCount;
                     updateTeamCarousel();
                 }
             }
+
             function prevTeamSlide() {
                 if (currentTeamIndex - visibleCardsCount >= 0) {
                     currentTeamIndex -= visibleCardsCount;
@@ -415,6 +434,7 @@
                     updateTeamCarousel();
                 }
             }
+
             function initTeamCarousel() {
                 visibleCardsCount = getVisibleCardsCount();
                 createIndicators();
@@ -479,12 +499,14 @@
             /* remove default bullet */
             padding-left: 0;
         }
+
         .icon-list li {
             display: flex;
             align-items: flex-start;
             gap: 10px;
             margin-bottom: 8px;
         }
+
         .icon-list li i {
             min-width: 20px;
             margin-top: 3px;
