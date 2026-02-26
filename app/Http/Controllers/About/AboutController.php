@@ -34,7 +34,7 @@ class AboutController extends Controller
             ]
         );
 
-        return redirect()->route('admin')
+        return redirect()->route('about')
             ->with('success', 'About Us berhasil disimpan!');
     }
 }

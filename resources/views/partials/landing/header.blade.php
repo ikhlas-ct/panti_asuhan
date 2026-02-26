@@ -27,8 +27,9 @@
                         <a class="nav-link" href="{{ route('landing.index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('landing.blog', ['jenis' => 'artikel']) }}">Articles</a>
+                        <a class="nav-link" href="{{ route('landing.about') }}">Our Story</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('landing.blog', ['jenis' => 'curated-journey']) }}">Curated Journey</a>
                     </li>

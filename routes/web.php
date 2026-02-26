@@ -27,6 +27,8 @@ Route::get('/blog/{jenis}/{slug}', [LandingController::class, 'show'])->where('j
 
 Route::get('/ethical', [LandingController::class, 'ethical'])->name('landing.ethical');
 Route::get('/transportasi', [LandingController::class, 'transportasi'])->name('landing.transportasi');
+Route::get('/about-us', [LandingController::class, 'about'])->name('landing.about');
+
 
 Route::get('/contact', [LandingController::class, 'contact'])->name('landing.contact');
 

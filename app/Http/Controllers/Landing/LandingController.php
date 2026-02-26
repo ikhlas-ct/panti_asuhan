@@ -162,4 +162,16 @@ class LandingController extends Controller
         $settings = WebsiteSetting::getInstance();
         return view('pages.mentawaitribe.kontak', compact('settings'));
     }
+
+    public function about()
+    {
+        $setting = WebsiteSetting::getInstance();
+        $founder = $setting->karyawan;
+
+
+        $team = Pegawai::all();
+        return view('pages.mentawaitribe.about', compact('setting', 'founder', 'team'));
+
+        }
+
 }
