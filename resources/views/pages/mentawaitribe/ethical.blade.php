@@ -8,7 +8,8 @@
                 <i class="fas fa-leaf"></i> {{ $setting->slogan ?? '' }}
             </div>
             <h1>Ethical Tourism Mentawai</h1>
-            <p>Explore the beauty of Mentawai culture in a responsible way. Every journey is designed to support local communities, preserve culture, and protect the environment.</p>
+            <p>Explore the beauty of Mentawai culture in a responsible way. Every journey is designed to support local
+                communities, preserve culture, and protect the environment.</p>
             <a href="#packages" class="tribal-btn">View Tour Packages</a>
         </div>
     </section>
@@ -49,7 +50,8 @@
                         <div class="tour-card">
                             <div class="tour-header">
                                 @if ($ethical->badge)
-                                    <div class="tour-badge badge-{{ strtolower($ethical->badge) }}">{{ $ethical->badge ?? '' }}
+                                    <div class="tour-badge badge-{{ strtolower($ethical->badge) }}">
+                                        {{ $ethical->badge ?? '' }}
                                     </div>
                                 @endif
                                 <h3 class="tour-title">{{ $ethical->judul ?? '' }}</h3>
@@ -231,13 +233,12 @@
                 observer.observe(item);
             });
 
-            // Navbar background change on scroll
             window.addEventListener('scroll', function() {
                 const header = document.querySelector('header');
                 if (window.scrollY > 100) {
-                    header.style.backgroundColor = 'rgba(28, 20, 8, 0.98)';
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
                 } else {
-                    header.style.backgroundColor = 'rgba(28, 20, 8, 0.95)';
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
                 }
             });
 

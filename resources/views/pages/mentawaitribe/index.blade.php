@@ -5,11 +5,13 @@
         <div class="carousel-slides">
             @forelse($heroSlides as $slide)
                 <div class="carousel-slide">
-                    <img src="{{ asset($slide->image ?? '') }}" alt="{{ $slide->title ?? '' }}">
+                    <img src="{{ asset($slide->image ?? '') }}"
+                        alt="{{ $slide->title ?? '' }}">
                     <div class="slide-content">
                         <h2>{{ $slide->title ?? '' }}</h2>
                         <p>{{ $slide->description ?? '' }}</p>
-                        <a href="{{ $slide->button_link ?? '' }}" class="tribal-btn">{{ $slide->button_text ?? '' }}</a>
+                        <a href="{{ $slide->button_link ?? '' }}"
+                            class="tribal-btn">{{ $slide->button_text ?? '' }}</a>
                     </div>
                 </div>
             @empty
@@ -41,6 +43,7 @@
             @endforelse
         </div>
     </section>
+
     <!-- Culture Section -->
     <section class="culture-section" id="culture">
         <div class="container-fluid">
@@ -64,7 +67,7 @@
     <section id="activities" class="py-5">
         <div class="container-fluid">
             <div class="section-title">
-                <h2>Traditional Activities</h2>
+                <h2>Curated Journey</h2>
             </div>
         </div>
         <div class="activities-carousel">
@@ -104,56 +107,56 @@
         </div>
     </section>
     <!-- Travel Themes Section (Dynamic from Service type 'tema') -->
- <section id="themes" class="themes-section">
-    <div class="container-fluid">
-        <div class="section-title">
-            <h2>Our Travel Themes</h2>
-            <p class="mt-3 text-center" style="max-width: 800px; margin: 0 auto;">Choose a travel experience that
-                matches your interests and needs. Each theme is designed to provide a deep, authentic experience.</p>
-        </div>
-        <div class="row g-4">
-            @forelse($services->where('type', 'tema') as $theme)
-                <div class="col-lg-4 col-md-6">
-                    <div class="theme-card">
-                        <div class="theme-icon">
-                            <i class="{{ $theme->getIconClassAttribute() ?? '' }}"></i>
+    <section id="themes" class="themes-section">
+        <div class="container-fluid">
+            <div class="section-title">
+                <h2>Our Travel Themes</h2>
+                <p class="mt-3 text-center" style="max-width: 800px; margin: 0 auto;">Choose a travel experience that
+                    matches your interests and needs. Each theme is designed to provide a deep, authentic experience.</p>
+            </div>
+            <div class="row g-4">
+                @forelse($services->where('type', 'tema') as $theme)
+                    <div class="col-lg-4 col-md-6">
+                        <div class="theme-card">
+                            <div class="theme-icon">
+                                <i class="{{ $theme->getIconClassAttribute() ?? '' }}"></i>
+                            </div>
+                            <h3>{{ $theme->title ?? '' }}</h3>
+
+                            <!-- Deskripsi & List jadi justify -->
+                            <p style="text-align: justify;">
+                                {{ $theme->description ?? '' }}
+                            </p>
+                            <ul class="culture-features icon-list" style="text-align: justify;">
+                                @foreach ($theme->steps as $step)
+                                    <li>
+                                        <i class="{{ $step->kategori->icon ?? '' }}"></i>
+                                        <span>{{ $step->title ?? '' }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
-                        <h3>{{ $theme->title ?? '' }}</h3>
-
-                        <!-- Deskripsi & List jadi justify -->
-                        <p style="text-align: justify;">
-                            {{ $theme->description ?? '' }}
-                        </p>
-                        <ul class="culture-features icon-list" style="text-align: justify;">
-                            @foreach ($theme->steps as $step)
-                                <li>
-                                    <i class="{{ $step->kategori->icon ?? '' }}"></i>
-                                    <span>{{ $step->title ?? '' }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
                     </div>
-                </div>
-            @empty
-                <!-- Fallback -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="theme-card">
-                        <div class="theme-icon"><i class="fas fa-mountain"></i></div>
-                        <h3>Wild Nature Adventure</h3>
+                @empty
+                    <!-- Fallback -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="theme-card">
+                            <div class="theme-icon"><i class="fas fa-mountain"></i></div>
+                            <h3>Wild Nature Adventure</h3>
 
-                        <p style="text-align: justify;">
-                            Exploration of tropical forests, rivers, and untouched nature in Mentawai.
-                        </p>
-                        <ul class="culture-features" style="text-align: justify;">
-                            <li>Trekking to Mentawai forest</li>
-                            <li>Camping in the open nature</li>
-                        </ul>
+                            <p style="text-align: justify;">
+                                Exploration of tropical forests, rivers, and untouched nature in Mentawai.
+                            </p>
+                            <ul class="culture-features" style="text-align: justify;">
+                                <li>Trekking to Mentawai forest</li>
+                                <li>Camping in the open nature</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            @endforelse
+                @endforelse
+            </div>
         </div>
-    </div>
-</section>
+    </section>
     <!-- Our Services Section (Dynamic from Service type 'layanan') -->
     <section id="services" class="services-section">
         <div class="container-fluid">
@@ -486,8 +489,8 @@
             });
             window.addEventListener('scroll', () => {
                 const header = document.querySelector('header');
-                if (header) header.style.backgroundColor = window.scrollY > 100 ? 'rgba(28, 20, 8, 0.98)' :
-                    'rgba(28, 20, 8, 0.95)';
+                if (header) header.style.backgroundColor = window.scrollY > 100 ?
+                    'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.95)';
             });
         });
     </script>

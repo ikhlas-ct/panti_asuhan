@@ -5,7 +5,8 @@
 @section('styles')
     <style>
         .story-content {
-            background-color: rgba(40, 32, 20, 0.5);
+            background-color: #f8f9fa;
+            color: #212529;
             padding: 2.5rem;
             border-radius: 16px;
             border: 1px solid rgba(184, 134, 11, 0.2);
@@ -16,7 +17,7 @@
         .story-content p {
             margin-bottom: 1.8rem;
             font-size: 1.05rem;
-            color: #f0e6d0;
+            color: #212529; /* diubah dari #f0e6d0 */
         }
 
         .culture-features {
@@ -52,10 +53,10 @@
         }
 
         .member-card {
-            background: linear-gradient(145deg, rgba(47, 79, 47, 0.2), rgba(28, 20, 8, 0.95));
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border: 1px solid rgba(230, 126, 34, 0.2);
             border-radius: 20px;
             padding: 1.8rem 1.5rem;
-            border: 1px solid rgba(184, 134, 11, 0.25);
             transition: all 0.4s;
             display: flex;
             flex-direction: column;
@@ -82,7 +83,7 @@
             justify-content: center;
             font-size: 3.5rem;
             color: var(--tribal-ocre);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             position: relative;
         }
 
@@ -118,7 +119,7 @@
         }
 
         .member-card .description {
-            color: #d4c9b8;
+            color: #2c3e50; /* diubah dari #d4c9b8, menggunakan var(--tribal-light) */
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 1rem;
@@ -158,7 +159,8 @@
             border-radius: 50%;
             overflow: hidden;
             border: 5px solid var(--tribal-ocre);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            border-color: var(--tribal-ocre);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
             background: var(--tribal-dark);
             display: flex;
             align-items: center;
@@ -229,7 +231,7 @@
         .founder-intro {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #f0e6d0;
+            color: #212529; /* diubah dari #f0e6d0 */
             margin-bottom: 1.5rem;
             margin-top: 0;
             line-height: 1.3;
@@ -241,54 +243,65 @@
         }
 
         /* Responsive Styles */
-        /* Untuk Laptop/Komputer (default di atas) */
-
         /* Untuk Tablet (antara 769px - 1024px) */
         @media (min-width: 769px) and (max-width: 1024px) {
             .story-content {
                 padding: 2rem;
             }
+
             .team-grid {
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 gap: 1.5rem;
             }
+
             .member-card {
                 padding: 1.5rem 1.2rem;
             }
+
             .member-img-container {
                 width: 120px;
                 height: 120px;
             }
+
             .member-card h3 {
                 font-size: 1.4rem;
             }
+
             .member-card .position {
                 font-size: 0.95rem;
             }
+
             .member-card .description {
                 font-size: 0.9rem;
             }
+
             .founder-photo-top .img-container {
                 width: 180px;
                 height: 180px;
             }
+
             .founder-photo-top .founder-info h3 {
                 font-size: 1.6rem;
             }
+
             .founder-photo-top .founder-info .position {
                 font-size: 1.1rem;
             }
+
             .founder-section .member-card {
                 max-width: 350px;
                 padding: 1.8rem;
             }
+
             .founder-section .member-img-container {
                 width: 140px;
                 height: 140px;
             }
+
             .founder-intro {
                 font-size: 1.4rem;
             }
+
             .section-title {
                 margin-bottom: 0.4rem;
             }
@@ -299,44 +312,57 @@
             .story-content {
                 padding: 1.8rem;
             }
+
             .team-grid {
                 grid-template-columns: 1fr;
             }
+
             .member-card {
                 padding: 1.5rem;
             }
+
             .member-img-container {
                 width: 110px;
                 height: 110px;
             }
+
             .member-card h3 {
                 font-size: 1.3rem;
             }
+
             .member-card .position {
                 font-size: 0.9rem;
             }
+
             .member-card .description {
                 font-size: 0.85rem;
             }
+
             .founder-section .member-card {
                 padding: 1.8rem;
             }
+
             .founder-photo-top .img-container {
                 width: 160px;
                 height: 160px;
             }
+
             .founder-photo-top .founder-info h3 {
                 font-size: 1.5rem;
             }
+
             .founder-photo-top .founder-info .position {
                 font-size: 1rem;
             }
+
             .founder-intro {
                 font-size: 1.3rem;
             }
+
             .founder-photo-top {
                 margin-bottom: 0.8rem;
             }
+
             .section-title {
                 margin-bottom: 0.3rem;
             }
@@ -347,48 +373,62 @@
             .story-content {
                 padding: 1.5rem;
             }
+
             .section-title h2 {
                 font-size: 1.8rem;
             }
+
             .section-title p {
                 font-size: 1rem;
             }
+
             .member-card {
                 padding: 1.2rem;
             }
+
             .member-img-container {
                 width: 100px;
                 height: 100px;
             }
+
             .member-card h3 {
                 font-size: 1.2rem;
             }
+
             .member-card .position {
                 font-size: 0.85rem;
             }
+
             .member-card .description {
                 font-size: 0.8rem;
             }
+
             .member-card .social-icons {
                 font-size: 1.5rem;
                 gap: 1rem;
             }
+
             .founder-photo-top .img-container {
                 width: 140px;
                 height: 140px;
             }
+
             .founder-photo-top .founder-info h3 {
                 font-size: 1.4rem;
             }
+
             .founder-photo-top .founder-info .position {
                 font-size: 0.95rem;
             }
+
             .founder-intro {
                 font-size: 1.2rem;
             }
+
             .founder-photo-top {
                 margin-bottom: 0.5rem;
             }
+
             .section-title {
                 margin-bottom: 0.2rem;
             }
@@ -398,10 +438,11 @@
 
 @section('content')
     <!-- FOUNDER PHOTO AT TOP -->
-    <section class="container py-4 founder-photo-top">
+    <section class="founder-photo-top container py-4">
         <div class="img-container">
-            @if($founder && $founder->foto_profil)
-                <img src="{{ asset($founder->foto_profil) }}" alt="{{ $founder->nama ?? 'Founder' }} - Founder" onerror="this.style.display='none';">
+            @if ($founder && $founder->foto_profil)
+                <img src="{{ asset($founder->foto_profil) }}" alt="{{ $founder->nama ?? 'Founder' }} - Founder"
+                    onerror="this.style.display='none';">
             @endif
             <i class="fas fa-user-tie"></i>
         </div>
@@ -412,13 +453,14 @@
         <div class="section-title">
             <h2>Who we are :</h2>
         </div>
-        @if($founder)
+        @if ($founder)
             <div class="founder-intro">
                 I'm {{ $founder->nama ?? '' }} {{ strtolower($founder->posisi ?? '') }} of Mentawai Tribe
             </div>
         @endif
         <div class="story-content">
-            {!! $setting->about_us ?? '<p>Our journey began with a belief: The Mentawai culture cannot be understood from a distance, it must be lived. ...</p>' !!}
+            {!! $setting->about_us ??
+                '<p>Our journey began with a belief: The Mentawai culture cannot be understood from a distance, it must be lived. ...</p>' !!}
         </div>
     </section>
 
@@ -430,52 +472,61 @@
 
         <!-- TEKS BARU YANG KAMU MINTA -->
         <div class="story-content" style="margin-bottom: 3rem;">
-            <p>Our passionate team of local guides and experts is dedicated to showing you the true beauty of our island. We go beyond the typical tourist spots to immerse you in Sumatra's rich culture, incredible wildlife, and stunning landscapes. From trekking to see orangutans in their natural habitat to discovering traditional villages and tribes, we craft personalized experiences that connect you to the real Sumatra.</p>
+            <p>Our passionate team of local guides and experts is dedicated to showing you the true beauty of our island. We
+                go beyond the typical tourist spots to immerse you in Sumatra's rich culture, incredible wildlife, and
+                stunning landscapes. From trekking to see orangutans in their natural habitat to discovering traditional
+                villages and tribes, we craft personalized experiences that connect you to the real Sumatra.</p>
 
-            <p>With us, you're not just exploring, you're engaging with local communities and making a positive impact. Let us show you Sumatra through the eyes of those who know and love it best. Come as a visitor, leave as a friend!</p>
+            <p>With us, you're not just exploring, you're engaging with local communities and making a positive impact. Let
+                us show you Sumatra through the eyes of those who know and love it best. Come as a visitor, leave as a
+                friend!</p>
         </div>
 
         <div class="team-grid">
             @forelse($team as $member)
-            <div class="member-card">
-                <div class="member-img-container">
-                    @if($member->foto_profil)
-                        <img src="{{ asset($member->foto_profil) }}" alt="{{ $member->nama ?? 'Member' }}" onerror="this.style.display='none';">
+                <div class="member-card">
+                    <div class="member-img-container">
+                        @if ($member->foto_profil)
+                            <img src="{{ asset($member->foto_profil) }}" alt="{{ $member->nama ?? 'Member' }}"
+                                onerror="this.style.display='none';">
+                        @endif
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>{{ $member->nama ?? '' }}</h3>
+                    <span class="position">{{ $member->posisi ?? '' }}</span>
+                    @if (!empty($member->deskripsi))
+                        <div class="description">
+                            {{ $member->deskripsi }}
+                        </div>
+                    @else
+                        <div class="description"></div>
                     @endif
-                    <i class="fas fa-user"></i>
-                </div>
-                <h3>{{ $member->nama ?? '' }}</h3>
-                <span class="position">{{ $member->posisi ?? '' }}</span>
-                @if(!empty($member->deskripsi))
-                <div class="description">
-                    {{ $member->deskripsi }}
-                </div>
-                @else
-                <div class="description"></div>
-                @endif
 
-                @if($member->instagram || $member->twitter || $member->facebook)
-                <div class="social-icons">
-                    @if($member->instagram)
-                        <a href="{{ $member->instagram }}" target="_blank" rel="noopener noreferrer" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    @endif
-                    @if($member->twitter)
-                        <a href="{{ $member->twitter }}" target="_blank" rel="noopener noreferrer" title="X / Twitter">
-                            <i class="fab fa-x-twitter"></i>
-                        </a>
-                    @endif
-                    @if($member->facebook)
-                        <a href="{{ $member->facebook }}" target="_blank" rel="noopener noreferrer" title="Facebook">
-                            <i class="fab fa-facebook"></i>
-                        </a>
+                    @if ($member->instagram || $member->twitter || $member->facebook)
+                        <div class="social-icons">
+                            @if ($member->instagram)
+                                <a href="{{ $member->instagram }}" target="_blank" rel="noopener noreferrer"
+                                    title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            @endif
+                            @if ($member->twitter)
+                                <a href="{{ $member->twitter }}" target="_blank" rel="noopener noreferrer"
+                                    title="X / Twitter">
+                                    <i class="fab fa-x-twitter"></i>
+                                </a>
+                            @endif
+                            @if ($member->facebook)
+                                <a href="{{ $member->facebook }}" target="_blank" rel="noopener noreferrer"
+                                    title="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            @endif
+                        </div>
                     @endif
                 </div>
-                @endif
-            </div>
             @empty
-            <p>No team members available.</p>
+                <p>No team members available.</p>
             @endforelse
         </div>
     </section>

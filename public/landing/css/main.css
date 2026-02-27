@@ -1,12 +1,12 @@
 :root {
-    --tribal-dark: #1c1408;
-    --tribal-red: #8b0000;
-    --tribal-ocre: #b8860b;
-    --tribal-natural: #8f755f;
-    --tribal-light: #f5e8d0;
-    --tribal-green: #2f4f2f;
-    --tribal-teal: #2a6e6e;
-    --tribal-blue: #1e3a5f;
+    --tribal-dark: #ffffff;
+    --tribal-red: #c0392b;
+    --tribal-ocre: #e67e22;
+    --tribal-natural: #a0522d;
+    --tribal-light: #2c3e50;
+    --tribal-green: #27ae60;
+    --tribal-teal: #16a085;
+    --tribal-blue: #2980b9;
 }
 
 body {
@@ -19,7 +19,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Tribal Background Pattern */
+/* Tribal Background Pattern - lebih soft */
 .tribal-bg {
     position: fixed;
     top: 0;
@@ -27,7 +27,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -2;
-    opacity: 0.05;
+    opacity: 0.03;
     background-image:
         radial-gradient(
             circle at 25% 25%,
@@ -50,16 +50,16 @@ body {
         80px 80px;
 }
 
-/* Common Header/Navbar */
+/* Common Header/Navbar - putih */
 header {
-    background-color: rgba(28, 20, 8, 0.95);
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 0.8rem 0;
     position: sticky;
     top: 0;
     width: 100%;
     z-index: 1000;
     border-bottom: 3px solid var(--tribal-ocre);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -92,7 +92,7 @@ a.logo:focus {
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
-    color: var(--tribal-dark);
+    color: #ffffff; /* putih untuk kontras */
     font-weight: bold;
 }
 
@@ -100,7 +100,7 @@ a.logo:focus {
     font-size: 1.6rem;
     color: var(--tribal-light) !important;
     letter-spacing: 1.5px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 0;
     line-height: 1.2;
 }
@@ -151,14 +151,14 @@ a:hover {
     font-size: 1.1rem;
 }
 .navbar-toggler:focus {
-    box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.5) !important;
+    box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.5) !important;
 }
 
 .navbar-collapse {
-    background-color: rgba(28, 20, 8, 0.98);
+    background-color: rgba(255, 255, 255, 0.98);
     padding: 1rem 0 1rem 1rem;
     border-radius: 0 0 8px 8px;
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    border: 1px solid rgba(230, 126, 34, 0.3);
     border-top: none;
     margin-top: 0.5rem;
 }
@@ -169,9 +169,6 @@ a:hover {
     align-items: center;
     justify-content: center;
     background-color: transparent;
-    color: var(--tribal-light);
-    border: 2px solid var(--tribal-ocre);
-    padding: 10px 25px;
     font-weight: bold;
     letter-spacing: 1px;
     transition: all 0.3s;
@@ -180,6 +177,12 @@ a:hover {
     font-size: 0.95rem;
     min-height: 44px;
     text-decoration: none;
+
+
+    color: var(--tribal-ocre);
+    border: 2px solid var(--tribal-ocre);
+    padding: 10px 25px;
+
 }
 .tribal-btn::before {
     content: "";
@@ -188,7 +191,7 @@ a:hover {
     left: -100%;
     width: 100%;
     height: 100%;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     transition: left 0.5s;
 }
 .tribal-btn:hover::before {
@@ -196,12 +199,12 @@ a:hover {
 }
 .tribal-btn:hover {
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
 }
 
-/* Common Footer */
+/* Common Footer - putih */
 footer {
-    background-color: rgba(28, 20, 8, 0.98);
+    background-color: rgba(255, 255, 255, 0.98);
     padding: 3rem 0 1.5rem;
     margin-top: 3rem;
     border-top: 3px solid var(--tribal-ocre);
@@ -214,10 +217,10 @@ footer {
     margin-bottom: 1.2rem;
     color: var(--tribal-ocre);
     padding-bottom: 8px;
-    border-bottom: 2px solid rgba(184, 134, 11, 0.3);
+    border-bottom: 2px solid rgba(230, 126, 34, 0.3);
 }
 .footer-column p {
-    color: #d4c9b8;
+    color: var(--tribal-light);
     font-size: 0.9rem;
     line-height: 1.5;
 }
@@ -252,7 +255,7 @@ footer {
     justify-content: center;
     width: 38px;
     height: 38px;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     color: var(--tribal-light);
     border-radius: 50%;
     text-decoration: none;
@@ -261,15 +264,15 @@ footer {
 }
 .social-links a:hover {
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
     transform: translateY(-3px);
 }
 .copyright {
     text-align: center;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(245, 232, 208, 0.7);
+    border-top: 1px solid rgba(44, 62, 80, 0.1);
+    color: rgba(44, 62, 80, 0.7);
     font-size: 0.85rem;
 }
 
@@ -299,15 +302,50 @@ footer {
     transform: translateX(-50%);
 }
 .section-title p {
-    color: #d4c9b8;
+    color: #5d6d7e; /* lebih gelap dari light */
     font-size: 1rem;
     max-width: 600px;
     margin: 0 auto;
 }
 
+/* ===== KONTEN PANJANG DIBERI LATAR ABU-ABU ===== */
+.article-content,
+.story-content,
+.blog-card-body,
+.tour-body,
+.principle-card,
+.benefit-content,
+.service-item,
+.theme-card,
+.sidebar-widget,
+.info-section,
+.contact-container,
+.transportation-container p,
+.about-story p {
+    background-color: #f8f9fa;
+    color: #212529;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+/* Override untuk kartu yang sudah punya background */
+.tour-card,
+.blog-card,
+.principle-card,
+.service-item,
+.theme-card {
+    background-color: #f8f9fa !important;
+    border: 1px solid rgba(230, 126, 34, 0.2);
+}
+
 /* ===== ARTICLE DETAIL PAGE ===== */
 .article-hero {
-    background: linear-gradient(rgba(28, 20, 8, 0.85), rgba(28, 20, 8, 0.9));
+    background: linear-gradient(
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.85)
+    );
     padding: 4rem 0 2rem;
     margin-top: 70px;
 }
@@ -322,7 +360,7 @@ footer {
 }
 .article-category {
     display: inline-block;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     color: var(--tribal-ocre);
     padding: 6px 15px;
     border-radius: 20px;
@@ -342,7 +380,7 @@ footer {
     align-items: center;
     gap: 2rem;
     margin-bottom: 2rem;
-    color: #a89a7d;
+    color: #5d6d7e;
     font-size: 0.95rem;
     flex-wrap: wrap;
 }
@@ -364,12 +402,12 @@ footer {
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 2rem;
-    border: 2px solid rgba(184, 134, 11, 0.3);
+    border: 2px solid rgba(230, 126, 34, 0.3);
 }
 .article-content {
     font-size: 1.1rem;
     line-height: 1.8;
-    color: #f0e6d0;
+    color: #212529;
 }
 .article-content h2 {
     color: var(--tribal-ocre);
@@ -399,7 +437,7 @@ footer {
     padding-left: 1.5rem;
     margin: 2rem 0;
     font-style: italic;
-    color: #d4c9b8;
+    color: #5d6d7e;
 }
 .video-container {
     position: relative;
@@ -408,7 +446,7 @@ footer {
     overflow: hidden;
     margin: 2rem 0;
     border-radius: 10px;
-    border: 2px solid rgba(184, 134, 11, 0.3);
+    border: 2px solid rgba(230, 126, 34, 0.3);
 }
 .video-container iframe {
     position: absolute;
@@ -431,7 +469,7 @@ footer {
     border-radius: 8px;
     transition: transform 0.3s;
     cursor: pointer;
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    border: 1px solid rgba(230, 126, 34, 0.3);
 }
 .gallery-img:hover {
     transform: scale(1.02);
@@ -441,7 +479,7 @@ footer {
     justify-content: space-between;
     margin-top: 4rem;
     padding-top: 2rem;
-    border-top: 1px solid rgba(184, 134, 11, 0.2);
+    border-top: 1px solid rgba(230, 126, 34, 0.2);
 }
 .nav-btn {
     display: flex;
@@ -451,21 +489,20 @@ footer {
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 5px;
-    background-color: rgba(40, 32, 20, 0.8);
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    background-color: #f8f9fa;
+    border: 1px solid rgba(230, 126, 34, 0.3);
     transition: all 0.3s;
 }
 .nav-btn:hover {
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.1);
     color: var(--tribal-ocre);
 }
 
 /* ===== BLOG PAGE ===== */
 .blog-hero {
     background:
-        linear-gradient(rgba(28, 20, 8, 0.85), rgba(28, 20, 8, 0.9)),
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
         url("/default-image/blog.jpg");
-
     background-size: cover;
     background-position: center;
     padding: 5rem 0 3rem;
@@ -474,39 +511,39 @@ footer {
 }
 .blog-hero h1 {
     font-size: 2.5rem;
-    color: var(--tribal-light);
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     margin-bottom: 1.2rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     line-height: 1.2;
 }
 .blog-hero p {
     font-size: 1.1rem;
     max-width: 700px;
     margin: 0 auto 2rem;
-    color: #f0e6d0;
-    padding: 0 1rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 .blog-content {
     padding: 3rem 0;
 }
 .blog-card {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa !important;
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 1.5rem;
     transition:
         transform 0.3s,
         box-shadow 0.3s;
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    border: 1px solid rgba(230, 126, 34, 0.2);
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 .blog-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
     border-color: var(--tribal-ocre);
 }
 .blog-card-img {
@@ -522,7 +559,7 @@ footer {
 }
 .blog-card-category {
     display: inline-block;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     color: var(--tribal-ocre);
     padding: 4px 12px;
     border-radius: 20px;
@@ -538,7 +575,7 @@ footer {
     line-height: 1.3;
 }
 .blog-card-text {
-    color: #d4c9b8;
+    color: #5d6d7e;
     margin-bottom: 1.2rem;
     line-height: 1.5;
     font-size: 0.95rem;
@@ -548,9 +585,9 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(184, 134, 11, 0.2);
+    border-top: 1px solid rgba(230, 126, 34, 0.2);
     padding-top: 0.8rem;
-    color: #a89a7d;
+    color: #7f8c8d;
     font-size: 0.85rem;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -568,18 +605,18 @@ footer {
     border: 2px solid var(--tribal-ocre);
 }
 .sidebar-widget {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa !important;
     border-radius: 8px;
     padding: 1.25rem;
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    border: 1px solid rgba(230, 126, 34, 0.2);
 }
 .widget-title {
     font-size: 1.2rem;
     color: var(--tribal-ocre);
     margin-bottom: 1.2rem;
     padding-bottom: 8px;
-    border-bottom: 2px solid rgba(184, 134, 11, 0.3);
+    border-bottom: 2px solid rgba(230, 126, 34, 0.3);
 }
 .categories-list {
     list-style: none;
@@ -597,16 +634,16 @@ footer {
     justify-content: space-between;
     padding: 7px 10px;
     border-radius: 5px;
-    background-color: rgba(28, 20, 8, 0.4);
+    background-color: rgba(255, 255, 255, 0.5);
     font-size: 0.9rem;
 }
 .categories-list a:hover {
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.1);
     color: var(--tribal-ocre);
     padding-left: 15px;
 }
 .categories-list .count {
-    background-color: rgba(184, 134, 11, 0.3);
+    background-color: rgba(230, 126, 34, 0.2);
     color: var(--tribal-ocre);
     padding: 2px 6px;
     border-radius: 10px;
@@ -618,29 +655,29 @@ footer {
     margin-top: 2rem;
 }
 .page-link {
-    background-color: rgba(40, 32, 20, 0.8);
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    background-color: #ffffff;
+    border: 1px solid rgba(230, 126, 34, 0.3);
     color: var(--tribal-light);
     margin: 0 3px;
     padding: 0.5rem 0.75rem;
     font-size: 0.9rem;
 }
 .page-link:hover {
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.1);
     border-color: var(--tribal-ocre);
     color: var(--tribal-light);
 }
 .page-item.active .page-link {
     background-color: var(--tribal-ocre);
     border-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
     font-weight: bold;
 }
 
 /* ===== ETHICAL TOURISM PAGE ===== */
 .ethical-hero {
     background:
-        linear-gradient(rgba(18, 13, 6, 0.9), rgba(18, 13, 6, 0.95)),
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
         url("/default-image/hiking.jpg");
     background-size: cover;
     background-position: center;
@@ -648,26 +685,25 @@ footer {
     margin-top: 70px;
     text-align: center;
 }
-
 .ethical-hero h1 {
     font-size: 2.5rem;
-    color: var(--tribal-light);
+    color: #ffffff;
     margin-bottom: 1.2rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 .ethical-hero p {
     font-size: 1.1rem;
     max-width: 700px;
     margin: 0 auto 2rem;
-    color: #f0e6d0;
-    padding: 0 1rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 .ethical-badge {
     display: inline-block;
-    background-color: rgba(42, 110, 110, 0.8);
-    color: white;
+    background-color: rgba(22, 160, 133, 0.2);
+    color: var(--tribal-teal);
     padding: 8px 20px;
     border-radius: 30px;
     font-size: 0.9rem;
@@ -678,7 +714,7 @@ footer {
 }
 .principles-section {
     padding: 4rem 0;
-    background-color: rgba(47, 79, 47, 0.1);
+    background-color: rgba(39, 174, 96, 0.05);
 }
 .principles-grid {
     display: grid;
@@ -687,11 +723,11 @@ footer {
     margin-top: 2rem;
 }
 .principle-card {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa !important;
     border-radius: 8px;
     padding: 1.5rem;
     text-align: center;
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    border: 1px solid rgba(230, 126, 34, 0.2);
     transition: transform 0.3s;
     height: 100%;
 }
@@ -702,7 +738,7 @@ footer {
 .principle-icon {
     width: 70px;
     height: 70px;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -717,7 +753,7 @@ footer {
     margin-bottom: 0.8rem;
 }
 .principle-card p {
-    color: #d4c9b8;
+    color: #5d6d7e;
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -725,11 +761,11 @@ footer {
     padding: 4rem 0;
 }
 .tour-card {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa !important;
     border-radius: 10px;
     overflow: visible;
     margin-bottom: 2rem;
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    border: 1px solid rgba(230, 126, 34, 0.2);
     transition:
         transform 0.3s,
         box-shadow 0.3s;
@@ -740,7 +776,7 @@ footer {
 }
 .tour-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     border-color: var(--tribal-ocre);
 }
 .tour-badge {
@@ -748,13 +784,13 @@ footer {
     top: -12px;
     right: 20px;
     background-color: var(--tribal-red);
-    color: white;
+    color: #ffffff;
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: bold;
     z-index: 10;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
     max-width: calc(100% - 40px);
     overflow: hidden;
@@ -786,7 +822,7 @@ footer {
     flex-direction: column;
 }
 .tour-description {
-    color: #d4c9b8;
+    color: #5d6d7e;
     margin-bottom: 1.5rem;
     line-height: 1.5;
     font-size: 0.95rem;
@@ -801,7 +837,7 @@ footer {
     margin-bottom: 0.5rem;
     padding-left: 1.5rem;
     position: relative;
-    color: #d4c9b8;
+    color: #5d6d7e;
     font-size: 0.9rem;
 }
 .tour-features li::before {
@@ -816,7 +852,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding-top: 1.2rem;
-    border-top: 1px solid rgba(184, 134, 11, 0.2);
+    border-top: 1px solid rgba(230, 126, 34, 0.2);
     flex-wrap: wrap;
     gap: 1rem;
 }
@@ -827,7 +863,7 @@ footer {
 }
 .tour-price span {
     font-size: 0.9rem;
-    color: #a89a7d;
+    color: #7f8c8d;
     font-weight: normal;
 }
 .tour-actions {
@@ -840,7 +876,7 @@ footer {
 }
 .why-choose-section {
     padding: 4rem 0;
-    background-color: rgba(42, 110, 110, 0.1);
+    background-color: rgba(22, 160, 133, 0.05);
 }
 .benefits-grid {
     display: grid;
@@ -852,12 +888,16 @@ footer {
     display: flex;
     gap: 1rem;
     align-items: flex-start;
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 .benefit-icon {
     flex-shrink: 0;
     width: 50px;
     height: 50px;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -871,36 +911,36 @@ footer {
     margin-bottom: 0.5rem;
 }
 .benefit-content p {
-    color: #d4c9b8;
+    color: #5d6d7e;
     font-size: 0.9rem;
     line-height: 1.5;
 }
 .modal-content {
-    background-color: rgba(40, 32, 20, 0.95);
+    background-color: #ffffff;
     color: var(--tribal-light);
     border: 1px solid var(--tribal-ocre);
 }
 .modal-header {
-    border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+    border-bottom: 1px solid rgba(230, 126, 34, 0.3);
 }
 .modal-title {
     color: var(--tribal-ocre);
 }
 .form-control,
 .form-select {
-    background-color: rgba(28, 20, 8, 0.7);
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    background-color: #f8f9fa;
+    border: 1px solid rgba(230, 126, 34, 0.3);
     color: var(--tribal-light);
 }
 .form-control:focus,
 .form-select:focus {
-    background-color: rgba(28, 20, 8, 0.9);
+    background-color: #ffffff;
     border-color: var(--tribal-ocre);
     color: var(--tribal-light);
-    box-shadow: 0 0 0 0.25rem rgba(184, 134, 11, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(230, 126, 34, 0.25);
 }
 .form-label {
-    color: #d4c9b8;
+    color: #5d6d7e;
 }
 
 /* ===== HOME / CAROUSEL PAGE ===== */
@@ -925,7 +965,7 @@ footer {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.7);
+    filter: brightness(0.6);
 }
 .slide-content {
     position: absolute;
@@ -933,29 +973,32 @@ footer {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: white;
+    color: var(--tribal-light);
     width: 80%;
     max-width: 800px;
     z-index: 2;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.5);
 }
 .slide-content h2 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
-    color: var(--tribal-light);
+    color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 3px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
 .slide-content p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     line-height: 1.8;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 .carousel-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(28, 20, 8, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
     color: var(--tribal-light);
     border: none;
     width: 50px;
@@ -968,7 +1011,7 @@ footer {
 }
 .carousel-nav:hover {
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
 }
 .prev-slide {
     left: 20px;
@@ -992,7 +1035,7 @@ footer {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(44, 62, 80, 0.5);
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -1011,14 +1054,14 @@ footer {
     overflow: hidden;
     border-radius: 5px;
     height: 300px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     transition:
         transform 0.5s,
         box-shadow 0.5s;
 }
 .tribal-item:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 .tribal-item img {
     width: 100%;
@@ -1034,8 +1077,8 @@ footer {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(28, 20, 8, 0.9), transparent);
-    color: white;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.9), transparent);
+    color: var(--tribal-light);
     padding: 2rem 1.5rem 1.5rem;
     transform: translateY(100%);
     transition: transform 0.5s;
@@ -1049,7 +1092,7 @@ footer {
     color: var(--tribal-ocre);
 }
 .culture-section {
-    background-color: rgba(47, 79, 47, 0.2);
+    background-color: rgba(39, 174, 96, 0.1);
     padding: 4rem 0;
     margin: 4rem 0;
     position: relative;
@@ -1093,6 +1136,7 @@ footer {
     margin-bottom: 1rem;
     padding-left: 2rem;
     position: relative;
+    color: #5d6d7e;
 }
 .culture-features li::before {
     content: "▸";
@@ -1107,7 +1151,7 @@ footer {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 .activities-slides {
     display: flex;
@@ -1116,7 +1160,7 @@ footer {
 .activity-slide {
     min-width: 100%;
     display: flex;
-    background-color: rgba(28, 20, 8, 0.9);
+    background-color: #f8f9fa;
 }
 .activity-image {
     flex: 1;
@@ -1142,13 +1186,14 @@ footer {
 .activity-content p {
     margin-bottom: 1.5rem;
     line-height: 1.8;
+    color: #5d6d7e;
 }
 .activity-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(184, 134, 11, 0.8);
-    color: var(--tribal-dark);
+    background-color: rgba(230, 126, 34, 0.8);
+    color: #ffffff;
     border: none;
     width: 50px;
     height: 50px;
@@ -1168,26 +1213,22 @@ footer {
 }
 .themes-section {
     padding: 5rem 0;
-    background-color: rgba(28, 20, 8, 0.7);
+    background-color: rgba(255, 255, 255, 0.5);
     position: relative;
 }
 .theme-card {
-    background: linear-gradient(
-        145deg,
-        rgba(47, 79, 47, 0.3),
-        rgba(28, 20, 8, 0.8)
-    );
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
     border-radius: 10px;
     padding: 2.5rem 2rem;
     height: 100%;
     transition: all 0.4s;
-    border: 1px solid rgba(184, 134, 11, 0.2);
+    border: 1px solid rgba(230, 126, 34, 0.2);
     text-align: center;
 }
 .theme-card:hover {
     transform: translateY(-10px);
     border-color: var(--tribal-ocre);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 .theme-icon {
     width: 80px;
@@ -1199,7 +1240,7 @@ footer {
     justify-content: center;
     margin: 0 auto 1.5rem;
     font-size: 2rem;
-    color: var(--tribal-dark);
+    color: #ffffff;
 }
 .theme-card h3 {
     color: var(--tribal-ocre);
@@ -1208,10 +1249,10 @@ footer {
 }
 .services-section {
     padding: 5rem 0;
-    background-color: rgba(47, 79, 47, 0.1);
+    background-color: rgba(39, 174, 96, 0.05);
 }
 .service-item {
-    background-color: rgba(28, 20, 8, 0.8);
+    background-color: #f8f9fa;
     border-radius: 10px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -1233,7 +1274,7 @@ footer {
 }
 .team-section {
     padding: 5rem 0;
-    background-color: rgba(28, 20, 8, 0.8);
+    background-color: rgba(255, 255, 255, 0.5);
     position: relative;
 }
 .team-section::before {
@@ -1264,25 +1305,21 @@ footer {
     padding: 20px 5px;
 }
 .team-card {
-    background: linear-gradient(
-        145deg,
-        rgba(47, 79, 47, 0.2),
-        rgba(28, 20, 8, 0.9)
-    );
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
     border-radius: 15px;
     padding: 1.5rem;
     text-align: center;
     min-width: 280px;
     flex: 0 0 auto;
     transition: all 0.4s;
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    border: 1px solid rgba(230, 126, 34, 0.3);
     position: relative;
     overflow: hidden;
 }
 .team-card:hover {
     transform: translateY(-10px);
     border-color: var(--tribal-ocre);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 .team-img-container {
     width: 140px;
@@ -1292,7 +1329,7 @@ footer {
     overflow: hidden;
     border: 4px solid var(--tribal-ocre);
     position: relative;
-    background-color: var(--tribal-dark);
+    background-color: #ffffff;
 }
 .team-img-container img {
     width: 100%;
@@ -1316,7 +1353,7 @@ footer {
     display: block;
 }
 .team-card .location {
-    color: var(--tribal-natural);
+    color: #7f8c8d;
     font-size: 0.85rem;
     margin-bottom: 1rem;
     display: block;
@@ -1325,6 +1362,7 @@ footer {
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
     line-height: 1.5;
+    color: #5d6d7e;
 }
 .team-social {
     display: flex;
@@ -1336,7 +1374,7 @@ footer {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1346,15 +1384,15 @@ footer {
 }
 .team-social a:hover {
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
     transform: translateY(-3px);
 }
 .team-carousel-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(184, 134, 11, 0.8);
-    color: var(--tribal-dark);
+    background-color: rgba(230, 126, 34, 0.8);
+    color: #ffffff;
     border: none;
     width: 40px;
     height: 40px;
@@ -1392,7 +1430,7 @@ footer {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: rgba(184, 134, 11, 0.3);
+    background-color: rgba(230, 126, 34, 0.3);
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -1404,9 +1442,8 @@ footer {
 /* ===== TRANSPORTATION PAGE ===== */
 .transportation-hero {
     background:
-        linear-gradient(rgba(28, 20, 8, 0.85), rgba(28, 20, 8, 0.9)),
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
         url("/default-image/transportasi.jpg");
-
     background-size: cover;
     background-position: center;
     padding: 6rem 0 3rem;
@@ -1415,22 +1452,23 @@ footer {
 }
 .transportation-title {
     font-size: 3rem;
-    color: var(--tribal-light);
+    color: #ffffff;
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 .transportation-subtitle {
     font-size: 1.2rem;
-    color: var(--tribal-ocre);
+    color: #ffffff;
     max-width: 700px;
     margin: 0 auto 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
 }
 .filter-section {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa;
     padding: 2rem;
     border-radius: 10px;
     margin: 2rem auto 3rem;
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    border: 1px solid rgba(230, 126, 34, 0.3);
 }
 .filter-title {
     color: var(--tribal-ocre);
@@ -1444,9 +1482,9 @@ footer {
     justify-content: center;
 }
 .filter-btn {
-    background-color: rgba(28, 20, 8, 0.7);
+    background-color: #ffffff;
     color: var(--tribal-light);
-    border: 1px solid rgba(184, 134, 11, 0.5);
+    border: 1px solid rgba(230, 126, 34, 0.5);
     padding: 0.5rem 1.5rem;
     border-radius: 20px;
     cursor: pointer;
@@ -1455,7 +1493,7 @@ footer {
 .filter-btn:hover,
 .filter-btn.active {
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
 }
 .transportation-container {
     max-width: 1200px;
@@ -1469,17 +1507,17 @@ footer {
     margin-bottom: 4rem;
 }
 .transportation-card {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa !important;
     border-radius: 10px;
     overflow: hidden;
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    border: 1px solid rgba(230, 126, 34, 0.3);
     transition:
         transform 0.3s,
         box-shadow 0.3s;
 }
 .transportation-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 .card-image {
     width: 100%;
@@ -1496,7 +1534,7 @@ footer {
 }
 .card-category {
     display: inline-block;
-    background-color: rgba(184, 134, 11, 0.2);
+    background-color: rgba(230, 126, 34, 0.2);
     color: var(--tribal-ocre);
     padding: 4px 12px;
     border-radius: 20px;
@@ -1511,7 +1549,7 @@ footer {
 }
 .card-features li {
     padding: 0.3rem 0;
-    color: #d4c9b8;
+    color: #5d6d7e;
     font-size: 0.9rem;
 }
 .card-features i {
@@ -1527,7 +1565,7 @@ footer {
 }
 .card-price span {
     font-size: 0.9rem;
-    color: #a89a7d;
+    color: #7f8c8d;
     font-weight: normal;
 }
 .card-actions {
@@ -1539,7 +1577,7 @@ footer {
 .book-btn {
     flex: 1;
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
     border: none;
     padding: 0.7rem;
     border-radius: 5px;
@@ -1548,20 +1586,20 @@ footer {
     transition: background-color 0.3s;
 }
 .book-btn:hover {
-    background-color: #d4a017;
+    background-color: #d35400;
 }
 .detail-btn {
     flex: 1;
     background-color: transparent;
     color: var(--tribal-light);
-    border: 1px solid rgba(184, 134, 11, 0.5);
+    border: 1px solid rgba(230, 126, 34, 0.5);
     padding: 0.7rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 .detail-btn:hover {
-    background-color: rgba(184, 134, 11, 0.1);
+    background-color: rgba(230, 126, 34, 0.1);
 }
 .booking-modal {
     display: none;
@@ -1570,14 +1608,14 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1001;
     align-items: center;
     justify-content: center;
     padding: 1rem;
 }
 .modal-content {
-    background-color: var(--tribal-dark);
+    background-color: #ffffff;
     border-radius: 10px;
     padding: 2rem;
     max-width: 500px;
@@ -1618,8 +1656,8 @@ footer {
 .form-textarea {
     width: 100%;
     padding: 0.75rem;
-    background-color: rgba(40, 32, 20, 0.8);
-    border: 1px solid rgba(184, 134, 11, 0.5);
+    background-color: #f8f9fa;
+    border: 1px solid rgba(230, 126, 34, 0.5);
     border-radius: 5px;
     color: var(--tribal-light);
     font-size: 1rem;
@@ -1632,7 +1670,7 @@ footer {
     width: 100%;
     padding: 1rem;
     background-color: var(--tribal-ocre);
-    color: var(--tribal-dark);
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     font-size: 1.1rem;
@@ -1642,14 +1680,14 @@ footer {
     margin-top: 1rem;
 }
 .submit-booking:hover {
-    background-color: #d4a017;
+    background-color: #d35400;
 }
 .info-section {
-    background-color: rgba(40, 32, 20, 0.8);
+    background-color: #f8f9fa !important;
     padding: 3rem;
     border-radius: 10px;
     margin: 3rem auto;
-    border: 1px solid rgba(184, 134, 11, 0.3);
+    border: 1px solid rgba(230, 126, 34, 0.3);
 }
 .info-title {
     color: var(--tribal-ocre);
@@ -1661,8 +1699,8 @@ footer {
 }
 .info-list li {
     padding: 0.8rem 0;
-    border-bottom: 1px solid rgba(184, 134, 11, 0.2);
-    color: #d4c9b8;
+    border-bottom: 1px solid rgba(230, 126, 34, 0.2);
+    color: #5d6d7e;
 }
 .info-list li:last-child {
     border-bottom: none;
@@ -1924,7 +1962,7 @@ img {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 

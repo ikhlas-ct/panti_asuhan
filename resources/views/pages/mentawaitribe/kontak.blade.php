@@ -66,7 +66,7 @@
         <div class="container text-center">
             <h2 class="join-title">Join With Us</h2>
             <h3 class="join-subtitle">Mentawai Tribe</h3>
-            <a href="https://wa.me/{{ $settings->nomor_telepon ?? '+6281261513662' }}" class="wa-btn">
+            <a href="https://wa.me/{{ $settings->nomor_telepon ?? '+6281261513662' }}" class="tribal-btn">
                 <i class="fab fa-whatsapp me-2"></i> +6281261513662
             </a>
         </div>
@@ -88,70 +88,42 @@
 
 @section('styles')
     <style>
-        /* ================= ROOT COLOR ================= */
-        :root {
-            --brown-dark: #120d06;
-            --brown-main: #1b140a;
-            --brown-card: #241a0e;
-            --brown-light: #3a2a18;
-            --white: #f5f1e8;
-            --white-soft: #c8bfae;
-            --gold: #b89b5e;
-        }
-
-        /* ================= BASE ================= */
-        body {
-            background: linear-gradient(180deg, #0f0b05, #1b140a, #241a0e);
-            color: var(--white);
-            font-family: 'Trebuchet MS', Arial, sans-serif;
-        }
-
-        /* ================= HERO ================= */
+        /* ===== Hanya CSS spesifik untuk halaman kontak ===== */
+        /* Hero section dengan overlay gelap agar gambar jelas */
         .contact-hero {
-            background:
-                linear-gradient(rgba(18, 13, 6, 0.9), rgba(18, 13, 6, 0.85)),
-                url('{{ asset("default-image/family.jpg") }}');
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                        url('{{ asset('default-image/family.jpg') }}');
             background-size: cover;
             background-position: center;
             padding: 130px 0 80px;
+            margin-top: 70px;
         }
 
         .contact-title {
             font-size: 3.5rem;
             font-weight: 700;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
         .contact-subtitle {
             max-width: 800px;
             margin: 25px auto 0;
-            color: var(--white-soft);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             line-height: 1.8;
+            font-size: 1.2rem;
         }
 
-        /* ================= SECTION ================= */
+        /* Container dengan latar putih/abu-abu (mengikuti main) */
         .contact-container {
-            background: linear-gradient(180deg, var(--brown-main), var(--brown-card));
+            background-color: #f8f9fa;
             padding: 90px 0;
-            border-top: 1px solid rgba(184, 155, 94, .25);
-            border-bottom: 1px solid rgba(184, 155, 94, .25);
+            border-top: 1px solid rgba(230, 126, 34, 0.25);
+            border-bottom: 1px solid rgba(230, 126, 34, 0.25);
         }
 
-        .section-title {
-            font-size: 2.6rem;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            width: 60px;
-            height: 3px;
-            background: var(--gold);
-            display: block;
-            margin: 15px auto 0;
-        }
-
-        /* ================= SOCIAL ================= */
+        /* Social grid */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -159,199 +131,160 @@
         }
 
         .social-item {
-            background: linear-gradient(145deg, #2a1f13, #1f160c);
-            border: 1px solid rgba(184, 155, 94, .25);
+            background: #ffffff;
+            border: 1px solid rgba(230, 126, 34, 0.2);
             padding: 35px 20px;
             border-radius: 16px;
-            transition: .3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .social-item:hover {
             transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, .7);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: var(--tribal-ocre);
         }
 
         .social-icon {
             width: 80px;
             height: 80px;
-            border: 2px solid var(--gold);
+            border: 2px solid var(--tribal-ocre);
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 2.3rem;
             margin-bottom: 20px;
-            color: var(--white);
+            color: var(--tribal-ocre);
+            background-color: rgba(230, 126, 34, 0.1);
+            transition: all 0.3s;
         }
 
-        /* ================= JOIN ================= */
+        .social-item:hover .social-icon {
+            background-color: var(--tribal-ocre);
+            color: #ffffff;
+        }
+
+        .social-item p {
+            color: var(--tribal-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .social-item .small {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* Join section dengan overlay gelap */
         .join-section {
-            background:
-                linear-gradient(rgba(18, 13, 6, .95), rgba(18, 13, 6, .95)),
-                url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                        url('{{ asset('default-image/kontak.jpg') }}');
             background-size: cover;
+            background-position: center;
             padding: 110px 0;
         }
 
         .join-title {
             font-size: 3rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
         .join-subtitle {
-            color: var(--white-soft);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             margin-bottom: 40px;
+            font-size: 2rem;
         }
 
-        .wa-btn {
-            background: var(--gold);
-            color: #1a120b;
-            padding: 15px 45px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .wa-btn:hover {
-            background: #d6b66f;
-        }
-
-        /* ================= MAP ================= */
+        /* Map container */
         .map-container {
             border-radius: 14px;
             overflow: hidden;
-            border: 2px solid rgba(184, 155, 94, .3);
+            border: 2px solid var(--tribal-ocre);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* ================= RESPONSIVE ================= */
+        /* Responsive */
         @media (max-width: 575.98px) {
             .contact-hero {
                 padding: 80px 0 50px;
             }
-
             .contact-title {
                 font-size: 1.8rem;
             }
-
             .contact-subtitle {
-                max-width: 100%;
-                margin: 15px auto 0;
-                font-size: .95rem;
+                font-size: 0.95rem;
                 padding: 0 15px;
             }
-
             .contact-container {
                 padding: 50px 0;
             }
-
-            .section-title {
-                font-size: 1.6rem;
-            }
-
             .social-item {
                 padding: 18px;
             }
-
             .social-icon {
                 width: 64px;
                 height: 64px;
                 font-size: 1.6rem;
             }
-
-            .wa-btn {
-                padding: 12px 28px;
-                font-size: 1rem;
+            .join-section {
+                padding: 60px 0;
             }
-
+            .join-title {
+                font-size: 2rem;
+            }
+            .join-subtitle {
+                font-size: 1.5rem;
+            }
             .map-container iframe {
                 height: 260px !important;
             }
         }
 
         @media (min-width: 576px) and (max-width: 767.98px) {
-            .contact-hero {
-                padding: 100px 0 60px;
-            }
-
             .contact-title {
                 font-size: 2.2rem;
             }
-
             .contact-subtitle {
                 font-size: 1rem;
             }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .social-item {
-                padding: 22px;
-            }
-
             .social-icon {
                 width: 72px;
                 height: 72px;
                 font-size: 1.9rem;
             }
-
             .map-container iframe {
                 height: 320px !important;
             }
         }
 
         @media (min-width: 768px) and (max-width: 991.98px) {
-            .contact-hero {
-                padding: 120px 0 70px;
-            }
-
             .contact-title {
                 font-size: 2.8rem;
             }
-
-            .section-title {
-                font-size: 2.2rem;
-            }
-
             .social-grid {
                 gap: 24px;
             }
-
             .map-container iframe {
                 height: 380px !important;
             }
         }
 
         @media (min-width: 992px) and (max-width: 1199.98px) {
-            .contact-hero {
-                padding: 130px 0 80px;
-            }
-
             .contact-title {
                 font-size: 3.2rem;
             }
-
-            .section-title {
-                font-size: 2.4rem;
-            }
-
             .map-container iframe {
                 height: 420px !important;
             }
         }
 
         @media (min-width: 1200px) {
-            .contact-hero {
-                padding: 140px 0 90px;
-            }
-
             .contact-title {
                 font-size: 3.8rem;
             }
-
-            .section-title {
-                font-size: 2.6rem;
-            }
-
             .map-container iframe {
                 height: 450px !important;
             }

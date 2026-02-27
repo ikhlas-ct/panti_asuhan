@@ -10,12 +10,10 @@
                     <h1 class="article-title">{{ $konten->judul }}</h1>
                     <div class="article-meta">
                         <div class="article-author">
-                            <img
-                                src="{{ $konten->user->pegawai->foto_profil
-                                    ? asset($konten->user->pegawai->foto_profil)
-                                    : 'https://randomuser.me/api/portraits/women/44.jpg' }}"
-                                alt="{{ $konten->user->pegawai->nama ?? 'Author' }}"
-                                class="article-author-img">
+                            <img src="{{ $konten->user->pegawai->foto_profil
+                                ? asset($konten->user->pegawai->foto_profil)
+                                : 'https://randomuser.me/api/portraits/women/44.jpg' }}"
+                                alt="{{ $konten->user->pegawai->nama ?? 'Author' }}" class="article-author-img">
                             <span>{{ $konten->user->pegawai->nama ?? 'Author' }}</span>
                         </div>
                         <span>{{ $konten->tanggal_publikasi->format('d F Y') }}</span>
@@ -27,10 +25,7 @@
         </section>
 
         <section class="article-container">
-            <img
-                src="{{ asset($konten->gambar) }}"
-                alt="{{ $konten->judul }}"
-                class="article-image">
+            <img src="{{ asset($konten->gambar) }}" alt="{{ $konten->judul }}" class="article-image">
 
             <div class="article-content">
                 {!! $konten->isi !!}
@@ -55,7 +50,7 @@
             </div>
 
             <!-- Back Button -->
-            <div class="text-center back-to-blog">
+            <div class="back-to-blog text-center">
                 <a href="{{ route('landing.blog', ['jenis' => $jenis]) }}" class="tribal-btn">
                     <i class="fas fa-arrow-left"></i> Back to {{ ucfirst($jenis) }} List
                 </a>
@@ -98,9 +93,9 @@
             window.addEventListener('scroll', function() {
                 const header = document.querySelector('header');
                 if (window.scrollY > 100) {
-                    header.style.backgroundColor = 'rgba(28, 20, 8, 0.98)';
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
                 } else {
-                    header.style.backgroundColor = 'rgba(28, 20, 8, 0.95)';
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
                 }
             });
 

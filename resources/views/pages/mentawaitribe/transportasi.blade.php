@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title','Mentawai Tourism Transportation')
+@section('title', 'Mentawai Tourism Transportation')
 @section('content')
     <!-- Hero Section -->
     <section class="transportation-hero">
@@ -21,11 +21,10 @@
 
         <div class="transportation-grid" id="transportation-grid">
             @forelse ($transportations as $transportation)
-                <div class="transportation-card" data-category="{{ Str::slug($transportation->kategori->nama_kategori ?? 'uncategorized') }}">
-                    <img
-                        src="{{ $transportation->gambar ? asset($transportation->gambar) : '../mentawai/trans.jpg' }}"
-                        alt="{{ $transportation->title }}"
-                        class="card-image">
+                <div class="transportation-card"
+                    data-category="{{ Str::slug($transportation->kategori->nama_kategori ?? 'uncategorized') }}">
+                    <img src="{{ $transportation->gambar ? asset($transportation->gambar) : '../mentawai/trans.jpg' }}"
+                        alt="{{ $transportation->title }}" class="card-image">
                     <div class="card-content">
                         <span class="card-category">{{ $transportation->kategori->nama_kategori ?? 'Uncategorized' }}</span>
                         <h3 class="card-title">{{ $transportation->title }}</h3>
@@ -37,10 +36,11 @@
                             @endforeach
                         </ul>
 
-                        <div class="card-price"> {{ ($transportation->price ?? 0) }}</div>
+                        <div class="card-price"> {{ $transportation->price ?? 0 }}</div>
 
                         <div class="card-actions">
-                            <a href="https://wa.me/{{ $setting->nomor_telepon ?? '+6281261513662' }}?text=Hello,%20I%20want%20to%20book%20{{ urlencode($transportation->title) }}%20with%20price%20Rp%20{{ number_format($transportation->harga ?? 0) }}" class="tribal-btn" style="display: inline-block;">
+                            <a href="https://wa.me/{{ $setting->nomor_telepon ?? '+6281261513662' }}?text=Hello,%20I%20want%20to%20book%20{{ urlencode($transportation->title) }}%20with%20price%20Rp%20{{ number_format($transportation->harga ?? 0) }}"
+                                class="tribal-btn" style="display: inline-block;">
                                 <i class="fab fa-whatsapp me-2"></i> Book Now
                             </a>
                         </div>
@@ -58,7 +58,8 @@
             <h3 class="info-title">Important Information</h3>
             <ul class="info-list">
                 @forelse ($informasis as $informasi)
-                    <li><i class="{{ $informasi->getIconClassAttribute() }}"></i> {{ $informasi->title }}: {{ $informasi->description }}</li>
+                    <li><i class="{{ $informasi->getIconClassAttribute() }}"></i> {{ $informasi->title }}:
+                        {{ $informasi->description }}</li>
                 @empty
                     <li><i class="fas fa-info-circle"></i> No additional information at this time.</li>
                 @endforelse
@@ -97,13 +98,12 @@
                     });
                 });
 
-                // Navbar background change on scroll
                 window.addEventListener('scroll', function() {
                     const header = document.querySelector('header');
                     if (window.scrollY > 100) {
-                        header.style.backgroundColor = 'rgba(28, 20, 8, 0.98)';
+                        header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
                     } else {
-                        header.style.backgroundColor = 'rgba(28, 20, 8, 0.95)';
+                        header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
                     }
                 });
             });
