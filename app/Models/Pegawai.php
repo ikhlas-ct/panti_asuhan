@@ -35,4 +35,8 @@ class Pegawai extends Model
     {
         return $this->hasMany(Konten::class, 'id_user', 'id_user');
     }
+    public function websiteSetting()
+    {
+        return $this->hasOne(WebsiteSetting::class, 'karyawan_id', 'id_pegawai');
+    }
 }

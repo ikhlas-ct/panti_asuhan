@@ -29,12 +29,12 @@ class LandingController extends Controller
         // Services (layanan & tema), dengan steps
         $services = Service::with('steps')->orderBy('order')->get();
 
-        // Activities dari Konten (jenis_konten = 'aktivitas'), limit 3 agar sesuai carousel
-        $activities = Konten::where('jenis_konten', 'aktivitas')
-            ->orderBy('tanggal_publikasi', 'desc')
-            ->take(10)
-            ->get()
-            ->random(3);
+        // Activities dari Konten (jenis_konten = 'curated-journey'), limit 3 agar sesuai carousel
+        $activities = Konten::where('jenis_konten', 'curated-journey')
+            ->inRandomOrder()
+            ->limit(3)
+            ->get();
+
 
 
         $settings = WebsiteSetting::getInstance();
@@ -52,7 +52,7 @@ class LandingController extends Controller
     public function blog($jenis = 'artikel')
     {
         // Validasi jenis
-        if (!in_array($jenis, ['artikel', 'aktivitas'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey'])) {
             abort(404); // Atau redirect ke default
         }
 
@@ -74,7 +74,7 @@ class LandingController extends Controller
     public function category($jenis, $slug)
     {
         // Validasi jenis
-        if (!in_array($jenis, ['artikel', 'aktivitas'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey'])) {
             abort(404);
         }
 
@@ -97,7 +97,7 @@ class LandingController extends Controller
     public function show($jenis, $slug)
     {
         // Validasi jenis
-        if (!in_array($jenis, ['artikel', 'aktivitas', 'ethical'])) {
+        if (!in_array($jenis, ['artikel', 'curated-journey', 'ethical'])) {
             abort(404);
         }
 
@@ -162,4 +162,16 @@ class LandingController extends Controller
         $settings = WebsiteSetting::getInstance();
         return view('pages.mentawaitribe.kontak', compact('settings'));
     }
+
+    public function about()
+    {
+        $setting = WebsiteSetting::getInstance();
+        $founder = $setting->karyawan;
+
+
+        $team = Pegawai::all();
+        return view('pages.mentawaitribe.about', compact('setting', 'founder', 'team'));
+
+        }
+
 }

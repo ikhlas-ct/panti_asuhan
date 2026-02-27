@@ -89,12 +89,18 @@
                         </li>
                         <li>
                             <a href="{{ route('service.index', 'layanan') }}">
-                                <span class="sub-item">Layanan Aktivitas</span>
+                                <span class="sub-item">Layanan curated-journey</span>
                             </a>
                         </li>
 
                     </ul>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('about') }}">
+                    <i class="fas fa-info-circle"></i>
+                    <p>About Us</p>
+                </a>
             </li>
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#ethical">
@@ -154,9 +160,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('konten.index', 'aktivitas') }}">
+                <a href="{{ route('konten.index', 'curated-journey') }}">
                     <i class="fas fa-calendar-check"></i>
-                    <p>Aktivitas</p>
+                    <p>Curated-Journey</p>
                 </a>
             </li>
             <li class="nav-item">

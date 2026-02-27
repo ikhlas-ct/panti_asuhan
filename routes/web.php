@@ -1,20 +1,18 @@
 <?php
 
-use App\Http\Controllers\Landing\LandingController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Service\ServiceController;
-use App\Http\Controllers\Login\AuthController;
-
-use App\Http\Controllers\Profile\CamatController;
-use App\Http\Controllers\Konten\ArtikelController;
+use App\Http\Controllers\About\AboutController;
 use App\Http\Controllers\Gallery\GalleryController;
+use App\Http\Controllers\Konten\ArtikelController;
+use App\Http\Controllers\Landing\LandingController;
+use App\Http\Controllers\Login\AuthController;
 use App\Http\Controllers\Pegawai\PegawaiController;
-use App\Http\Controllers\Profile\SettingController;
-
-// =================== Pegawai dan camat ===================
-use App\Http\Controllers\Profile\KategoriController;
-use App\Http\Controllers\Profile\HeroslideController;
 use App\Http\Controllers\Pegawai\ProfilpegawaiController;
+use App\Http\Controllers\Profile\CamatController;
+use App\Http\Controllers\Profile\HeroslideController;
+use App\Http\Controllers\Profile\KategoriController;
+use App\Http\Controllers\Profile\SettingController;
+use App\Http\Controllers\Service\ServiceController;
+use Illuminate\Support\Facades\Route;
 
 
 Route::get('/ethical-blog', function () {
@@ -23,12 +21,14 @@ Route::get('/ethical-blog', function () {
 
 
 
-Route::get('/blog/{jenis?}', [LandingController::class, 'blog'])->where('jenis', 'artikel|aktivitas')->name('landing.blog');
-Route::get('/blog/{jenis}/category/{slug}', [LandingController::class, 'category'])->where('jenis', 'artikel|aktivitas')->name('blog.category');
-Route::get('/blog/{jenis}/{slug}', [LandingController::class, 'show'])->where('jenis', 'artikel|aktivitas|ethical')->name('blog.show');
+Route::get('/blog/{jenis?}', [LandingController::class, 'blog'])->where('jenis', 'artikel|curated-journey')->name('landing.blog');
+Route::get('/blog/{jenis}/category/{slug}', [LandingController::class, 'category'])->where('jenis', 'artikel|curated-journey')->name('blog.category');
+Route::get('/blog/{jenis}/{slug}', [LandingController::class, 'show'])->where('jenis', 'artikel|curated-journey|ethical')->name('blog.show');
 
 Route::get('/ethical', [LandingController::class, 'ethical'])->name('landing.ethical');
 Route::get('/transportasi', [LandingController::class, 'transportasi'])->name('landing.transportasi');
+Route::get('/about-us', [LandingController::class, 'about'])->name('landing.about');
+
 
 Route::get('/contact', [LandingController::class, 'contact'])->name('landing.contact');
 
@@ -55,33 +55,37 @@ Route::middleware('auth')->group(function () {
     Route::prefix('konten/{jenis}')->group(function () {
         Route::get('/', [ArtikelController::class, 'index'])
             ->name('konten.index')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::get('/create', [ArtikelController::class, 'create'])
             ->name('konten.create')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
         Route::post('/', [ArtikelController::class, 'store'])
             ->name('konten.store')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::get('/{slug}/edit', [ArtikelController::class, 'edit'])
             ->name('konten.edit')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::put('/{id_konten}', [ArtikelController::class, 'update'])
             ->name('konten.update')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
 
         Route::delete('/{id_konten}', [ArtikelController::class, 'destroy'])
             ->name('konten.destroy')
-            ->where('jenis', 'artikel|aktivitas|ethical');
+            ->where('jenis', 'artikel|curated-journey|ethical');
     });
 
     // Route upload & delete image tetap shared (tidak perlu constraint jenis)
     Route::post('/blog/upload', [ArtikelController::class, 'uploadImage'])->name('blog.upload.image');
     Route::post('/blog/imagedelete', [ArtikelController::class, 'deleteImage'])->name('blog.delete.image');
 
+    Route::get('about', [AboutController::class, 'edit'])
+        ->name('about');
 
+    Route::put('about', [AboutController::class, 'update'])
+        ->name('admin.about.update');
 
 
     // Settings

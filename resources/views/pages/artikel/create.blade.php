@@ -26,29 +26,9 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="ringkasan" class="form-label">Ringkasan</label>
-                                <textarea class="form-control" id="ringkasan" name="ringkasan" rows="3" maxlength="255"
-                                    placeholder="Tulis ringkasan singkat yang akan tampil di halaman utama...">{{ old('ringkasan') }}</textarea>
-
-                                @error('ringkasan')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Isi -->
-                        <div class="summernote-wrapper mb-3 mt-3">
-                            <label for="isi" class="form-label">Isi {{ ucfirst($jenis) }}</label>
-                            <textarea class="form-control summernote" id="isi" name="isi" rows="5" required>{{ old('isi') }}</textarea>
-                            @error('isi')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Kategori (untuk aktivitas dan berita) -->
-                        @if (in_array($jenis, ['aktivitas', 'berita']))
+                        
+                        <!-- Kategori (untuk curated-journey dan berita) -->
+                        @if (in_array($jenis, ['curated-journey', 'berita']))
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <div class="input-group mb-3">
@@ -110,6 +90,27 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="ringkasan" class="form-label">Ringkasan</label>
+                                <textarea class="form-control" id="ringkasan" name="ringkasan" rows="3" maxlength="255"
+                                    placeholder="Tulis ringkasan singkat yang akan tampil di halaman utama...">{{ old('ringkasan') }}</textarea>
+
+                                @error('ringkasan')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Isi -->
+                        <div class="summernote-wrapper mb-3 mt-3">
+                            <label for="isi" class="form-label">Isi {{ ucfirst($jenis) }}</label>
+                            <textarea class="form-control summernote" id="isi" name="isi" rows="5" required>{{ old('isi') }}</textarea>
+                            @error('isi')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="text-end">

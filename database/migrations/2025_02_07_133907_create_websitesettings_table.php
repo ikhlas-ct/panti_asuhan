@@ -10,6 +10,8 @@ return new class extends Migration
     {
         Schema::create('website_settings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('karyawan_id')->nullable();
+            $table->foreign('karyawan_id')->references('id_pegawai')->on('pegawai')->onDelete('set null')->onUpdate('cascade');
             $table->string('nama')->nullable();
             $table->string('slogan')->nullable();
             $table->text('alamat')->nullable();
