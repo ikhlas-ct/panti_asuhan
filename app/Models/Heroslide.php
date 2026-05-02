@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Heroslide extends Model
+class HeroSlide extends Model
 {
-    use HasFactory;
     protected $table = 'hero_slides';
     protected $primaryKey = 'id';
+
     protected $fillable = [
         'image',
         'title',
@@ -17,8 +16,4 @@ class Heroslide extends Model
         'button_text',
         'button_link',
     ];
-
-
-
-
 }

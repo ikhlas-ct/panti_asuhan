@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pegawai extends Model
 {
-    use HasFactory;
-
     protected $table = 'pegawai';
     protected $primaryKey = 'id_pegawai';
 
     protected $fillable = [
+        'id_user',
         'nama',
         'alamat',
         'nohp',
@@ -23,20 +22,11 @@ class Pegawai extends Model
         'facebook',
         'posisi',
         'foto_profil',
-        'id_user',
     ];
 
-    public function user()
+    // Akun user pegawai ini (admin_dinsos)
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user', 'id');
-    }
-
-    public function konten()
-    {
-        return $this->hasMany(Konten::class, 'id_user', 'id_user');
-    }
-    public function websiteSetting()
-    {
-        return $this->hasOne(WebsiteSetting::class, 'karyawan_id', 'id_pegawai');
+        return $this->belongsTo(User::class, 'id_user');
     }
 }

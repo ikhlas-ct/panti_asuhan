@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kategori extends Model
 {
-    use HasFactory;
     protected $table = 'kategori';
     protected $primaryKey = 'id_kategori';
+
     protected $fillable = [
         'nama_kategori',
         'slug',
@@ -17,12 +17,17 @@ class Kategori extends Model
         'status',
     ];
 
-    public function konten()
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
+    public function konten(): HasMany
     {
         return $this->hasMany(Konten::class, 'id_kategori', 'id_kategori');
     }
 
-
-
-
+    public function scopeAktif($query)
+    {
+        return $query->where('status', true);
+    }
 }

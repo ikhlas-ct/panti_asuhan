@@ -82,16 +82,6 @@
                                 <span class="sub-item">Kata Pengantar</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ route('service.index', 'tema') }}">
-                                <span class="sub-item">tema</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('service.index', 'layanan') }}">
-                                <span class="sub-item">Layanan curated-journey</span>
-                            </a>
-                        </li>
 
                     </ul>
                 </div>
@@ -102,61 +92,23 @@
                     <p>About Us</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#ethical">
-                    <i class="fas fa-balance-scale"></i>
-                    <p>Ethical</p>
-
-                    <span class="caret"></span>
-                </a>
-                <div class="collapse" id="ethical">
-                    <ul class="nav nav-collapse">
-                        <li>
-                            <a href="{{ route('konten.index', 'ethical') }}">
-                                <span class="sub-item"> Blog</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('service.index', 'etika') }}">
-                                <span class="sub-item">Etika</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('service.index', 'keunggulan') }}">
-                                <span class="sub-item">keunggulan</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#transportasi">
-                    <i class="fas fa-bus"></i>
-                    <p>Transportasi</p>
-
-                    <span class="caret"></span>
-                </a>
-                <div class="collapse" id="transportasi">
-                    <ul class="nav nav-collapse">
-                        <li>
-                            <a href="{{ route('service.index', 'transportasi') }}">
-                                <span class="sub-item">Transportasi</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('service.index', 'informasi') }}">
-                                <span class="sub-item">Informasi</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
 
             <li class="nav-item">
                 <a href="{{ route('konten.index', 'artikel') }}">
                     <i class="fas fa-newspaper"></i>
                     <p>Artikel</p>
+                </a>
+            </li>
+              <li class="nav-item">
+                <a href="{{ route('anak-asuh.index') }}">
+                    <i class="fas fa-child"></i>
+                    <p>Anak Asuh</p>
+                </a>
+            </li>
+                  <li class="nav-item">
+                <a href="{{ route('panti-asuhan.index') }}">
+                    <i class="fas fa-home"></i>
+                    <p>Panti Asuhan</p>
                 </a>
             </li>
             <li class="nav-item">
@@ -169,20 +121,6 @@
                 <a href="{{ route('gallery.index') }}">
                     <i class="fa-solid fa-camera-retro"></i>
                     <p>Galeri</p>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('service.index', 'transportasi') }}">
-                    <i class="fas fa-bus"></i>
-                    <p>Transportasi</p>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('pegawai.index') }}">
-                    <i class="fas fa-users"></i>
-                    <p>Team</p>
                 </a>
             </li>
 

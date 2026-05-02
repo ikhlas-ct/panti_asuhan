@@ -8,6 +8,9 @@ class Visitor extends Model
 {
     protected $table = 'visitors';
     protected $primaryKey = 'id';
-    protected $fillable = ['ip_address','user_agent'];
 
+    protected $fillable = [
+        'ip_address',
+        'user_agent',
+    ];
 }

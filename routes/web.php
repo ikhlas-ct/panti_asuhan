@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\About\AboutController;
+use App\Http\Controllers\AnakAsuhController;
 use App\Http\Controllers\Gallery\GalleryController;
 use App\Http\Controllers\Konten\ArtikelController;
 use App\Http\Controllers\Landing\LandingController;
 use App\Http\Controllers\Login\AuthController;
+use App\Http\Controllers\PantiAsuhanController;
 use App\Http\Controllers\Pegawai\PegawaiController;
 use App\Http\Controllers\Pegawai\ProfilpegawaiController;
 use App\Http\Controllers\Profile\CamatController;
@@ -146,3 +148,25 @@ Route::middleware('auth')->group(function () {
             ->where('type', 'layanan|tema|transportasi|etika|keunggulan');
     });
 });
+
+Route::get('/anak-asuh', [AnakAsuhController::class, 'index'])->name('anak-asuh.index');
+Route::get('/anak-asuh/create', [AnakAsuhController::class, 'create'])->name('anak-asuh.create');
+Route::post('/anak-asuh', [AnakAsuhController::class, 'store'])->name('anak-asuh.store');
+Route::get('/anak-asuh/{anakAsuh}', [AnakAsuhController::class, 'show'])->name('anak-asuh.show');
+Route::get('/anak-asuh/{anakAsuh}/edit', [AnakAsuhController::class, 'edit'])->name('anak-asuh.edit');
+Route::put('/anak-asuh/{anakAsuh}', [AnakAsuhController::class, 'update'])->name('anak-asuh.update');
+Route::delete('/anak-asuh/{anakAsuh}', [AnakAsuhController::class, 'destroy'])->name('anak-asuh.destroy');
+
+
+
+
+Route::get('/panti-asuhan',                   [PantiAsuhanController::class, 'index'])->name('panti-asuhan.index');
+Route::get('/panti-asuhan/create',            [PantiAsuhanController::class, 'create'])->name('panti-asuhan.create');
+Route::post('/panti-asuhan',                  [PantiAsuhanController::class, 'store'])->name('panti-asuhan.store');
+Route::get('/panti-asuhan/{pantiAsuhan}',     [PantiAsuhanController::class, 'show'])->name('panti-asuhan.show');
+Route::get('/panti-asuhan/{pantiAsuhan}/edit', [PantiAsuhanController::class, 'edit'])->name('panti-asuhan.edit');
+Route::put('/panti-asuhan/{pantiAsuhan}',     [PantiAsuhanController::class, 'update'])->name('panti-asuhan.update');
+Route::delete('/panti-asuhan/{pantiAsuhan}',  [PantiAsuhanController::class, 'destroy'])->name('panti-asuhan.destroy');
+
+// Hapus foto panti (individual)
+Route::delete('/panti-asuhan/{pantiAsuhan}/foto/{foto}', [PantiAsuhanController::class, 'destroyFoto'])->name('panti-asuhan.foto.destroy');

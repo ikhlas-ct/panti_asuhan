@@ -2,26 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class WebsiteSetting extends Model
 {
-    /** @use HasFactory<\Database\Factories\WebsiteSettingFactory> */
-    use HasFactory;
-
     protected $table = 'website_settings';
     protected $primaryKey = 'id';
 
-    public $incrementing = true;
-    protected $keyType = 'int';
-
     protected $fillable = [
-        'karyawan_id',
         'nama',
+        'slogan',
         'alamat',
         'email',
-        'slogan',
         'nomor_telepon',
         'logo',
         'social_facebook',
@@ -33,16 +25,11 @@ class WebsiteSetting extends Model
         'gambar_pengantar',
         'about_us',
         'why_choose_us',
-        'created_at',
-        'updated_at'
     ];
 
-    public static function getInstance()
+    // Ambil satu-satunya record settings
+    public static function getSetting(): ?self
     {
-        return self::firstOrCreate([]);
-    }
-    public function karyawan()
-    {
-        return $this->belongsTo(Pegawai::class, 'karyawan_id', 'id_pegawai');
+        return static::first();
     }
 }
