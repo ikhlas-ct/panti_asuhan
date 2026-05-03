@@ -16,7 +16,6 @@ class Pegawai extends Model
         'nama',
         'alamat',
         'nohp',
-        'email',
         'deskripsi',
         'instagram',
         'twitter',

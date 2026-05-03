@@ -46,7 +46,7 @@
                 <span class="sidebar-mini-icon">
                     <i class="fa fa-ellipsis-h"></i>
                 </span>
-                <h4 class="text-section">Komponen</h4>
+                <h4 class="text-section">Setting</h4>
             </li>
 
             <!-- Website Setting -->
@@ -56,13 +56,6 @@
                     <p>Website Setting</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="{{ route('kategori.index') }}">
-                    <i class="fas fa-tags"></i>
-                    <p>Kategori</p>
-                </a>
-            </li>
-
             <!-- Website Profil -->
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">
@@ -92,47 +85,66 @@
                     <p>About Us</p>
                 </a>
             </li>
-
+            <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                    <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">Data Master</h4>
+            </li>
             <li class="nav-item">
-                <a href="{{ route('konten.index', 'artikel') }}">
-                    <i class="fas fa-newspaper"></i>
-                    <p>Artikel</p>
-                </a>
-            </li>
-              <li class="nav-item">
-                <a href="{{ route('anak-asuh.index') }}">
-                    <i class="fas fa-child"></i>
-                    <p>Anak Asuh</p>
-                </a>
-            </li>
-                  <li class="nav-item">
                 <a href="{{ route('panti-asuhan.index') }}">
                     <i class="fas fa-home"></i>
                     <p>Panti Asuhan</p>
                 </a>
             </li>
-                   <li class="nav-item">
+            <li class="nav-item">
+                <a href="{{ route('anak-asuh.index') }}">
+                    <i class="fas fa-child"></i>
+                    <p>Anak Asuh</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('pegawai.index') }}">
                     <i class="fas fa-home"></i>
                     <p>pegawai</p>
                 </a>
             </li>
-              <li class="nav-item">
-                    <a href="{{ route('pengurus.index') }}">
+            <li class="nav-item">
+                <a href="{{ route('pengurus.index') }}">
                     <i class="fas fa-home"></i>
                     <p>pengurus</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('konten.index', 'curated-journey') }}">
+                <a href="{{ route('donatur.index') }}">
+                    <i class="fas fa-home"></i>
+                    <p>donatur</p>
+                </a>
+            </li>
+            <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                    <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">Proses</h4>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('konten.index', 'kegiatan') }}">
                     <i class="fas fa-calendar-check"></i>
-                    <p>Curated-Journey</p>
+                    <p>Kegiatan</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('konten.index', 'berita') }}">
+                    <i class="fas fa-newspaper"></i>
+                    <p>Berita</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('gallery.index') }}">
-                    <i class="fa-solid fa-camera-retro"></i>
-                    <p>Galeri</p>
+                <a href="{{ route('keuangan.index') }}">
+                    <i class="fas fa-calendar-check"></i>
+                    <p>Keuangan</p>
                 </a>
             </li>
 

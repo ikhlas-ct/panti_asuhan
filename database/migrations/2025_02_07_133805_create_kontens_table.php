@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->string('slug')->unique();
             $table->timestamp('tanggal_publikasi')->useCurrent();
-            $table->enum('jenis_konten', ['artikel','kegiatan','berita']);
+            $table->enum('jenis_konten', ['kegiatan','berita']);
             $table->unsignedBigInteger('id_kategori')->nullable();
             $table->foreign('id_kategori')->references('id_kategori')->on('kategori')->nullOnDelete();
             $table->string('gambar');
@@ -30,11 +30,13 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('panti_asuhan')
                 ->cascadeOnDelete();
-            $table->date('tanggal_mulai');
+            $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_selesai')->nullable();
             $table->string('lokasi', '100')->nullable();
-            $table->enum('status', ['direncanakan', 'berlangsung', 'selesai', 'dibatalkan'])->default('direncanakan');
-            $table->integer('jumlah_peserta')->nullable();
+            $table->enum('status', ['direncanakan', 'berlangsung', 'selesai', 'dibatalkan'])
+                ->nullable()
+                ->default('direncanakan');
+                            $table->integer('jumlah_peserta')->nullable();
             $table->string('penanggung_jawab', '100')->nullable();
 
 

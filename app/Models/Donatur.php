@@ -16,7 +16,6 @@ class Donatur extends Model
         'nama',
         'jenis_donatur',
         'no_telp',
-        'email',
         'alamat',
         'foto',
         'status',

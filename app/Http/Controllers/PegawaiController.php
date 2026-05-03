@@ -22,7 +22,6 @@ class PegawaiController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('posisi', 'like', "%{$search}%")
                   ->orWhere('nohp', 'like', "%{$search}%");
             });
@@ -63,7 +62,6 @@ class PegawaiController extends Controller
         $validated = $request->validate([
             'nama'        => 'required|string|max:255',
             'posisi'      => 'required|string|max:255',
-            'email'       => 'nullable|email|max:255',
             'nohp'        => 'nullable|string|max:20',
             'alamat'      => 'nullable|string|max:255',
             'deskripsi'   => 'nullable|string',
@@ -106,7 +104,6 @@ class PegawaiController extends Controller
             'id_user'     => $idUser,
             'nama'        => $validated['nama'],
             'posisi'      => $validated['posisi'],
-            'email'       => $validated['email'],
             'nohp'        => $validated['nohp'],
             'alamat'      => $validated['alamat'],
             'deskripsi'   => $validated['deskripsi'],
@@ -156,7 +153,6 @@ class PegawaiController extends Controller
         $validated = $request->validate([
             'nama'        => 'required|string|max:255',
             'posisi'      => 'required|string|max:255',
-            'email'       => 'nullable|email|max:255',
             'nohp'        => 'nullable|string|max:20',
             'alamat'      => 'nullable|string|max:255',
             'deskripsi'   => 'nullable|string',

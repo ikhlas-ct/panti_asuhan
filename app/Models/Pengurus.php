@@ -19,7 +19,6 @@ class Pengurus extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'no_telp',
-        'email',
         'alamat',
         'jabatan',
         'pendidikan_terakhir',

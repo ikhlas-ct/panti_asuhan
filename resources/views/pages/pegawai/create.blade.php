@@ -136,19 +136,13 @@
                                     @error('posisi')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" name="email"
-                                        class="form-control @error('email') is-invalid @enderror"
-                                        value="{{ old('email') }}" placeholder="email@domain.com">
-                                    @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
 
-                                <div class="col-md-6">
+
+                                <div class="col-md-12">
                                     <label class="form-label">No. HP / WhatsApp</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                        <input type="text" name="nohp"
+                                        <span class="input-group-number"><i class="fas fa-phone"></i></span>
+                                        <input type="number" name="nohp"
                                             class="form-control @error('nohp') is-invalid @enderror"
                                             value="{{ old('nohp') }}" placeholder="08xxxxxxxxxx">
                                         @error('nohp')<div class="invalid-feedback">{{ $message }}</div>@enderror

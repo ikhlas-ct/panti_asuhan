@@ -24,7 +24,6 @@ return new class extends Migration
             $table->longText('paragraf_pengantar')->nullable();
             $table->string('gambar_pengantar')->nullable();
             $table->longText('about_us')->nullable();
-            $table->longText('why_choose_us')->nullable();
             $table->timestamps();
         });
     }

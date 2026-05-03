@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('tempat_lahir', 100)->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->string('no_telp', 20)->nullable();
-            $table->string('email', 100)->nullable();
             $table->text('alamat')->nullable();
             $table->string('jabatan', 50)->nullable();
             $table->string('pendidikan_terakhir', 100)->nullable();

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('nama');
             $table->string('alamat')->nullable();
             $table->string('nohp', 20)->nullable();
-            $table->string('email')->nullable();
             $table->text('deskripsi')->nullable();
             $table->text('instagram')->nullable();
             $table->text('twitter')->nullable();

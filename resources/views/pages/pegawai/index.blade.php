@@ -650,10 +650,10 @@
 
                                 {{-- Email --}}
                                 <td>
-                                    @if ($pegawai->email)
-                                        <a href="mailto:{{ $pegawai->email }}" class="text-decoration-none text-dark"
+                                    @if ($pegawai->user->email)
+                                        <a href="mailto:{{ $pegawai->user->email }}" class="text-decoration-none text-dark"
                                             style="font-size:.8rem;">
-                                            <i class="fas fa-envelope text-muted me-1"></i>{{ $pegawai->email }}
+                                            <i class="fas fa-envelope text-muted me-1"></i>{{ $pegawai->user->email }}
                                         </a>
                                     @else
                                         <span class="text-muted">-</span>

@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\About\AboutController;
 use App\Http\Controllers\AnakAsuhController;
+use App\Http\Controllers\DonaturController;
 use App\Http\Controllers\Gallery\GalleryController;
+use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\Konten\ArtikelController;
+use App\Http\Controllers\KontenController;
 use App\Http\Controllers\Landing\LandingController;
 use App\Http\Controllers\Login\AuthController;
 use App\Http\Controllers\PantiAsuhanController;
@@ -53,34 +56,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
 
 
-    Route::prefix('konten/{jenis}')->group(function () {
-        Route::get('/', [ArtikelController::class, 'index'])
-            ->name('konten.index')
-            ->where('jenis', 'artikel|curated-journey|ethical');
 
-        Route::get('/create', [ArtikelController::class, 'create'])
-            ->name('konten.create')
-            ->where('jenis', 'artikel|curated-journey|ethical');
-        Route::post('/', [ArtikelController::class, 'store'])
-            ->name('konten.store')
-            ->where('jenis', 'artikel|curated-journey|ethical');
 
-        Route::get('/{slug}/edit', [ArtikelController::class, 'edit'])
-            ->name('konten.edit')
-            ->where('jenis', 'artikel|curated-journey|ethical');
-
-        Route::put('/{id_konten}', [ArtikelController::class, 'update'])
-            ->name('konten.update')
-            ->where('jenis', 'artikel|curated-journey|ethical');
-
-        Route::delete('/{id_konten}', [ArtikelController::class, 'destroy'])
-            ->name('konten.destroy')
-            ->where('jenis', 'artikel|curated-journey|ethical');
-    });
-
-    // Route upload & delete image tetap shared (tidak perlu constraint jenis)
-    Route::post('/blog/upload', [ArtikelController::class, 'uploadImage'])->name('blog.upload.image');
-    Route::post('/blog/imagedelete', [ArtikelController::class, 'deleteImage'])->name('blog.delete.image');
 
     Route::get('about', [AboutController::class, 'edit'])
         ->name('about');
@@ -105,13 +82,6 @@ Route::middleware('auth')->group(function () {
     });
 
 
-    // Master Data
-    Route::get('/team', [PegawaiController::class, 'index'])->name('pegawai.index');
-    Route::get('/team/create', [PegawaiController::class, 'create'])->name('pegawai.create');
-    Route::post('/team', [PegawaiController::class, 'store'])->name('pegawai.store');
-    Route::get('/team/{pegawai}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
-    Route::put('/team/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
-    Route::delete('/team/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 
 
     Route::get('kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -197,3 +167,39 @@ Route::get('/pengurus/{pengurus}',      [PengurusController::class, 'show'])->na
 Route::get('/pengurus/{pengurus}/edit', [PengurusController::class, 'edit'])->name('pengurus.edit');
 Route::put('/pengurus/{pengurus}',      [PengurusController::class, 'update'])->name('pengurus.update');
 Route::delete('/pengurus/{pengurus}',   [PengurusController::class, 'destroy'])->name('pengurus.destroy');
+
+
+Route::get('/donatur',                [DonaturController::class, 'index'])->name('donatur.index');
+Route::get('/donatur/create',         [DonaturController::class, 'create'])->name('donatur.create');
+Route::post('/donatur',               [DonaturController::class, 'store'])->name('donatur.store');
+Route::get('/donatur/{donatur}',      [DonaturController::class, 'show'])->name('donatur.show');
+Route::get('/donatur/{donatur}/edit', [DonaturController::class, 'edit'])->name('donatur.edit');
+Route::put('/donatur/{donatur}',      [DonaturController::class, 'update'])->name('donatur.update');
+Route::delete('/donatur/{donatur}',   [DonaturController::class, 'destroy'])->name('donatur.destroy');
+
+
+Route::get('/konten/{jenis}',            [KontenController::class, 'index'])->name('konten.index');
+// Create & Store
+Route::get('/konten/{jenis}/tambah',      [KontenController::class, 'create'])->name('konten.create');
+Route::post('/konten/{jenis}/simpan',     [KontenController::class, 'store'])->name('konten.store');
+// Edit & Update (berdasarkan slug)
+Route::get('/konten/{jenis}/{slug}/edit', [KontenController::class, 'edit'])->name('konten.edit');
+// Update & Destroy (berdasarkan id_konten)
+Route::put('/konten/{jenis}/{id_konten}', [KontenController::class, 'update'])->name('konten.update');
+Route::delete('/konten/{jenis}/{id_konten}', [KontenController::class, 'destroy'])->name('konten.destroy');
+
+Route::post('blog/upload-image', [KontenController::class, 'uploadImage'])->name('blog.upload.image');
+ Route::post('blog/delete-image', [KontenController::class, 'deleteImage'])->name('blog.delete.image');
+
+
+Route::get('/keuangan',                [KeuanganController::class, 'index'])->name('keuangan.index');
+Route::get('/keuangan/create',         [KeuanganController::class, 'create'])->name('keuangan.create');
+Route::post('/keuangan',               [KeuanganController::class, 'store'])->name('keuangan.store');
+Route::get('/keuangan/{keuangan}',     [KeuanganController::class, 'show'])->name('keuangan.show');
+Route::get('/keuangan/{keuangan}/edit', [KeuanganController::class, 'edit'])->name('keuangan.edit');
+Route::put('/keuangan/{keuangan}',     [KeuanganController::class, 'update'])->name('keuangan.update');
+Route::delete('/keuangan/{keuangan}',  [KeuanganController::class, 'destroy'])->name('keuangan.destroy');
+
+// AJAX: dropdown donasi by panti (untuk admin_dinsos)
+Route::get('/keuangan-donasi-by-panti', [KeuanganController::class, 'getDonasiByPanti'])
+    ->name('keuangan.donasi-by-panti');

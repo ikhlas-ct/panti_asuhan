@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('nama', 50);
             $table->enum('jenis_donatur', ['perorangan', 'organisasi', 'perusahaan', 'pemerintah']);
             $table->string('no_telp', 20)->nullable();
-            $table->string('email', 100)->nullable();
             $table->text('alamat')->nullable();
             $table->string('foto', 255)->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
