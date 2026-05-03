@@ -111,6 +111,18 @@
                     <p>Panti Asuhan</p>
                 </a>
             </li>
+                   <li class="nav-item">
+                <a href="{{ route('pegawai.index') }}">
+                    <i class="fas fa-home"></i>
+                    <p>pegawai</p>
+                </a>
+            </li>
+              <li class="nav-item">
+                    <a href="{{ route('pengurus.index') }}">
+                    <i class="fas fa-home"></i>
+                    <p>pengurus</p>
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="{{ route('konten.index', 'curated-journey') }}">
                     <i class="fas fa-calendar-check"></i>

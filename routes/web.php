@@ -7,12 +7,13 @@ use App\Http\Controllers\Konten\ArtikelController;
 use App\Http\Controllers\Landing\LandingController;
 use App\Http\Controllers\Login\AuthController;
 use App\Http\Controllers\PantiAsuhanController;
-use App\Http\Controllers\Pegawai\PegawaiController;
-use App\Http\Controllers\Pegawai\ProfilpegawaiController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PengurusController;
 use App\Http\Controllers\Profile\CamatController;
 use App\Http\Controllers\Profile\HeroslideController;
 use App\Http\Controllers\Profile\KategoriController;
 use App\Http\Controllers\Profile\SettingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Service\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,9 +51,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // =================== Authenticated Routes ===================
 Route::middleware('auth')->group(function () {
-    Route::get('profil', [ProfilpegawaiController::class, 'profil'])->name('pegawai.profil');
-    Route::put('profil', [ProfilpegawaiController::class, 'profil_update'])->name('pegawai.profil_update');
-    Route::put('password', [ProfilpegawaiController::class, 'password_update'])->name('pegawai.password_update');
+
 
     Route::prefix('konten/{jenis}')->group(function () {
         Route::get('/', [ArtikelController::class, 'index'])
@@ -170,3 +169,31 @@ Route::delete('/panti-asuhan/{pantiAsuhan}',  [PantiAsuhanController::class, 'de
 
 // Hapus foto panti (individual)
 Route::delete('/panti-asuhan/{pantiAsuhan}/foto/{foto}', [PantiAsuhanController::class, 'destroyFoto'])->name('panti-asuhan.foto.destroy');
+
+
+
+
+Route::get('/pegawai/profil', [ProfileController::class, 'show'])
+    ->name('pegawai.profil');
+Route::put('/pegawai/profil', [ProfileController::class, 'update'])
+    ->name('pegawai.profil.update');
+Route::put('/pegawai/profil/password', [ProfileController::class, 'updatePassword'])
+    ->name('pegawai.profil.password');
+
+
+Route::get('/pegawai',                   [PegawaiController::class, 'index'])->name('pegawai.index');
+Route::get('/pegawai/create',            [PegawaiController::class, 'create'])->name('pegawai.create');
+Route::post('/pegawai',                  [PegawaiController::class, 'store'])->name('pegawai.store');
+Route::get('/pegawai/{pegawai}',     [PegawaiController::class, 'show'])->name('pegawai.show');
+Route::get('/pegawai/{pegawai}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+Route::put('/pegawai/{pegawai}',     [PegawaiController::class, 'update'])->name('pegawai.update');
+Route::delete('/pegawai/{pegawai}',  [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+
+
+Route::get('/pengurus',                 [PengurusController::class, 'index'])->name('pengurus.index');
+Route::get('/pengurus/create',          [PengurusController::class, 'create'])->name('pengurus.create');
+Route::post('/pengurus',                [PengurusController::class, 'store'])->name('pengurus.store');
+Route::get('/pengurus/{pengurus}',      [PengurusController::class, 'show'])->name('pengurus.show');
+Route::get('/pengurus/{pengurus}/edit', [PengurusController::class, 'edit'])->name('pengurus.edit');
+Route::put('/pengurus/{pengurus}',      [PengurusController::class, 'update'])->name('pengurus.update');
+Route::delete('/pengurus/{pengurus}',   [PengurusController::class, 'destroy'])->name('pengurus.destroy');
