@@ -26,11 +26,7 @@ return new class extends Migration
             // Data donasi barang — diisi donatur (deskripsi umum)
             $table->text('deskripsi_barang')->nullable();
 
-            // Detail barang — dilengkapi pengurus setelah menerima
-            $table->string('nama_barang', '100')->nullable();
-            $table->integer('jumlah_barang')->nullable();
-            $table->string('satuan_barang', '50')->nullable(); // unit, kg, lusin, dll
-            $table->string('foto_barang', '255')->nullable();   // 1 foto barang saat diterima (opsional)
+      
 
             // Kunjungan
             $table->date('tanggal_kunjungan')->nullable(); // diisi jika metode kunjungan

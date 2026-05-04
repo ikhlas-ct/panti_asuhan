@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Donasi extends Model
 {
@@ -19,10 +20,7 @@ class Donasi extends Model
         'nominal',
         'bukti_transfer',
         'deskripsi_barang',
-        'nama_barang',
-        'jumlah_barang',
-        'satuan_barang',
-        'foto_barang',
+
         'tanggal_kunjungan',
         'tanggal_donasi',
         'catatan',
@@ -34,7 +32,6 @@ class Donasi extends Model
 
     protected $casts = [
         'nominal'           => 'decimal:2',
-        'jumlah_barang'     => 'integer',
         'tanggal_kunjungan' => 'date',
         'tanggal_donasi'    => 'date',
         'dikonfirmasi_at'   => 'datetime',
@@ -42,6 +39,8 @@ class Donasi extends Model
         'metode'            => 'string',
         'status'            => 'string',
     ];
+
+    // ── Relasi ────────────────────────────────────────────────────
 
     // Donatur yang melakukan donasi ini
     public function donatur(): BelongsTo
@@ -67,7 +66,13 @@ class Donasi extends Model
         return $this->hasOne(Keuangan::class, 'donasi_id');
     }
 
-    // ── Scopes ───────────────────────────────────────────────
+    // Detail item barang yang diterima (bisa lebih dari satu)
+    public function barang(): HasMany
+    {
+        return $this->hasMany(DonasiBarang::class, 'donasi_id');
+    }
+
+    // ── Scopes ────────────────────────────────────────────────────
 
     public function scopePending($query)
     {
@@ -94,8 +99,26 @@ class Donasi extends Model
         return $query->where('jenis_donasi', 'barang');
     }
 
+    // ── Helpers ───────────────────────────────────────────────────
+
     public function sudahDikonfirmasi(): bool
     {
         return $this->status !== 'pending';
+    }
+
+    public function isBarang(): bool
+    {
+        return $this->jenis_donasi === 'barang';
+    }
+
+    public function isUang(): bool
+    {
+        return $this->jenis_donasi === 'uang';
+    }
+
+    // Total jumlah seluruh item barang
+    public function totalItemBarang(): int
+    {
+        return (int) $this->barang()->sum('jumlah_barang');
     }
 }

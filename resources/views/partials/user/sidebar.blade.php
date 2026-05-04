@@ -22,14 +22,15 @@
     </div>
     <!-- End Logo Header -->
 </div>
+
 <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
         <ul class="nav nav-secondary">
 
             <!-- Dashboard -->
             <li class="nav-item">
-                <a href="{{ route('dashboard') }}">
-                    <i class="fas fa-home"></i>
+                <a href="{{ route('dinsos.dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
@@ -37,8 +38,8 @@
             <!-- Profile -->
             <li class="nav-item">
                 <a href="{{ route('pegawai.profil') }}">
-                    <i class="fas fa-user"></i>
-                    <p>Profile</p>
+                    <i class="fas fa-user-circle"></i>
+                    <p>Profile Saya</p>
                 </a>
             </li>
 
@@ -46,54 +47,27 @@
                 <span class="sidebar-mini-icon">
                     <i class="fa fa-ellipsis-h"></i>
                 </span>
-                <h4 class="text-section">Setting</h4>
+                <h4 class="text-section">Pengaturan</h4>
             </li>
 
             <!-- Website Setting -->
             <li class="nav-item">
-                <a href="{{ route('camat.settings.edit') }}">
+                <a href="{{ route('setting.website.edit') }}">
                     <i class="fas fa-cogs"></i>
                     <p>Website Setting</p>
                 </a>
             </li>
-            <!-- Website Profil -->
-            <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#base">
-                    <i class="fas fa-globe"></i>
-                    <p>Landing Page</p>
-                    <span class="caret"></span>
-                </a>
-                <div class="collapse" id="base">
-                    <ul class="nav nav-collapse">
-                        <li>
-                            <a href="{{ route('camat.settings.heroslide') }}">
-                                <span class="sub-item">Hero Slide</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('camat.pengantar') }}">
-                                <span class="sub-item">Kata Pengantar</span>
-                            </a>
-                        </li>
 
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('about') }}">
-                    <i class="fas fa-info-circle"></i>
-                    <p>About Us</p>
-                </a>
-            </li>
             <li class="nav-section">
                 <span class="sidebar-mini-icon">
                     <i class="fa fa-ellipsis-h"></i>
                 </span>
                 <h4 class="text-section">Data Master</h4>
             </li>
+
             <li class="nav-item">
                 <a href="{{ route('panti-asuhan.index') }}">
-                    <i class="fas fa-home"></i>
+                    <i class="fas fa-house-user"></i>
                     <p>Panti Asuhan</p>
                 </a>
             </li>
@@ -105,32 +79,33 @@
             </li>
             <li class="nav-item">
                 <a href="{{ route('pegawai.index') }}">
-                    <i class="fas fa-home"></i>
-                    <p>pegawai</p>
+                    <i class="fas fa-users"></i>
+                    <p>Pegawai</p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('pengurus.index') }}">
-                    <i class="fas fa-home"></i>
-                    <p>pengurus</p>
+                    <i class="fas fa-user-tie"></i>
+                    <p>Pengurus</p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('donatur.index') }}">
-                    <i class="fas fa-home"></i>
-                    <p>donatur</p>
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <p>Donatur</p>
                 </a>
             </li>
+
             <li class="nav-section">
                 <span class="sidebar-mini-icon">
                     <i class="fa fa-ellipsis-h"></i>
                 </span>
-                <h4 class="text-section">Proses</h4>
+                <h4 class="text-section">Proses &amp; Kegiatan</h4>
             </li>
 
             <li class="nav-item">
                 <a href="{{ route('konten.index', 'kegiatan') }}">
-                    <i class="fas fa-calendar-check"></i>
+                    <i class="fas fa-calendar-alt"></i>
                     <p>Kegiatan</p>
                 </a>
             </li>
@@ -141,15 +116,23 @@
                     <p>Berita</p>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ route('donasi.index') }}">
+                    <i class="fas fa-donate"></i>
+                    <p>Donasi</p>
+                </a>
+            </li>
+
             <li class="nav-item">
                 <a href="{{ route('keuangan.index') }}">
-                    <i class="fas fa-calendar-check"></i>
+                    <i class="fas fa-money-bill-wave"></i>
                     <p>Keuangan</p>
                 </a>
             </li>
 
             <!-- Logout -->
-            <li class="nav-item">
+            <li class="nav-item mt-4">
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt"></i>
