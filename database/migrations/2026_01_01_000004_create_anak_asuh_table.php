@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('no_telp_wali', '20')->nullable();
 
             // Data pendidikan
-            $table->enum('jenjang_pendidikan', ['belum_sekolah', 'SD', 'SMP', 'SMA', 'Kuliah', 'tidak_sekolah'])->nullable();
+            $table->string('jenjang_pendidikan')->nullable();
             $table->string('nama_sekolah', '100')->nullable();
             $table->string('kelas', '50')->nullable();
 
@@ -42,7 +42,7 @@ return new class extends Migration
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->text('keterangan')->nullable();
             $table->timestamps();
-         
+
         });
     }
 

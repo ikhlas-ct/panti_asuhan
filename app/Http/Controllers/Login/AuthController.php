@@ -24,10 +24,22 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $user = Auth::user(); // Ambil data user yang login
+            $user = Auth::user();
 
-            // Cek role untuk redirect sesuai dashboard
-                return redirect()->route('dashboard')->with('success', 'Login berhasil');
+            // Redirect berdasarkan role
+            if ($user->isAdminDinsos()) {
+                return redirect()->route('dinsos.dashboard')->with('success', 'Login berhasil');
+            } elseif ($user->isAdminPanti()) {
+                return redirect()->route('admin_panti.dashboard')->with('success', 'Login berhasil');
+            } elseif ($user->isDonatur()) {
+                return redirect()->route('donatur.dashboard')->with('success', 'Login berhasil');
+            }
+
+            // Fallback jika role tidak dikenali
+            Auth::logout();
+            return back()->withErrors([
+                'username' => 'Role tidak dikenali, hubungi administrator.',
+            ]);
         }
 
         return back()->withErrors([
@@ -44,4 +56,3 @@ class AuthController extends Controller
         return redirect('/login')->with('success', 'Logout berhasil!');
     }
 }
-

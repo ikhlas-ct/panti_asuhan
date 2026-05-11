@@ -94,11 +94,13 @@ class DonasiController extends Controller
     {
         $user = Auth::user();
 
-        $donaturList = $user->role === 'donatur'
-            ? collect([$user->donatur])->filter()
+        // Donatur: hanya dirinya sendiri, tidak perlu pilih
+        $donaturList = ($user->role === 'donatur')
+            ? null
             : Donatur::aktif()->orderBy('nama')->get();
 
-        $pantis = $user->role === 'admin_panti'
+        // Admin panti: hanya panti miliknya
+        $pantis = ($user->role === 'admin_panti')
             ? PantiAsuhan::where('id', $user->pengurus?->panti_asuhan_id)->get()
             : PantiAsuhan::aktif()->orderBy('nama_panti')->get();
 
@@ -112,6 +114,16 @@ class DonasiController extends Controller
     {
         $user = Auth::user();
 
+        // Tentukan donatur_id & panti_asuhan_id berdasarkan role
+        if ($user->role === 'donatur') {
+            // Paksa pakai donatur milik user yang login, abaikan input
+            $request->merge(['donatur_id' => $user->donatur?->id]);
+        }
+        if ($user->role === 'admin_panti') {
+            // Paksa pakai panti milik admin panti yang login
+            $request->merge(['panti_asuhan_id' => $user->pengurus?->panti_asuhan_id]);
+        }
+
         // ── Validasi dasar ────────────────────────────────────────────
         $rules = [
             'donatur_id'      => 'required|exists:donatur,id',
@@ -122,7 +134,6 @@ class DonasiController extends Controller
             'catatan'         => 'nullable|string|max:500',
         ];
 
-        // Kondisional: uang
         if ($request->jenis_donasi === 'uang') {
             $rules['nominal']        = 'required|numeric|min:1000';
             $rules['bukti_transfer'] = $request->metode === 'online'
@@ -130,41 +141,37 @@ class DonasiController extends Controller
                 : 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048';
         }
 
-        // Kondisional: barang
         if ($request->jenis_donasi === 'barang') {
-            $rules['deskripsi_barang']      = 'nullable|string|max:500';
-            $rules['tanggal_kunjungan']     = 'nullable|date';
-            // Validasi array item barang
-            $rules['barang']                = 'required|array|min:1';
-            $rules['barang.*.nama_barang']  = 'required|string|max:100';
+            $rules['deskripsi_barang']       = 'nullable|string|max:500';
+            $rules['tanggal_kunjungan']      = 'nullable|date';
+            $rules['barang']                 = 'required|array|min:1';
+            $rules['barang.*.nama_barang']   = 'required|string|max:100';
             $rules['barang.*.jumlah_barang'] = 'required|integer|min:1';
             $rules['barang.*.satuan_barang'] = 'nullable|string|max:50';
-            $rules['barang.*.keterangan']   = 'nullable|string|max:255';
-            $rules['barang.*.foto_barang']  = 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048';
+            $rules['barang.*.keterangan']    = 'nullable|string|max:255';
+            $rules['barang.*.foto_barang']   = 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048';
         }
 
         $validated = $request->validate($rules, [
-            'donatur_id.required'           => 'Donatur wajib dipilih.',
-            'panti_asuhan_id.required'      => 'Panti asuhan tujuan wajib dipilih.',
-            'jenis_donasi.required'         => 'Jenis donasi wajib dipilih.',
-            'metode.required'               => 'Metode donasi wajib dipilih.',
-            'nominal.required'              => 'Nominal wajib diisi untuk donasi uang.',
-            'nominal.min'                   => 'Nominal minimal Rp 1.000.',
-            'bukti_transfer.required'       => 'Bukti transfer wajib diupload untuk donasi online.',
-            'barang.required'               => 'Tambahkan minimal 1 item barang.',
-            'barang.*.nama_barang.required' => 'Nama barang wajib diisi.',
+            'donatur_id.required'             => 'Donatur wajib dipilih.',
+            'panti_asuhan_id.required'        => 'Panti asuhan tujuan wajib dipilih.',
+            'jenis_donasi.required'           => 'Jenis donasi wajib dipilih.',
+            'metode.required'                 => 'Metode donasi wajib dipilih.',
+            'nominal.required'                => 'Nominal wajib diisi untuk donasi uang.',
+            'nominal.min'                     => 'Nominal minimal Rp 1.000.',
+            'bukti_transfer.required'         => 'Bukti transfer wajib diupload untuk donasi online.',
+            'barang.required'                 => 'Tambahkan minimal 1 item barang.',
+            'barang.*.nama_barang.required'   => 'Nama barang wajib diisi.',
             'barang.*.jumlah_barang.required' => 'Jumlah barang wajib diisi.',
         ]);
 
         DB::transaction(function () use ($request, $validated, $user) {
 
-            // Upload bukti transfer
             $buktiPath = null;
             if ($request->hasFile('bukti_transfer')) {
                 $buktiPath = $request->file('bukti_transfer')->store('donasi/bukti', 'public');
             }
 
-            // ── Status berdasarkan role ───────────────────────────────
             $isAutoApprove = $this->canAutoApprove();
 
             $donasi = Donasi::create([
@@ -183,7 +190,6 @@ class DonasiController extends Controller
                 'dikonfirmasi_at'   => $isAutoApprove ? now() : null,
             ]);
 
-            // ── Simpan item barang ────────────────────────────────────
             if ($validated['jenis_donasi'] === 'barang' && !empty($validated['barang'])) {
                 foreach ($validated['barang'] as $idx => $item) {
                     $fotoPath = null;
@@ -191,7 +197,6 @@ class DonasiController extends Controller
                         $fotoPath = $request->file("barang.{$idx}.foto_barang")
                             ->store('donasi/foto_barang', 'public');
                     }
-
                     DonasiBarang::create([
                         'donasi_id'     => $donasi->id,
                         'nama_barang'   => $item['nama_barang'],
@@ -203,7 +208,6 @@ class DonasiController extends Controller
                 }
             }
 
-            // ── Jika auto-approve dan uang → catat keuangan ──────────
             if ($isAutoApprove) {
                 $donasi->load('donatur');
                 $this->catatKeuangan($donasi);
@@ -241,11 +245,13 @@ class DonasiController extends Controller
 
         $user = Auth::user();
 
-        $donaturList = $user->role === 'donatur'
-            ? collect([$user->donatur])->filter()
+        // Donatur: hanya bisa lihat donasinya sendiri, tidak perlu list
+        $donaturList = ($user->role === 'donatur')
+            ? null
             : Donatur::aktif()->orderBy('nama')->get();
 
-        $pantis = $user->role === 'admin_panti'
+        // Admin panti: hanya panti miliknya
+        $pantis = ($user->role === 'admin_panti')
             ? PantiAsuhan::where('id', $user->pengurus?->panti_asuhan_id)->get()
             : PantiAsuhan::aktif()->orderBy('nama_panti')->get();
 
@@ -264,6 +270,22 @@ class DonasiController extends Controller
         if ($donasi->sudahDikonfirmasi()) {
             return redirect()->route('donasi.show', $donasi)
                 ->with('error', 'Donasi yang sudah dikonfirmasi tidak dapat diedit.');
+        }
+
+        $user = Auth::user();
+
+        // Kunci donatur_id & panti_asuhan_id sesuai role:
+        // - donatur    → pakai donatur_id existing, tidak bisa ganti
+        // - admin_panti → pakai panti_asuhan_id existing, tidak bisa ganti panti
+        //                 tapi bisa ganti donatur (input dari form)
+        // - admin_dinsos → bebas ganti semua
+        if ($user->role === 'donatur') {
+            $request->merge([
+                'donatur_id'      => $donasi->donatur_id,
+                'panti_asuhan_id' => $donasi->panti_asuhan_id,
+            ]);
+        } elseif ($user->role === 'admin_panti') {
+            $request->merge(['panti_asuhan_id' => $donasi->panti_asuhan_id]);
         }
 
         $rules = [
@@ -295,7 +317,6 @@ class DonasiController extends Controller
 
         DB::transaction(function () use ($request, $validated, $donasi) {
 
-            // Update bukti transfer jika ada file baru
             $buktiPath = $donasi->bukti_transfer;
             if ($request->hasFile('bukti_transfer')) {
                 if ($buktiPath) Storage::disk('public')->delete($buktiPath);
@@ -315,9 +336,7 @@ class DonasiController extends Controller
                 'catatan'           => $validated['catatan'] ?? null,
             ]);
 
-            // Update item barang: hapus semua lama, buat ulang
             if ($validated['jenis_donasi'] === 'barang') {
-                // Hapus foto lama
                 foreach ($donasi->barang as $b) {
                     if ($b->foto_barang) Storage::disk('public')->delete($b->foto_barang);
                 }
@@ -357,13 +376,12 @@ class DonasiController extends Controller
                 ->with('error', 'Donasi yang sudah dikonfirmasi tidak dapat dihapus.');
         }
 
-        // Hapus file
         if ($donasi->bukti_transfer) Storage::disk('public')->delete($donasi->bukti_transfer);
         foreach ($donasi->barang as $b) {
             if ($b->foto_barang) Storage::disk('public')->delete($b->foto_barang);
         }
 
-        $donasi->delete(); // cascade ke donasi_barang
+        $donasi->delete();
 
         return redirect()->route('donasi.index')
             ->with('success', 'Data donasi berhasil dihapus.');
@@ -371,12 +389,20 @@ class DonasiController extends Controller
 
     /* ================================================================== */
     /*  KONFIRMASI – admin_dinsos & admin_panti                            */
-    /*  Donasi uang → otomatis buat pemasukan keuangan                    */
     /* ================================================================== */
     public function konfirmasi(Request $request, Donasi $donasi)
     {
         if (!$this->canAutoApprove()) {
             abort(403, 'Anda tidak memiliki izin untuk memverifikasi donasi.');
+        }
+
+        // Admin panti hanya bisa konfirmasi donasi ke pantinya sendiri
+        if (Auth::user()->role === 'admin_panti') {
+            abort_if(
+                $donasi->panti_asuhan_id !== Auth::user()->pengurus?->panti_asuhan_id,
+                403,
+                'Donasi ini bukan untuk panti Anda.'
+            );
         }
 
         if ($donasi->sudahDikonfirmasi()) {
@@ -410,6 +436,14 @@ class DonasiController extends Controller
             abort(403, 'Anda tidak memiliki izin untuk menolak donasi.');
         }
 
+        if (Auth::user()->role === 'admin_panti') {
+            abort_if(
+                $donasi->panti_asuhan_id !== Auth::user()->pengurus?->panti_asuhan_id,
+                403,
+                'Donasi ini bukan untuk panti Anda.'
+            );
+        }
+
         if ($donasi->sudahDikonfirmasi()) {
             return back()->with('error', 'Donasi ini sudah pernah dikonfirmasi.');
         }
@@ -441,7 +475,11 @@ class DonasiController extends Controller
         }
 
         if ($user->role === 'admin_panti') {
-            abort_if($donasi->panti_asuhan_id !== $user->pengurus?->panti_asuhan_id, 403, 'Donasi ini bukan untuk panti Anda.');
+            abort_if(
+                $donasi->panti_asuhan_id !== $user->pengurus?->panti_asuhan_id,
+                403,
+                'Donasi ini bukan untuk panti Anda.'
+            );
         }
     }
 }

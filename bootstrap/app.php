@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\TrackVisitor;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\TrackVisitor;
-
 use Illuminate\Foundation\Configuration\Middleware as ConfigMiddleware;
+use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,8 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (ConfigMiddleware $middleware) {
         // alias kalau nanti mau pakai per‑route
         $middleware->alias([
-            'role'  => RoleMiddleware::class,
-            'track' => TrackVisitor::class,
+        'role' =>  CheckRole::class,
+        'track' => TrackVisitor::class,
         ]);
 
 

@@ -13,11 +13,21 @@ use Illuminate\Support\Str;
 class KontenController extends Controller
 {
     /* ─────────────────────────────────────────────────────────── */
-    /* Validasi $jenis agar hanya 'berita' atau 'kegiatan'        */
+    /* Validasi $jenis: hanya 'berita' atau 'kegiatan'            */
     /* ─────────────────────────────────────────────────────────── */
     private function validateJenis(string $jenis): void
     {
         abort_if(! in_array($jenis, ['berita', 'kegiatan']), 404);
+    }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /* ✅ BARU: Cek akses — berita hanya untuk admin_dinsos        */
+    /* ─────────────────────────────────────────────────────────── */
+    private function validateAkses(string $jenis): void
+    {
+        if ($jenis === 'berita' && ! Auth::user()->isAdminDinsos()) {
+            abort(403, 'Hanya Admin Dinsos yang dapat mengakses halaman berita.');
+        }
     }
 
     /* ─────────────────────────────────────────────────────────── */
@@ -26,10 +36,11 @@ class KontenController extends Controller
     public function index(Request $request, string $jenis)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
         $user  = Auth::user();
         $query = Konten::with(['user', 'pantiAsuhan', 'kategori'])
-                       ->where('jenis_konten', $jenis);
+            ->where('jenis_konten', $jenis);
 
         // Admin panti hanya melihat konten panti-nya sendiri
         if ($user->isAdminPanti()) {
@@ -41,8 +52,8 @@ class KontenController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', "%{$search}%")
-                  ->orWhere('ringkasan', 'like', "%{$search}%")
-                  ->orWhere('penanggung_jawab', 'like', "%{$search}%");
+                    ->orWhere('ringkasan', 'like', "%{$search}%")
+                    ->orWhere('penanggung_jawab', 'like', "%{$search}%");
             });
         }
 
@@ -60,14 +71,14 @@ class KontenController extends Controller
 
         // Stat counts
         $stats = [
-            'total'   => Konten::where('jenis_konten', $jenis)
-                                ->when($user->isAdminPanti(), fn($q) => $q->where('panti_asuhan_id', $user->pengurus?->panti_asuhan_id))
-                                ->count(),
+            'total' => Konten::where('jenis_konten', $jenis)
+                ->when($user->isAdminPanti(), fn($q) => $q->where('panti_asuhan_id', $user->pengurus?->panti_asuhan_id))
+                ->count(),
         ];
 
         if ($jenis === 'kegiatan') {
             $baseQ = Konten::where('jenis_konten', 'kegiatan')
-                           ->when($user->isAdminPanti(), fn($q) => $q->where('panti_asuhan_id', $user->pengurus?->panti_asuhan_id));
+                ->when($user->isAdminPanti(), fn($q) => $q->where('panti_asuhan_id', $user->pengurus?->panti_asuhan_id));
 
             $stats['direncanakan'] = (clone $baseQ)->where('status', 'direncanakan')->count();
             $stats['berlangsung']  = (clone $baseQ)->where('status', 'berlangsung')->count();
@@ -85,17 +96,17 @@ class KontenController extends Controller
     public function create(string $jenis)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
-        $user      = Auth::user();
-        $kategori  = Kategori::orderBy('nama_kategori')->get();
-        $pantis    = $user->isAdminDinsos() && $jenis === 'kegiatan'
-                        ? PantiAsuhan::aktif()->orderBy('nama_panti')->get()
-                        : collect();
+        $user     = Auth::user();
+        $kategori = Kategori::orderBy('nama_kategori')->get();
+        $pantis   = $user->isAdminDinsos() && $jenis === 'kegiatan'
+            ? PantiAsuhan::aktif()->orderBy('nama_panti')->get()
+            : collect();
 
-        // Untuk admin panti, ambil panti secara otomatis
         $pantiPengurus = $user->isAdminPanti()
-                        ? $user->pengurus?->pantiAsuhan
-                        : null;
+            ? $user->pengurus?->pantiAsuhan
+            : null;
 
         return view('pages.konten.create', compact('jenis', 'kategori', 'pantis', 'pantiPengurus'));
     }
@@ -106,12 +117,13 @@ class KontenController extends Controller
     public function store(Request $request, string $jenis)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
         $rules = [
-            'judul'    => 'required|string|max:255|unique:konten,judul',
-            'isi'      => 'required|string',
-            'ringkasan'=> 'nullable|string|max:255',
-            'gambar'   => 'required|image|mimes:jpg,jpeg,png,webp|max:3072',
+            'judul'       => 'required|string|max:255|unique:konten,judul',
+            'isi'         => 'required|string',
+            'ringkasan'   => 'nullable|string|max:255',
+            'gambar'      => 'required|image|mimes:jpg,jpeg,png,webp|max:3072',
             'id_kategori' => 'nullable|exists:kategori,id_kategori',
         ];
 
@@ -131,12 +143,12 @@ class KontenController extends Controller
         }
 
         $validated = $request->validate($rules, [
-            'judul.required'  => 'Judul wajib diisi.',
-            'judul.unique'    => 'Judul sudah digunakan, coba judul lain.',
-            'isi.required'    => 'Isi konten wajib diisi.',
-            'gambar.required' => 'Gambar sampul wajib diunggah.',
-            'gambar.image'    => 'File harus berupa gambar.',
-            'gambar.max'      => 'Ukuran gambar maksimal 3 MB.',
+            'judul.required'         => 'Judul wajib diisi.',
+            'judul.unique'           => 'Judul sudah digunakan, coba judul lain.',
+            'isi.required'           => 'Isi konten wajib diisi.',
+            'gambar.required'        => 'Gambar sampul wajib diunggah.',
+            'gambar.image'           => 'File harus berupa gambar.',
+            'gambar.max'             => 'Ukuran gambar maksimal 3 MB.',
             'tanggal_mulai.required' => 'Tanggal mulai kegiatan wajib diisi.',
         ]);
 
@@ -175,7 +187,7 @@ class KontenController extends Controller
         ]);
 
         return redirect()->route('konten.index', $jenis)
-                         ->with('success', ucfirst($jenis) . ' "' . $validated['judul'] . '" berhasil ditambahkan.');
+            ->with('success', ucfirst($jenis) . ' "' . $validated['judul'] . '" berhasil ditambahkan.');
     }
 
     /* ─────────────────────────────────────────────────────────── */
@@ -184,11 +196,12 @@ class KontenController extends Controller
     public function show(string $jenis, string $slug)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
         $konten = Konten::where('jenis_konten', $jenis)
-                        ->where('slug', $slug)
-                        ->with(['user', 'pantiAsuhan', 'kategori'])
-                        ->firstOrFail();
+            ->where('slug', $slug)
+            ->with(['user', 'pantiAsuhan', 'kategori'])
+            ->firstOrFail();
 
         $konten->incrementViewer();
 
@@ -201,6 +214,7 @@ class KontenController extends Controller
     public function edit(string $jenis, string $slug)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
         $user   = Auth::user();
         $konten = Konten::where('jenis_konten', $jenis)->where('slug', $slug)->firstOrFail();
@@ -212,12 +226,12 @@ class KontenController extends Controller
 
         $kategori = Kategori::orderBy('nama_kategori')->get();
         $pantis   = $user->isAdminDinsos() && $jenis === 'kegiatan'
-                        ? PantiAsuhan::aktif()->orderBy('nama_panti')->get()
-                        : collect();
+            ? PantiAsuhan::aktif()->orderBy('nama_panti')->get()
+            : collect();
 
         $pantiPengurus = $user->isAdminPanti()
-                        ? $user->pengurus?->pantiAsuhan
-                        : null;
+            ? $user->pengurus?->pantiAsuhan
+            : null;
 
         return view('pages.konten.edit', compact('konten', 'jenis', 'kategori', 'pantis', 'pantiPengurus'));
     }
@@ -228,6 +242,7 @@ class KontenController extends Controller
     public function update(Request $request, string $jenis, int $id_konten)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
         $user   = Auth::user();
         $konten = Konten::where('jenis_konten', $jenis)->findOrFail($id_konten);
@@ -237,10 +252,10 @@ class KontenController extends Controller
         }
 
         $rules = [
-            'judul'    => 'required|string|max:255|unique:konten,judul,' . $id_konten . ',id_konten',
-            'isi'      => 'required|string',
-            'ringkasan'=> 'nullable|string|max:255',
-            'gambar'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
+            'judul'       => 'required|string|max:255|unique:konten,judul,' . $id_konten . ',id_konten',
+            'isi'         => 'required|string',
+            'ringkasan'   => 'nullable|string|max:255',
+            'gambar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             'id_kategori' => 'nullable|exists:kategori,id_kategori',
         ];
 
@@ -293,7 +308,7 @@ class KontenController extends Controller
         $konten->update($data);
 
         return redirect()->route('konten.index', $jenis)
-                         ->with('success', ucfirst($jenis) . ' berhasil diperbarui.');
+            ->with('success', ucfirst($jenis) . ' berhasil diperbarui.');
     }
 
     /* ─────────────────────────────────────────────────────────── */
@@ -302,6 +317,7 @@ class KontenController extends Controller
     public function destroy(string $jenis, int $id_konten)
     {
         $this->validateJenis($jenis);
+        $this->validateAkses($jenis); // ← tambah ini
 
         $user   = Auth::user();
         $konten = Konten::where('jenis_konten', $jenis)->findOrFail($id_konten);
@@ -310,7 +326,6 @@ class KontenController extends Controller
             abort_if($konten->panti_asuhan_id !== $user->pengurus?->panti_asuhan_id, 403);
         }
 
-        // Hapus gambar sampul
         if ($konten->gambar && Storage::disk('public')->exists($konten->gambar)) {
             Storage::disk('public')->delete($konten->gambar);
         }
@@ -319,7 +334,7 @@ class KontenController extends Controller
         $konten->delete();
 
         return redirect()->route('konten.index', $jenis)
-                         ->with('success', ucfirst($jenis) . ' "' . $judul . '" berhasil dihapus.');
+            ->with('success', ucfirst($jenis) . ' "' . $judul . '" berhasil dihapus.');
     }
 
     /* ─────────────────────────────────────────────────────────── */
@@ -341,7 +356,6 @@ class KontenController extends Controller
     public function deleteImage(Request $request)
     {
         $src  = $request->input('src', '');
-        // Ambil path relatif dari URL (hapus base URL)
         $path = str_replace(asset('storage') . '/', '', $src);
 
         if ($path && Storage::disk('public')->exists($path)) {

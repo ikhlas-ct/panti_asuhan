@@ -23,18 +23,15 @@
     .form-control,.form-select { border-radius:10px; border:1.5px solid #e2e8f0; font-size:.87rem; padding:9px 13px; color:#334155; background:#f8fafc; transition:border-color .2s,box-shadow .2s; }
     .form-control:focus,.form-select:focus { border-color:#1269db; background:#fff; box-shadow:0 0 0 3px rgba(18,105,219,.12); }
 
-    /* Jenis & Metode toggle */
     .toggle-btn { flex:1; padding:14px 8px; border:2px solid #e2e8f0; border-radius:12px; text-align:center; cursor:pointer; transition:all .2s; background:#f8fafc; color:#64748b; font-weight:700; font-size:.88rem; }
     .toggle-btn:hover { border-color:#1269db; background:#eff6ff; color:#1269db; }
     .toggle-btn.active { border-color:#1269db; background:#eff6ff; color:#1269db; }
     .toggle-btn i { font-size:1.4rem; display:block; margin-bottom:5px; }
 
-    /* Upload */
     .upload-area { border:2px dashed #e2e8f0; border-radius:12px; padding:20px; text-align:center; cursor:pointer; background:#fafbfc; transition:border-color .2s,background .2s; }
     .upload-area:hover { border-color:#1269db; background:#eff6ff; }
     .upload-preview { max-width:100%; max-height:150px; border-radius:10px; border:2px solid #e2e8f0; margin-top:8px; display:none; }
 
-    /* Barang rows */
     .barang-row { background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:12px; position:relative; transition:border-color .2s; }
     .barang-row:hover { border-color:#1269db; }
     .barang-row-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
@@ -50,6 +47,10 @@
     .info-panel.pending { background:#fffbeb; border:1.5px solid #fde68a; }
     .btn-add-row { border-radius:10px; border:2px dashed #1269db; color:#1269db; background:transparent; font-weight:600; font-size:.83rem; padding:10px; width:100%; transition:all .2s; }
     .btn-add-row:hover { background:#eff6ff; }
+
+    /* Info donatur/panti (untuk role terbatas) */
+    .field-readonly-info { background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:.87rem; color:#15803d; font-weight:600; }
+    .field-readonly-info i { font-size:1rem; flex-shrink:0; }
 </style>
 @endsection
 
@@ -94,11 +95,10 @@
                         </div>
                         <input type="hidden" name="jenis_donasi" id="jenis_donasi" value="{{ old('jenis_donasi','uang') }}">
 
-                        {{-- Metode --}}
                         <div class="section-divider mt-3"><i class="fas fa-truck"></i> Metode</div>
                         <div class="d-flex gap-3">
                             <div class="toggle-btn active" id="btn-online" onclick="setMetode('online')">
-                                <i class="fas fa-wifi text-purple" style="color:#7c3aed;"></i> Online
+                                <i class="fas fa-wifi" style="color:#7c3aed;"></i> Online
                                 <div style="font-size:.72rem;color:#64748b;margin-top:3px;">Transfer / QRIS</div>
                             </div>
                             <div class="toggle-btn" id="btn-kunjungan" onclick="setMetode('kunjungan')">
@@ -117,28 +117,60 @@
                     <div class="card-body p-4">
                         <div class="section-divider"><i class="fas fa-users"></i> Donatur & Tujuan</div>
                         <div class="row g-3">
+
+                            {{-- ── DONATUR ── --}}
                             <div class="col-md-6">
                                 <label class="form-label">Donatur <span class="required-mark">*</span></label>
-                                <select name="donatur_id" class="form-select @error('donatur_id') is-invalid @enderror" required>
-                                    <option value="">-- Pilih Donatur --</option>
-                                    @foreach($donaturList as $d)
-                                        <option value="{{ $d->id }}" {{ old('donatur_id')==$d->id?'selected':'' }}>
-                                            {{ $d->nama }} ({{ ucfirst($d->jenis_donatur) }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('donatur_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                                @if(auth()->user()->role === 'donatur')
+                                    {{-- Donatur: tampilkan nama saja, hidden input otomatis --}}
+                                    <div class="field-readonly-info">
+                                        <i class="fas fa-user-check"></i>
+                                        {{ auth()->user()->donatur?->nama }}
+                                        <span class="text-muted fw-normal ms-1" style="font-size:.8rem;">({{ ucfirst(auth()->user()->donatur?->jenis_donatur) }})</span>
+                                    </div>
+                                    <input type="hidden" name="donatur_id" value="{{ auth()->user()->donatur?->id }}">
+                                    @error('donatur_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                                @else
+                                    {{-- Admin dinsos: pilih dari semua donatur --}}
+                                    <select name="donatur_id" class="form-select @error('donatur_id') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Donatur --</option>
+                                        @foreach($donaturList as $d)
+                                            <option value="{{ $d->id }}" {{ old('donatur_id') == $d->id ? 'selected' : '' }}>
+                                                {{ $d->nama }} ({{ ucfirst($d->jenis_donatur) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('donatur_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                @endif
                             </div>
+
+                            {{-- ── PANTI ASUHAN ── --}}
                             <div class="col-md-6">
                                 <label class="form-label">Panti Asuhan Tujuan <span class="required-mark">*</span></label>
-                                <select name="panti_asuhan_id" class="form-select @error('panti_asuhan_id') is-invalid @enderror" required>
-                                    <option value="">-- Pilih Panti --</option>
-                                    @foreach($pantis as $p)
-                                        <option value="{{ $p->id }}" {{ old('panti_asuhan_id')==$p->id?'selected':'' }}>{{ $p->nama_panti }}</option>
-                                    @endforeach
-                                </select>
-                                @error('panti_asuhan_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                                @if(auth()->user()->role === 'admin_panti')
+                                    {{-- Admin panti: hanya panti miliknya --}}
+                                    <div class="field-readonly-info">
+                                        <i class="fas fa-home"></i>
+                                        {{ auth()->user()->pengurus?->pantiAsuhan?->nama_panti }}
+                                    </div>
+                                    <input type="hidden" name="panti_asuhan_id" value="{{ auth()->user()->pengurus?->panti_asuhan_id }}">
+                                    @error('panti_asuhan_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                                @else
+                                    {{-- Admin dinsos / donatur: pilih panti --}}
+                                    <select name="panti_asuhan_id" class="form-select @error('panti_asuhan_id') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Panti --</option>
+                                        @foreach($pantis as $p)
+                                            <option value="{{ $p->id }}" {{ old('panti_asuhan_id') == $p->id ? 'selected' : '' }}>
+                                                {{ $p->nama_panti }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('panti_asuhan_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                @endif
                             </div>
+
                             <div class="col-md-6">
                                 <label class="form-label">Tanggal Donasi <span class="required-mark">*</span></label>
                                 <input type="date" name="tanggal_donasi"
@@ -146,7 +178,6 @@
                                     value="{{ old('tanggal_donasi', date('Y-m-d')) }}" required>
                                 @error('tanggal_donasi')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            {{-- Tanggal kunjungan (tampil jika metode kunjungan) --}}
                             <div class="col-md-6" id="field-kunjungan" style="display:none;">
                                 <label class="form-label">Tanggal Kunjungan</label>
                                 <input type="date" name="tanggal_kunjungan"
@@ -202,9 +233,7 @@
                             </div>
                         @enderror
 
-                        {{-- Container item barang --}}
                         <div id="barang-container">
-                            {{-- Row 1 default --}}
                             <div class="barang-row" data-index="0">
                                 <div class="barang-row-header">
                                     <span class="barang-row-num">1</span>
@@ -264,8 +293,7 @@
             {{-- ── Kolom Kanan ── --}}
             <div class="col-lg-4">
 
-                {{-- Info panel role --}}
-@if(in_array(auth()->user()->role, ['admin_dinsos','admin_panti']))
+                @if(in_array(auth()->user()->role, ['admin_dinsos','admin_panti']))
                     <div class="info-panel auto mb-4">
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <i class="fas fa-bolt text-success fs-5"></i>
@@ -290,7 +318,6 @@
                     </div>
                 @endif
 
-                {{-- Catatan --}}
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body p-4">
                         <div class="section-divider"><i class="fas fa-sticky-note"></i> Catatan</div>
@@ -331,7 +358,6 @@
         document.getElementById('btn-online').classList.toggle('active', metode === 'online');
         document.getElementById('btn-kunjungan').classList.toggle('active', metode === 'kunjungan');
         document.getElementById('field-kunjungan').style.display = metode === 'kunjungan' ? '' : 'none';
-        // Bukti wajib hanya untuk online
         document.getElementById('label-bukti-wajib').style.display = metode === 'online' ? '' : 'none';
         document.getElementById('label-bukti-opsional').style.display = metode === 'kunjungan' ? '' : 'none';
     }
@@ -386,11 +412,9 @@
         });
     }
 
-    // Init
     setJenis('{{ old('jenis_donasi','uang') }}');
     setMetode('{{ old('metode','online') }}');
 
-    // Preview bukti
     document.getElementById('bukti-input').addEventListener('change', function() {
         if (this.files && this.files[0]) {
             const reader = new FileReader();

@@ -22,21 +22,17 @@
     .required-mark { color:#dc3545; }
     .form-control, .form-select { border-radius:10px; border:1.5px solid #e2e8f0; font-size:.87rem; padding:9px 13px; color:#334155; background:#f8fafc; transition:border-color .2s,box-shadow .2s; }
     .form-control:focus, .form-select:focus { border-color:#ca8a04; background:#fff; box-shadow:0 0 0 3px rgba(202,138,4,.12); }
-    .form-control::placeholder { color:#b0bec5; }
 
-    /* Toggle Jenis & Metode */
     .toggle-btn { flex:1; padding:14px 8px; border:2px solid #e2e8f0; border-radius:12px; text-align:center; cursor:pointer; transition:all .2s; background:#f8fafc; color:#64748b; font-weight:700; font-size:.88rem; }
     .toggle-btn:hover { border-color:#ca8a04; background:#fefce8; color:#ca8a04; }
     .toggle-btn.active { border-color:#ca8a04; background:#fefce8; color:#ca8a04; }
     .toggle-btn i { font-size:1.4rem; display:block; margin-bottom:5px; }
 
-    /* Upload */
     .upload-area { border:2px dashed #e2e8f0; border-radius:12px; padding:18px; text-align:center; cursor:pointer; background:#fafbfc; transition:border-color .2s,background .2s; }
     .upload-area:hover { border-color:#ca8a04; background:#fefce8; }
     .upload-preview { max-width:100%; max-height:150px; border-radius:10px; border:2px solid #e2e8f0; margin-top:8px; display:none; }
     .existing-foto { width:60px; height:60px; object-fit:cover; border-radius:8px; border:2px solid #e2e8f0; }
 
-    /* Barang rows */
     .barang-row { background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:12px; position:relative; transition:border-color .2s; }
     .barang-row:hover { border-color:#ca8a04; }
     .barang-row-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
@@ -51,6 +47,10 @@
     .btn-outline-secondary { border-radius:10px; font-size:.87rem; border-color:#e2e8f0; color:#64748b; }
     .alert { border-radius:12px; border:none; font-size:.84rem; padding:12px 16px; }
     .alert-warning { background:#fffbeb; border:1px solid #fde68a; color:#92400e; }
+
+    /* Info donatur/panti (untuk role terbatas) */
+    .field-readonly-info { background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:.87rem; color:#15803d; font-weight:600; }
+    .field-readonly-info i { font-size:1rem; flex-shrink:0; }
 </style>
 @endsection
 
@@ -131,32 +131,76 @@
                     <div class="card-body p-4">
                         <div class="section-divider"><i class="fas fa-users"></i> Donatur & Tujuan</div>
                         <div class="row g-3">
+
+                            {{-- ── DONATUR ── --}}
                             <div class="col-md-6">
                                 <label class="form-label">Donatur <span class="required-mark">*</span></label>
-                                <select name="donatur_id" class="form-select @error('donatur_id') is-invalid @enderror" required>
-                                    <option value="">-- Pilih Donatur --</option>
-                                    @foreach($donaturList as $d)
-                                        <option value="{{ $d->id }}"
-                                            {{ old('donatur_id', $donasi->donatur_id) == $d->id ? 'selected' : '' }}>
-                                            {{ $d->nama }} ({{ ucfirst($d->jenis_donatur) }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('donatur_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                                @if(auth()->user()->role === 'donatur')
+                                    {{-- Donatur: tidak bisa ganti, tampilkan info saja --}}
+                                    <div class="field-readonly-info">
+                                        <i class="fas fa-user-check"></i>
+                                        {{ $donasi->donatur?->nama }}
+                                        <span class="text-muted fw-normal ms-1" style="font-size:.8rem;">({{ ucfirst($donasi->donatur?->jenis_donatur) }})</span>
+                                    </div>
+                                    <input type="hidden" name="donatur_id" value="{{ $donasi->donatur_id }}">
+                                    @error('donatur_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+
+                                @elseif(auth()->user()->role === 'admin_panti')
+                                    {{-- Admin panti: bisa ganti donatur tapi tidak bisa ganti panti --}}
+                                    <select name="donatur_id" class="form-select @error('donatur_id') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Donatur --</option>
+                                        @foreach($donaturList as $d)
+                                            <option value="{{ $d->id }}"
+                                                {{ old('donatur_id', $donasi->donatur_id) == $d->id ? 'selected' : '' }}>
+                                                {{ $d->nama }} ({{ ucfirst($d->jenis_donatur) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('donatur_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                                @else
+                                    {{-- Admin dinsos: bebas ganti donatur --}}
+                                    <select name="donatur_id" class="form-select @error('donatur_id') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Donatur --</option>
+                                        @foreach($donaturList as $d)
+                                            <option value="{{ $d->id }}"
+                                                {{ old('donatur_id', $donasi->donatur_id) == $d->id ? 'selected' : '' }}>
+                                                {{ $d->nama }} ({{ ucfirst($d->jenis_donatur) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('donatur_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                @endif
                             </div>
+
+                            {{-- ── PANTI ASUHAN ── --}}
                             <div class="col-md-6">
                                 <label class="form-label">Panti Asuhan Tujuan <span class="required-mark">*</span></label>
-                                <select name="panti_asuhan_id" class="form-select @error('panti_asuhan_id') is-invalid @enderror" required>
-                                    <option value="">-- Pilih Panti --</option>
-                                    @foreach($pantis as $p)
-                                        <option value="{{ $p->id }}"
-                                            {{ old('panti_asuhan_id', $donasi->panti_asuhan_id) == $p->id ? 'selected' : '' }}>
-                                            {{ $p->nama_panti }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('panti_asuhan_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                                @if(in_array(auth()->user()->role, ['donatur', 'admin_panti']))
+                                    {{-- Donatur & Admin panti: tidak bisa ganti panti --}}
+                                    <div class="field-readonly-info">
+                                        <i class="fas fa-home"></i>
+                                        {{ $donasi->pantiAsuhan?->nama_panti }}
+                                    </div>
+                                    <input type="hidden" name="panti_asuhan_id" value="{{ $donasi->panti_asuhan_id }}">
+                                    @error('panti_asuhan_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                                @else
+                                    {{-- Admin dinsos: bebas ganti panti --}}
+                                    <select name="panti_asuhan_id" class="form-select @error('panti_asuhan_id') is-invalid @enderror" required>
+                                        <option value="">-- Pilih Panti --</option>
+                                        @foreach($pantis as $p)
+                                            <option value="{{ $p->id }}"
+                                                {{ old('panti_asuhan_id', $donasi->panti_asuhan_id) == $p->id ? 'selected' : '' }}>
+                                                {{ $p->nama_panti }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('panti_asuhan_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                @endif
                             </div>
+
                             <div class="col-md-6">
                                 <label class="form-label">Tanggal Donasi <span class="required-mark">*</span></label>
                                 <input type="date" name="tanggal_donasi"
@@ -192,11 +236,9 @@
                                 </div>
                             </div>
 
-                            {{-- Bukti transfer --}}
                             <div class="col-12">
                                 <label class="form-label">Bukti Transfer / Pembayaran</label>
 
-                                {{-- Foto existing --}}
                                 @if($donasi->bukti_transfer)
                                     <div class="d-flex align-items-center gap-3 mb-2 p-3"
                                          style="background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;">
@@ -240,7 +282,6 @@
                         @endif
 
                         <div id="barang-container">
-                            {{-- Render existing barang items --}}
                             @forelse($donasi->barang as $i => $b)
                             <div class="barang-row" data-index="{{ $i }}">
                                 <div class="barang-row-header">
@@ -277,7 +318,6 @@
                                         <label class="form-label">Foto Baru</label>
                                         <input type="file" name="barang[{{ $i }}][foto_barang]"
                                             accept="image/*" class="form-control" style="padding:6px;">
-                                        {{-- tampilkan foto lama jika ada --}}
                                         @if($b->foto_barang)
                                             <div class="mt-1">
                                                 <a href="{{ asset('storage/'.$b->foto_barang) }}" target="_blank">
@@ -298,7 +338,6 @@
                                 </div>
                             </div>
                             @empty
-                            {{-- Jika belum ada item (misal jenis berubah dari uang ke barang) --}}
                             <div class="barang-row" data-index="0">
                                 <div class="barang-row-header">
                                     <span class="barang-row-num">1</span>
@@ -349,8 +388,7 @@
             {{-- ── Kolom Kanan ── --}}
             <div class="col-lg-4">
 
-                {{-- Info --}}
-                <div class="card shadow-sm border-0 mb-4" style="border-radius:14px;border-left:4px solid #ca8a04!important;">
+                <div class="card shadow-sm border-0 mb-4" style="border-radius:14px;">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <i class="fas fa-info-circle text-warning"></i>
@@ -358,6 +396,11 @@
                         </div>
                         <ul class="mb-0 ps-3 text-muted" style="font-size:.8rem;line-height:2;">
                             <li>Hanya donasi <strong>Pending</strong> yang bisa diedit</li>
+                            @if(auth()->user()->role === 'donatur')
+                                <li>Donatur dan panti tujuan <strong>tidak dapat diubah</strong></li>
+                            @elseif(auth()->user()->role === 'admin_panti')
+                                <li>Panti tujuan <strong>tidak dapat diubah</strong></li>
+                            @endif
                             <li>Jika ganti jenis dari Uang ke Barang, isi ulang semua item</li>
                             <li>Upload foto baru untuk mengganti foto lama</li>
                             <li>Item barang lama akan <strong>diganti seluruhnya</strong></li>
@@ -365,7 +408,6 @@
                     </div>
                 </div>
 
-                {{-- Catatan --}}
                 <div class="card shadow-sm border-0 mb-4" style="border-radius:14px;">
                     <div class="card-body p-4">
                         <div class="section-divider"><i class="fas fa-sticky-note"></i> Catatan</div>
@@ -392,7 +434,6 @@
 
 @section('scripts')
 <script>
-    // Index dinamis untuk row baru (mulai setelah existing rows)
     let barangIndex = {{ $donasi->barang->count() > 0 ? $donasi->barang->count() : 1 }};
 
     function setJenis(jenis) {
@@ -461,11 +502,9 @@
         });
     }
 
-    // Init state
     setJenis('{{ old('jenis_donasi', $donasi->jenis_donasi) }}');
     setMetode('{{ old('metode', $donasi->metode) }}');
 
-    // Preview bukti baru
     document.getElementById('bukti-input').addEventListener('change', function () {
         if (this.files && this.files[0]) {
             const reader = new FileReader();

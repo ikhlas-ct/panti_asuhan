@@ -29,7 +29,14 @@
 
             <!-- Dashboard -->
             <li class="nav-item">
-                <a href="{{ route('dinsos.dashboard') }}">
+                @php
+                    $dashboardRoute = match (auth()->user()->role) {
+                        'admin_dinsos' => route('dinsos.dashboard'),
+                        'admin_panti' => route('admin_panti.dashboard'),
+                        default => route('donatur.dashboard'),
+                    };
+                @endphp
+                <a href="{{ $dashboardRoute }}">
                     <i class="fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
@@ -37,64 +44,85 @@
 
             <!-- Profile -->
             <li class="nav-item">
-                <a href="{{ route('pegawai.profil') }}">
+                @php
+                    $role = auth()->user()->role;
+                    $profilRoute = match ($role) {
+                        'admin_dinsos' => route('pegawai.profil'),
+                        'admin_panti' => route('admin_panti.profil'),
+                        default => route('donatur.profil'),
+                    };
+                    $profilNama =
+                        match ($role) {
+                            'admin_dinsos' => auth()->user()->pegawai?->nama,
+                            'admin_panti' => auth()->user()->pengurus?->nama,
+                            default => auth()->user()->donatur?->nama,
+                        } ?? auth()->user()->username;
+                @endphp
+                <a href="{{ $profilRoute }}">
                     <i class="fas fa-user-circle"></i>
-                    <p>Profile Saya</p>
+                    <p>{{ $profilNama }}</p>
                 </a>
             </li>
+            @if (auth()->user()->role === 'admin_dinsos')
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Pengaturan</h4>
+                </li>
 
-            <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                    <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">Pengaturan</h4>
-            </li>
+                <!-- Website Setting -->
+                <li class="nav-item">
+                    <a href="{{ route('setting.website.edit') }}">
+                        <i class="fas fa-cogs"></i>
+                        <p>Website Setting</p>
+                    </a>
+                </li>
+            @endif
+            @if (auth()->user()->role === 'admin_dinsos' || auth()->user()->role === 'admin_panti')
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Data Master</h4>
+                </li>
+            @endif
 
-            <!-- Website Setting -->
-            <li class="nav-item">
-                <a href="{{ route('setting.website.edit') }}">
-                    <i class="fas fa-cogs"></i>
-                    <p>Website Setting</p>
-                </a>
-            </li>
+            @if (auth()->user()->role === 'admin_dinsos')
+                <li class="nav-item">
+                    <a href="{{ route('panti-asuhan.index') }}">
+                        <i class="fas fa-house-user"></i>
+                        <p>Panti Asuhan</p>
+                    </a>
+                </li>
 
-            <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                    <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">Data Master</h4>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('panti-asuhan.index') }}">
-                    <i class="fas fa-house-user"></i>
-                    <p>Panti Asuhan</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('anak-asuh.index') }}">
-                    <i class="fas fa-child"></i>
-                    <p>Anak Asuh</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('pegawai.index') }}">
-                    <i class="fas fa-users"></i>
-                    <p>Pegawai</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('pengurus.index') }}">
-                    <i class="fas fa-user-tie"></i>
-                    <p>Pengurus</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('donatur.index') }}">
-                    <i class="fas fa-hand-holding-heart"></i>
-                    <p>Donatur</p>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ route('pegawai.index') }}">
+                        <i class="fas fa-users"></i>
+                        <p>Pegawai</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('pengurus.index') }}">
+                        <i class="fas fa-user-tie"></i>
+                        <p>Pengurus</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('donatur.index') }}">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <p>Donatur</p>
+                    </a>
+                </li>
+            @endif
+            @if (auth()->user()->role === 'admin_dinsos' || auth()->user()->role === 'admin_panti')
+                <li class="nav-item">
+                    <a href="{{ route('anak-asuh.index') }}">
+                        <i class="fas fa-child"></i>
+                        <p>Anak Asuh</p>
+                    </a>
+                </li>
+            @endif
 
             <li class="nav-section">
                 <span class="sidebar-mini-icon">
@@ -102,20 +130,33 @@
                 </span>
                 <h4 class="text-section">Proses &amp; Kegiatan</h4>
             </li>
+            @if (auth()->user()->role === 'admin_panti' || auth()->user()->role === 'admin_dinsos')
+                <li class="nav-item">
+                    <a href="{{ route('konten.index', 'kegiatan') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        <p>Kegiatan</p>
+                    </a>
+                </li>
+            @endif
+                        @if (auth()->user()->role === 'donatur')
 
-            <li class="nav-item">
-                <a href="{{ route('konten.index', 'kegiatan') }}">
-                    <i class="fas fa-calendar-alt"></i>
-                    <p>Kegiatan</p>
-                </a>
-            </li>
+                    <li class="nav-item">
+                    <a href="{{ route('panti-asuhan.index') }}">
+                        <i class="fas fa-house-user"></i>
+                        <p>Panti Asuhan</p>
+                    </a>
+                </li>
+                            @endif
 
-            <li class="nav-item">
-                <a href="{{ route('konten.index', 'berita') }}">
-                    <i class="fas fa-newspaper"></i>
-                    <p>Berita</p>
-                </a>
-            </li>
+
+            @if (auth()->user()->role === 'admin_dinsos')
+                <li class="nav-item">
+                    <a href="{{ route('konten.index', 'berita') }}">
+                        <i class="fas fa-newspaper"></i>
+                        <p>Berita</p>
+                    </a>
+                </li>
+            @endif
 
             <li class="nav-item">
                 <a href="{{ route('donasi.index') }}">
@@ -124,12 +165,14 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ route('keuangan.index') }}">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <p>Keuangan</p>
-                </a>
-            </li>
+            @if (auth()->user()->role === 'admin_panti' || auth()->user()->role === 'admin_dinsos')
+                <li class="nav-item">
+                    <a href="{{ route('keuangan.index') }}">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <p>Keuangan</p>
+                    </a>
+                </li>
+            @endif
 
             <!-- Logout -->
             <li class="nav-item mt-4">

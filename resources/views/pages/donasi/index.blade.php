@@ -94,6 +94,9 @@
         <a href="{{ route('donasi.create') }}" class="btn btn-primary btn-sm">
             <i class="fas fa-plus me-1"></i> Tambah Donasi
         </a>
+            <a href="{{ route('laporan.donasi-per-panti') }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i> Laporan Donasi per Panti
+        </a>
     </div>
 
     {{-- Role Banner --}}
