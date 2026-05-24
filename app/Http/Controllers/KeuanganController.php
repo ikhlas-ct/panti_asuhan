@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Keuangan;
 use App\Models\Donasi;
 use App\Models\Donatur;
+use App\Models\Keuangan;
 use App\Models\PantiAsuhan;
 use App\Models\WebsiteSetting;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -127,7 +128,6 @@ class KeuanganController extends Controller
 
         $isDonasi = $request->input('sumber') === 'donasi';
 
-        // ── Validasi ─────────────────────────────────────────
         $rules = [
             'panti_asuhan_id' => 'required|exists:panti_asuhan,id',
             'jenis'           => 'required|in:pemasukan,pengeluaran',
@@ -151,7 +151,6 @@ class KeuanganController extends Controller
         DB::transaction(function () use ($request, $validated, $isDonasi, $pantiAsuhanId) {
             $donasi = null;
 
-            // ── 1. Buat record Donasi ────────────────────────
             if ($isDonasi) {
                 $buktiTransferPath = null;
                 if ($request->hasFile('bukti_transfer')) {
@@ -175,23 +174,19 @@ class KeuanganController extends Controller
                 ]);
             }
 
-            // ── 2. Upload bukti keuangan ─────────────────────
             $buktiPath = null;
             if ($request->hasFile('bukti')) {
                 $buktiPath = $request->file('bukti')->store('keuangan/bukti', 'public');
             } elseif ($isDonasi && isset($donasi) && $donasi->bukti_transfer) {
-                // Gunakan bukti transfer sebagai bukti keuangan jika tidak ada upload terpisah
                 $buktiPath = $donasi->bukti_transfer;
             }
 
-            // ── 3. Keterangan otomatis jika donasi ──────────
             $keterangan = $validated['keterangan'] ?? null;
             if ($isDonasi && !$keterangan) {
                 $donatur    = Donatur::find($validated['donatur_id']);
                 $keterangan = 'Pemasukan donasi dari ' . ($donatur->nama ?? '-');
             }
 
-            // ── 4. Buat record Keuangan ──────────────────────
             Keuangan::create([
                 'panti_asuhan_id' => $pantiAsuhanId,
                 'jenis'           => $isDonasi ? 'pemasukan' : $validated['jenis'],
@@ -262,7 +257,6 @@ class KeuanganController extends Controller
         $pantiAsuhanId = $isAdminPanti ? $myPantiId : $request->panti_asuhan_id;
         $request->merge(['panti_asuhan_id' => $pantiAsuhanId]);
 
-        // Jika record ini sudah punya donasi, tetap donasi
         $isDonasi = $keuangan->donasi_id !== null || $request->input('sumber') === 'donasi';
 
         $rules = [
@@ -287,10 +281,9 @@ class KeuanganController extends Controller
 
         DB::transaction(function () use ($request, $validated, $isDonasi, $pantiAsuhanId, $keuangan) {
 
-            // ── Update Donasi jika ada ───────────────────────
             if ($isDonasi && $keuangan->donasi) {
-                $donasi         = $keuangan->donasi;
-                $buktiTransfer  = $donasi->bukti_transfer;
+                $donasi        = $keuangan->donasi;
+                $buktiTransfer = $donasi->bukti_transfer;
 
                 if ($request->hasFile('bukti_transfer')) {
                     if ($buktiTransfer) Storage::disk('public')->delete($buktiTransfer);
@@ -310,7 +303,6 @@ class KeuanganController extends Controller
                 ]);
             }
 
-            // ── Bukti keuangan ───────────────────────────────
             $buktiPath = $keuangan->bukti;
 
             if ($request->hasFile('bukti')) {
@@ -323,7 +315,6 @@ class KeuanganController extends Controller
                 $buktiPath = null;
             }
 
-            // ── Update Keuangan ──────────────────────────────
             $keuangan->update([
                 'panti_asuhan_id' => $pantiAsuhanId,
                 'jenis'           => $isDonasi ? 'pemasukan' : $validated['jenis'],
@@ -366,86 +357,92 @@ class KeuanganController extends Controller
             ->with('success', 'Data keuangan berhasil dihapus.');
     }
 
-
-
-    public function laporanForm()
-    {
-        $user         = Auth::user();
-        $isAdminPanti = $user->isAdminPanti();
-        $pantiId      = $this->getPantiId();
-
-        if ($isAdminPanti && !$pantiId) {
-            abort(403, 'Akun Anda belum terhubung ke panti asuhan.');
-        }
-
-        // Admin panti: hanya pantiya, admin dinsos: semua panti
-        $pantis = $isAdminPanti
-            ? PantiAsuhan::where('id', $pantiId)->get()
-            : PantiAsuhan::orderBy('nama_panti')->get();
-
-        return view('pages.keuangan.laporan-form', compact('pantis', 'isAdminPanti', 'pantiId'));
-    }
-
-
-
+    // ──────────────────────────────────────────────────────────
+    // LAPORAN CETAK
+    // Route: GET /keuangan/laporan/cetak  → name: keuangan.laporan.cetak
+    // ──────────────────────────────────────────────────────────
     public function laporanCetak(Request $request)
     {
         $user         = Auth::user();
         $isAdminPanti = $user->isAdminPanti();
-        $myPantiId    = $this->getPantiId();
 
-        $request->validate([
-            'panti_asuhan_id' => 'required|exists:panti_asuhan,id',
-            'bulan'           => 'nullable|integer|between:1,12',
-            'tahun'           => 'nullable|integer|min:2000|max:2099',
-        ]);
-
-        $pantiId = $isAdminPanti ? $myPantiId : $request->panti_asuhan_id;
-
-        if ($isAdminPanti && $pantiId !== $myPantiId) {
-            abort(403);
+        // ── Tentukan panti ────────────────────────────────────
+        if ($isAdminPanti) {
+            $pantiId = $user->pengurus?->panti_asuhan_id;
+            abort_unless($pantiId, 403, 'Akun belum terhubung ke panti asuhan.');
+        } else {
+            $request->validate([
+                'panti_asuhan_id' => 'required|exists:panti_asuhan,id',
+            ], [
+                'panti_asuhan_id.required' => 'Silakan pilih panti asuhan terlebih dahulu.',
+            ]);
+            $pantiId = $request->panti_asuhan_id;
         }
 
         $panti = PantiAsuhan::findOrFail($pantiId);
 
-        // Query transaksi
-        $query = Keuangan::where('panti_asuhan_id', $pantiId)
+        // ── Tipe periode & rentang tanggal ────────────────────
+        $tipe = $request->input('tipe_periode', 'harian');
+
+        switch ($tipe) {
+            case 'harian':
+                $tanggal      = Carbon::parse($request->input('tanggal', today()))->startOfDay();
+                $dateFrom     = $tanggal->copy()->startOfDay();
+                $dateTo       = $tanggal->copy()->endOfDay();
+                $labelPeriode = $tanggal->translatedFormat('d F Y');
+                break;
+
+            case 'bulanan':
+                $bulan        = (int) $request->input('bulan_laporan',  now()->month);
+                $tahun        = (int) $request->input('tahun_laporan',  now()->year);
+                $dateFrom     = Carbon::createFromDate($tahun, $bulan, 1)->startOfMonth();
+                $dateTo       = $dateFrom->copy()->endOfMonth();
+                $labelPeriode = $dateFrom->translatedFormat('F Y');
+                break;
+
+            case 'tahunan':
+            default:
+                $tahun        = (int) $request->input('tahun_laporan_only', now()->year);
+                $dateFrom     = Carbon::createFromDate($tahun, 1, 1)->startOfYear();
+                $dateTo       = $dateFrom->copy()->endOfYear();
+                $labelPeriode = (string) $tahun;
+                break;
+        }
+
+        // ── Query transaksi ───────────────────────────────────
+        $transaksi = Keuangan::where('panti_asuhan_id', $pantiId)
+            ->whereBetween('tanggal', [$dateFrom->toDateString(), $dateTo->toDateString()])
             ->orderBy('tanggal')
-            ->orderBy('id');
+            ->orderBy('id')
+            ->get();
 
-        if ($request->filled('bulan')) $query->whereMonth('tanggal', $request->bulan);
-        if ($request->filled('tahun')) $query->whereYear('tanggal', $request->tahun);
-
-        $transaksis       = $query->get();
-        $totalPemasukan   = $transaksis->where('jenis', 'pemasukan')->sum('nominal');
-        $totalPengeluaran = $transaksis->where('jenis', 'pengeluaran')->sum('nominal');
+        // ── Hitung totals ─────────────────────────────────────
+        $totalPemasukan   = $transaksi->where('jenis', 'pemasukan')->sum('nominal');
+        $totalPengeluaran = $transaksi->where('jenis', 'pengeluaran')->sum('nominal');
         $saldo            = $totalPemasukan - $totalPengeluaran;
-        $bulan            = $request->bulan;
-        $tahun            = $request->tahun;
 
-        $settings = \App\Models\WebsiteSetting::first();
+        // ── Data pendukung ────────────────────────────────────
+        // WebsiteSetting: nama institusi, logo, alamat, slogan, dll.
+        $setting = WebsiteSetting::getSetting();
 
-        // ── Ambil nama kepala dinsos dari tabel pegawai ──────────
-        // Cari pegawai yang posisinya kepala / jabatan tertinggi,
-        // atau ambil berdasarkan user yang role-nya admin_dinsos
-        $kepalaDinsos = \App\Models\Pegawai::whereHas(
-            'user',
-            fn($q) =>
-            $q->where('role', 'admin_dinsos')
-        )->orderByDesc('id_pegawai')->first();
+        // Nama pengurus aktif panti (untuk tanda tangan)
+        $pengurusNama = $panti->pengurus()->aktif()->first()?->nama;
+
+        // Nama kepala dinas (opsional — dari Pegawai dengan posisi kepala)
+        $kepaladinsos = \App\Models\Pegawai::where('posisi', 'like', '%kepala%')
+            ->value('nama');
 
         return view('pages.keuangan.laporan-cetak', compact(
             'panti',
-            'transaksis',
+            'transaksi',
+            'tipe',
+            'labelPeriode',
             'totalPemasukan',
             'totalPengeluaran',
             'saldo',
-            'bulan',
-            'tahun',
-            'settings',
-            'kepalaDinsos'
+            'setting',
+            'pengurusNama',
+            'kepaladinsos'
         ));
     }
-
-
 }

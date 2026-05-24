@@ -529,9 +529,7 @@
                             <i class="fas fa-plus me-1"></i> Tambah Panti
                         </a>
 
-                        <a href="{{ route('laporan.donasi-per-panti') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus me-1"></i> Laporan Donasi per Panti
-                        </a>
+                  
                     </div>
                 </div>
 

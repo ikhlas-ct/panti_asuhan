@@ -98,6 +98,9 @@
     </div>
 
     <div class="page-inner">
+        {{-- ============================================================
+             FORM EDIT UTAMA — tidak ada <form> lain di dalamnya
+             ============================================================ --}}
         <form action="{{ route('panti-asuhan.update', $pantiAsuhan) }}" method="POST"
               enctype="multipart/form-data" novalidate>
             @csrf
@@ -201,17 +204,20 @@
                                     <div class="foto-item existing">
                                         <img src="{{ asset('storage/' . $foto->foto) }}" alt="{{ $foto->keterangan }}">
                                         <span class="foto-badge {{ $loop_idx === 0 ? 'cover-badge' : '' }}">
-                                            {{ $loop_idx === 0 ? 'Cover' : '#' . ($loop_idx+1) }}
+                                            {{ $loop_idx === 0 ? 'Cover' : '#' . ($loop_idx + 1) }}
                                         </span>
-                                        {{-- Tombol hapus foto (submit form terpisah) --}}
-                                        <form action="{{ route('panti-asuhan.foto.destroy', [$pantiAsuhan, $foto]) }}"
-                                              method="POST" class="btn-hapus-foto-form"
-                                              data-ket="{{ $foto->keterangan ?? 'foto ini' }}">
-                                            @csrf @method('DELETE')
+                                        {{--
+                                            FIX: Tidak ada <form> di sini.
+                                            Tombol memakai data-foto-id untuk trigger form
+                                            hapus yang diletakkan di LUAR form edit utama.
+                                        --}}
+                                        <div class="btn-hapus-foto-wrap"
+                                             data-foto-id="{{ $foto->id }}"
+                                             data-ket="{{ $foto->keterangan ?? 'foto ini' }}">
                                             <button type="button" class="foto-remove btn-hapus-foto" title="Hapus foto">
                                                 <i class="fas fa-times"></i>
                                             </button>
-                                        </form>
+                                        </div>
                                         <div class="foto-ket">
                                             <span style="font-size:.72rem;color:#64748b;">{{ $foto->keterangan ?: '-' }}</span>
                                         </div>
@@ -274,6 +280,24 @@
                 </div>{{-- end col-lg-4 --}}
             </div>
         </form>
+        {{-- ============================================================
+             AKHIR FORM EDIT UTAMA
+             ============================================================ --}}
+
+        {{-- ============================================================
+             FORM-FORM HAPUS FOTO — di LUAR form edit, tidak nested
+             Ini yang menjadi penyebab bug delete saat edit sebelumnya.
+             ============================================================ --}}
+        @foreach($pantiAsuhan->fotoPanti as $foto)
+        <form id="form-hapus-foto-{{ $foto->id }}"
+              action="{{ route('panti-asuhan.foto.destroy', [$pantiAsuhan, $foto]) }}"
+              method="POST"
+              class="d-none">
+            @csrf
+            @method('DELETE')
+        </form>
+        @endforeach
+
     </div>
 </div>
 @endsection
@@ -319,23 +343,27 @@
     }
 
     input.addEventListener('change', function () { addFiles(this.files); });
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-    dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); addFiles(e.dataTransfer.files); });
+    dropZone.addEventListener('dragover',  e  => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop',      e  => { e.preventDefault(); dropZone.classList.remove('drag-over'); addFiles(e.dataTransfer.files); });
 })();
 
 // ===== Hapus foto existing =====
+// FIX: Tombol sekarang mencari form via data-foto-id, bukan nested <form>.
 document.querySelectorAll('.btn-hapus-foto').forEach(btn => {
     btn.addEventListener('click', function () {
-        const form = this.closest('.btn-hapus-foto-form');
-        const ket  = form.dataset.ket;
+        const wrap  = this.closest('.btn-hapus-foto-wrap');
+        const id    = wrap.dataset.fotoId;
+        const ket   = wrap.dataset.ket;
         swal({
             title: 'Hapus Foto?',
             text: `Foto "${ket}" akan dihapus permanen.`,
             icon: 'warning',
             buttons: { cancel: 'Batal', confirm: { text: 'Hapus', className: 'btn-danger' } },
             dangerMode: true,
-        }).then(ok => { if (ok) form.submit(); });
+        }).then(ok => {
+            if (ok) document.getElementById('form-hapus-foto-' + id).submit();
+        });
     });
 });
 </script>

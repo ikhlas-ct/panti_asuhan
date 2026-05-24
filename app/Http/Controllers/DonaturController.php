@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donatur;
+use App\Models\Pegawai;
 use App\Models\User;
+use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -59,6 +61,83 @@ class DonaturController extends Controller
     }
 
     // ──────────────────────────────────────────────
+    //  CETAK LAPORAN (Admin Dinsos)
+    //
+    //  Query params:
+    //    ?periode=harian&tanggal=2026-05-23
+    //    ?periode=bulanan&bulan=5&tahun=2026
+    //    ?periode=tahunan&tahun=2026
+    // ──────────────────────────────────────────────
+    public function cetakLaporan(Request $request)
+    {
+        $periode = $request->input('periode', 'bulanan');
+
+        $query = Donatur::with('user')->orderBy('created_at', 'asc');
+
+        // ── Filter berdasarkan periode ──
+        switch ($periode) {
+
+            case 'harian':
+                $request->validate(['tanggal' => 'required|date']);
+                $tanggal = $request->input('tanggal');
+                $query->whereDate('created_at', $tanggal);
+
+                $labelPeriode = 'Per Hari: ' . \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y');
+                $subLabel     = \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y');
+                break;
+
+            case 'tahunan':
+                $request->validate(['tahun' => 'required|integer|min:2000|max:2100']);
+                $tahun = (int) $request->input('tahun');
+                $query->whereYear('created_at', $tahun);
+
+                $labelPeriode = 'Per Tahun: ' . $tahun;
+                $subLabel     = 'Tahun ' . $tahun;
+                break;
+
+            case 'bulanan':
+            default:
+                $request->validate([
+                    'bulan' => 'required|integer|min:1|max:12',
+                    'tahun' => 'required|integer|min:2000|max:2100',
+                ]);
+                $bulan = (int) $request->input('bulan');
+                $tahun = (int) $request->input('tahun');
+                $query->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
+
+                $namaBulan    = \Carbon\Carbon::createFromDate($tahun, $bulan, 1)
+                    ->locale('id')->translatedFormat('F');
+                $labelPeriode = 'Per Bulan: ' . $namaBulan . ' ' . $tahun;
+                $subLabel     = $namaBulan . ' ' . $tahun;
+                break;
+        }
+
+        $donaturs     = $query->get();
+        $totalAktif   = $donaturs->where('status', 'aktif')->count();
+        $totalSemua   = $donaturs->count();
+        $tanggalCetak = now()->translatedFormat('d F Y');
+
+        // ── Data website (logo, nama instansi, alamat) ──
+        $setting = WebsiteSetting::first();
+
+        // ── Data penanda tangan: pegawai milik admin yang sedang login,
+        //    fallback ke pegawai pertama jika tidak ditemukan ──
+        $pegawai = auth()->user()?->pegawai ?? Pegawai::first();
+
+        return view('pages.donatur.laporan', compact(
+            'donaturs',
+            'totalAktif',
+            'totalSemua',
+            'periode',
+            'labelPeriode',
+            'subLabel',
+            'tanggalCetak',
+            'setting',
+            'pegawai'
+        ));
+    }
+
+    // ──────────────────────────────────────────────
     //  CREATE
     // ──────────────────────────────────────────────
     public function create()
@@ -71,11 +150,6 @@ class DonaturController extends Controller
     // ──────────────────────────────────────────────
     public function store(Request $request)
     {
-        /*
-         * mode_akun:
-         *   'none'  → simpan donatur tanpa akun
-         *   'baru'  → buat user baru (role: donatur) sekaligus
-         */
         $modeAkun = $request->input('mode_akun', 'none');
 
         $rules = [
@@ -181,12 +255,6 @@ class DonaturController extends Controller
     // ──────────────────────────────────────────────
     public function update(Request $request, Donatur $donatur)
     {
-        /*
-         * mode_akun:
-         *   'none'     → tanpa akun (lepas akun lama jika ada)
-         *   'baru'     → buat akun baru
-         *   'existing' → sudah punya akun, boleh ganti password
-         */
         $modeAkun = $request->input('mode_akun', 'none');
 
         $rules = [

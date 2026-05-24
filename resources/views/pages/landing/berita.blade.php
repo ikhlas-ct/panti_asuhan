@@ -11,30 +11,7 @@
 </head>
 <body>
 
-{{-- NAVBAR --}}
-<nav class="navbar navbar-expand-lg">
-  <div class="container">
-    <a class="navbar-brand" href="{{ route('home') }}">
-      <div class="brand-icon"><i class="bi bi-heart-fill"></i></div>{{ $setting?->nama ?? 'TitikKebaikan' }}
-    </a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav mx-auto gap-1">
-        <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active':'' }}" href="{{ route('home') }}">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link {{ request()->routeIs('berita*') ? 'active':'' }}" href="{{ route('berita') }}">Berita</a></li>
-        <li class="nav-item"><a class="nav-link {{ request()->routeIs('daftar-panti*') ? 'active':'' }}" href="{{ route('daftar-panti') }}">Daftar Panti</a></li>
-        <li class="nav-item"><a class="nav-link {{ request()->routeIs('kerjasama*') ? 'active':'' }}" href="{{ route('kerjasama') }}">Kerjasama Kami</a></li>
-        <li class="nav-item"><a class="nav-link {{ request()->routeIs('tentang') ? 'active':'' }}" href="{{ route('tentang') }}">Tentang Kami</a></li>
-      </ul>
-      <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-        <button class="btn-bookmark"><i class="bi bi-bookmark"></i> Bookmark</button>
-        <a href="#" class="btn-admin">Admin Dashboard</a>
-      </div>
-    </div>
-  </div>
-</nav>
+@include('pages.landing.partials.navbar')
 
 {{-- HERO --}}
 <section class="hero-berita">
@@ -64,57 +41,128 @@
       </div>
       <h2 class="section-title">Berita dan Artikel <span>Terkini</span></h2>
     </div>
+
     <div class="row g-4 align-items-stretch">
 
       {{-- BIG CARD --}}
       <div class="col-lg-7 fade-up delay-1">
         <div class="featured-big h-100">
+
+          {{-- Gambar featured --}}
           <div class="feat-img">
             @if($beritaFeatured->gambar)
-              <img src="{{ asset('storage/'.$beritaFeatured->gambar) }}" alt="{{ $beritaFeatured->judul }}"
-                onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:260px\'><i class=\'bi bi-image\'></i></div>'"/>
+              <img
+                src="{{ asset('storage/' . $beritaFeatured->gambar) }}"
+                alt="{{ $beritaFeatured->judul ?? 'Berita Terkini' }}"
+                onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:260px\'><i class=\'bi bi-image\'></i></div>'"
+              />
             @else
               <div class="img-ph" style="height:260px;"><i class="bi bi-image"></i></div>
             @endif
           </div>
+
           <div class="feat-body">
+            {{-- Tanggal & author --}}
             <div class="feat-date">
-              <i class="bi bi-calendar3 me-1"></i>{{ $beritaFeatured->tanggal_publikasi?->format('d M, Y') }}
-              &nbsp;·&nbsp; <span style="color:var(--text-muted);">{{ $beritaFeatured->user?->username ?? 'Admin' }}</span>
+              <i class="bi bi-calendar3 me-1"></i>
+              {{ $beritaFeatured->tanggal_publikasi?->format('d M, Y') ?? '-' }}
+              &nbsp;·&nbsp;
+              <span style="color:var(--text-muted);">
+                {{ $beritaFeatured->user?->username ?? 'Admin' }}
+              </span>
+              @if($beritaFeatured->kategori?->nama_kategori)
+                &nbsp;·&nbsp;
+                <span class="category-badge badge-cerita">
+                  {{ $beritaFeatured->kategori->nama_kategori }}
+                </span>
+              @endif
             </div>
-            <div class="feat-title">{{ $beritaFeatured->judul }}</div>
-            <p class="feat-excerpt">{{ $beritaFeatured->ringkasan }}</p>
-            <a href="{{ route('berita.detail', $beritaFeatured->slug) }}" class="link-baca">Baca Selengkapnya <i class="bi bi-arrow-right"></i></a>
+
+            {{-- Judul --}}
+            <div class="feat-title">{{ $beritaFeatured->judul ?? '-' }}</div>
+
+            {{-- Ringkasan: strip HTML Summernote, fallback ke isi --}}
+            @php
+              $featRingkasan = $beritaFeatured->ringkasan
+                ? strip_tags($beritaFeatured->ringkasan)
+                : Str::limit(strip_tags($beritaFeatured->isi ?? ''), 180, '...');
+            @endphp
+            @if($featRingkasan)
+              <p class="feat-excerpt">{{ Str::limit($featRingkasan, 180, '...') }}</p>
+            @endif
+
+            {{-- Link baca --}}
+            @if($beritaFeatured->slug)
+              <a href="{{ route('berita.detail', $beritaFeatured->slug) }}" class="link-baca">
+                Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+              </a>
+            @else
+              <span class="link-baca text-muted">Tautan tidak tersedia</span>
+            @endif
           </div>
         </div>
       </div>
 
-      {{-- SMALL CARDS --}}
+      {{-- SMALL CARDS (2 berita populer) --}}
       <div class="col-lg-5 fade-up delay-2 d-flex flex-column gap-3">
-        @foreach($beritaPopuler as $pop)
+        @forelse($beritaPopuler as $pop)
         <div class="berita-sm h-auto">
+
+          {{-- Gambar kecil --}}
           <div class="berita-sm-img">
             @if($pop->gambar)
-              <img src="{{ asset('storage/'.$pop->gambar) }}" alt="{{ $pop->judul }}"/>
+              <img
+                src="{{ asset('storage/' . $pop->gambar) }}"
+                alt="{{ $pop->judul ?? 'Berita' }}"
+                onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:80px\'><i class=\'bi bi-journal-text\'></i></div>'"
+              />
             @else
               <div class="img-ph" style="height:80px;"><i class="bi bi-journal-text"></i></div>
             @endif
           </div>
+
           <div class="berita-sm-body">
-            @if($pop->kategori)
-              <span class="category-badge badge-cerita mb-1 d-inline-block">{{ $pop->kategori->nama_kategori }}</span>
+            {{-- Badge kategori --}}
+            @if($pop->kategori?->nama_kategori)
+              <span class="category-badge badge-cerita mb-1 d-inline-block">
+                {{ $pop->kategori->nama_kategori }}
+              </span>
             @endif
-            <div class="berita-sm-title">{{ $pop->judul }}</div>
+
+            {{-- Judul --}}
+            <div class="berita-sm-title">{{ $pop->judul ?? '-' }}</div>
+
+            {{-- Meta: tanggal & author --}}
             <div class="d-flex align-items-center gap-2 mt-2">
-              <div class="author-avatar" style="width:22px;height:22px;"><i class="bi bi-person-fill" style="font-size:.7rem;"></i></div>
+              <div class="author-avatar" style="width:22px;height:22px;">
+                <i class="bi bi-person-fill" style="font-size:.7rem;"></i>
+              </div>
               <span style="font-size:.73rem;color:var(--text-muted);">
-                {{ $pop->tanggal_publikasi?->format('d M, Y') }} · {{ $pop->user?->username ?? 'Admin' }}
+                {{ $pop->tanggal_publikasi?->format('d M, Y') ?? '-' }}
+                · {{ $pop->user?->username ?? 'Admin' }}
               </span>
             </div>
-            <a href="{{ route('berita.detail', $pop->slug) }}" class="link-baca mt-2 d-inline-flex">Baca Selengkapnya <i class="bi bi-arrow-right"></i></a>
+
+            {{-- Viewer --}}
+            @if($pop->viewer > 0)
+              <div class="mt-1" style="font-size:.72rem;color:var(--text-muted);">
+                <i class="bi bi-eye me-1"></i>{{ number_format($pop->viewer) }} pembaca
+              </div>
+            @endif
+
+            {{-- Link baca --}}
+            @if($pop->slug)
+              <a href="{{ route('berita.detail', $pop->slug) }}" class="link-baca mt-2 d-inline-flex">
+                Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+              </a>
+            @else
+              <span class="link-baca mt-2 d-inline-flex text-muted">Tautan tidak tersedia</span>
+            @endif
           </div>
         </div>
-        @endforeach
+        @empty
+        {{-- Tidak ada berita populer selain featured --}}
+        @endforelse
       </div>
 
     </div>
@@ -147,60 +195,97 @@
         </div>
       </div>
 
-      {{-- FILTER TABS KATEGORI --}}
+      {{--
+        FILTER TABS KATEGORI
+        Catatan: jenis_konten di DB enum('kegiatan','berita') — tidak ada 'artikel'.
+        Tab kategori dinamis dari tabel kategori.
+      --}}
       <div class="filter-tabs mb-4 fade-up delay-1">
-        <button type="submit" name="jenis" value="semua"
-          class="filter-tab {{ !request('jenis') || request('jenis') === 'semua' ? 'active active-orange' : '' }}">
-          <i class="bi bi-grid-fill me-1"></i> Semua Artikel
+        <button type="submit" name="kategori" value=""
+          class="filter-tab {{ !request('kategori') ? 'active active-orange' : '' }}">
+          <i class="bi bi-grid-fill me-1"></i> Semua
         </button>
-        <button type="submit" name="jenis" value="artikel"
-          class="filter-tab {{ request('jenis') === 'artikel' ? 'active' : '' }}">
-          <i class="bi bi-heart me-1"></i> Cerita Inspiratif
-        </button>
-        <button type="submit" name="jenis" value="berita"
-          class="filter-tab {{ request('jenis') === 'berita' ? 'active' : '' }}">
-          <i class="bi bi-newspaper me-1"></i> Berita
-        </button>
-        @foreach($kategoris as $kat)
+        @forelse($kategoris as $kat)
         <button type="submit" name="kategori" value="{{ $kat->id_kategori }}"
           class="filter-tab {{ request('kategori') == $kat->id_kategori ? 'active' : '' }}">
-          @if($kat->icon)<i class="{{ $kat->icon }} me-1"></i>@endif {{ $kat->nama_kategori }}
+          @if($kat->icon)
+            <i class="{{ $kat->icon }} me-1"></i>
+          @endif
+          {{ $kat->nama_kategori ?? '-' }}
         </button>
-        @endforeach
+        @empty
+        {{-- Tidak ada kategori, hanya tampil tab Semua --}}
+        @endforelse
       </div>
+
+      {{-- Tombol search tersembunyi agar form bisa submit via input --}}
+      <button type="submit" class="d-none">Cari</button>
     </form>
 
     {{-- ARTIKEL GRID --}}
     <div class="row g-4">
       @forelse($beritaList as $item)
-      <div class="col-md-4 fade-up delay-{{ ($loop->index % 3) + 1 }}">
-        <div class="berita-card">
+      <div class="col-sm-6 col-lg-4 fade-up delay-{{ ($loop->index % 3) + 1 }}">
+        <div class="berita-card h-100 d-flex flex-column">
+
+          {{-- Gambar --}}
           <div class="berita-img" style="height:180px;">
             @if($item->gambar)
-              <img src="{{ asset('storage/'.$item->gambar) }}" alt="{{ $item->judul }}" style="height:180px;"
-                onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:180px\'><i class=\'bi bi-journal-text\'></i></div>'"/>
+              <img
+                src="{{ asset('storage/' . $item->gambar) }}"
+                alt="{{ $item->judul ?? 'Berita' }}"
+                style="height:180px;"
+                onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:180px\'><i class=\'bi bi-journal-text\'></i></div>'"
+              />
             @else
               <div class="img-ph" style="height:180px;"><i class="bi bi-journal-text"></i></div>
             @endif
           </div>
-          <div class="berita-body">
+
+          <div class="berita-body flex-grow-1 d-flex flex-column">
+            {{-- Meta: author & waktu --}}
             <div class="berita-meta">
               <div class="author-row">
                 <div class="author-avatar"><i class="bi bi-person-fill"></i></div>
                 <div>
                   <div class="author-name">{{ $item->user?->username ?? 'Admin' }}</div>
-                  <div class="author-time">{{ $item->tanggal_publikasi?->diffForHumans() }}</div>
+                  <div class="author-time">
+                    {{ $item->tanggal_publikasi?->diffForHumans() ?? '-' }}
+                  </div>
                 </div>
               </div>
-              @if($item->kategori)
-                <span class="category-badge badge-cerita">{{ $item->kategori->nama_kategori }}</span>
+              @if($item->kategori?->nama_kategori)
+                <span class="category-badge badge-cerita">
+                  {{ $item->kategori->nama_kategori }}
+                </span>
               @endif
             </div>
-            <div class="berita-title">{{ $item->judul }}</div>
-            <p class="berita-excerpt">{{ $item->ringkasan }}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <a href="{{ route('berita.detail', $item->slug) }}" class="link-baca">Baca Selengkapnya <i class="bi bi-arrow-right"></i></a>
-              <button class="btn-heart" style="width:32px;height:32px;border-radius:6px;"><i class="bi bi-bookmark"></i></button>
+
+            {{-- Judul --}}
+            <div class="berita-title">{{ $item->judul ?? '-' }}</div>
+
+            {{-- Ringkasan: strip HTML Summernote, fallback ke isi --}}
+            @php
+              $ringkasan = $item->ringkasan
+                ? strip_tags($item->ringkasan)
+                : Str::limit(strip_tags($item->isi ?? ''), 120, '...');
+            @endphp
+            @if($ringkasan)
+              <p class="berita-excerpt">{{ Str::limit($ringkasan, 120, '...') }}</p>
+            @endif
+
+            {{-- Footer: link baca & bookmark --}}
+            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+              @if($item->slug)
+                <a href="{{ route('berita.detail', $item->slug) }}" class="link-baca">
+                  Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                </a>
+              @else
+                <span class="link-baca text-muted">Tautan tidak tersedia</span>
+              @endif
+              <button class="btn-heart" style="width:32px;height:32px;border-radius:6px;" title="Simpan">
+                <i class="bi bi-bookmark"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -208,7 +293,18 @@
       @empty
       <div class="col-12 text-center py-5">
         <i class="bi bi-inbox" style="font-size:3rem;color:var(--text-muted);"></i>
-        <p class="mt-3" style="color:var(--text-muted);">Belum ada artikel tersedia.</p>
+        <p class="mt-3" style="color:var(--text-muted);">
+          @if(request('q'))
+            Tidak ada berita yang cocok dengan pencarian "<strong>{{ request('q') }}</strong>".
+          @elseif(request('kategori'))
+            Belum ada berita di kategori ini.
+          @else
+            Belum ada berita tersedia.
+          @endif
+        </p>
+        @if(request()->hasAny(['q', 'kategori']))
+          <a href="{{ route('berita') }}" class="btn-outline-main mt-2">Lihat Semua Berita</a>
+        @endif
       </div>
       @endforelse
     </div>
@@ -216,15 +312,30 @@
     {{-- PAGINATION --}}
     @if($beritaList->hasPages())
     <div class="pagination-custom fade-up mt-4">
-      <a class="page-btn {{ $beritaList->onFirstPage() ? 'disabled' : '' }}" href="{{ $beritaList->previousPageUrl() }}">
-        <i class="bi bi-chevron-left"></i>
-      </a>
+      {{-- Tombol prev --}}
+      @if($beritaList->onFirstPage())
+        <span class="page-btn disabled"><i class="bi bi-chevron-left"></i></span>
+      @else
+        <a class="page-btn" href="{{ $beritaList->previousPageUrl() }}">
+          <i class="bi bi-chevron-left"></i>
+        </a>
+      @endif
+
+      {{-- Nomor halaman --}}
       @foreach($beritaList->getUrlRange(1, $beritaList->lastPage()) as $page => $url)
-        <a class="page-btn {{ $page == $beritaList->currentPage() ? 'active' : '' }}" href="{{ $url }}">{{ $page }}</a>
+        <a class="page-btn {{ $page == $beritaList->currentPage() ? 'active' : '' }}" href="{{ $url }}">
+          {{ $page }}
+        </a>
       @endforeach
-      <a class="page-btn {{ !$beritaList->hasMorePages() ? 'disabled' : '' }}" href="{{ $beritaList->nextPageUrl() }}">
-        <i class="bi bi-chevron-right"></i>
-      </a>
+
+      {{-- Tombol next --}}
+      @if($beritaList->hasMorePages())
+        <a class="page-btn" href="{{ $beritaList->nextPageUrl() }}">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      @else
+        <span class="page-btn disabled"><i class="bi bi-chevron-right"></i></span>
+      @endif
     </div>
     @endif
 

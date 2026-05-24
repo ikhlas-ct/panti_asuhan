@@ -7,7 +7,6 @@
           {{ $setting?->nama ?? 'TitikKebaikan' }}
         </div>
         <div class="footer-brand-sub">{{ $setting?->alamat }}</div>
-        <p class="footer-desc">{{ $setting?->about_us }}</p>
         <div class="footer-tagline"><i class="bi bi-heart-fill"></i> {{ $setting?->slogan }}</div>
         <div class="d-flex gap-2">
           @if($setting?->social_instagram)<a href="{{ $setting->social_instagram }}" class="social-btn"><i class="bi bi-instagram"></i></a>@endif

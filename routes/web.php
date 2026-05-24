@@ -53,6 +53,7 @@ Route::post('/register', [RegisterDonaturController::class, 'store'])
 Route::get('/',             [LandingController::class, 'index'])->name('home');
 Route::get('/berita',       [LandingController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [LandingController::class, 'beritaDetail'])->name('berita.detail');
+
 Route::get('/daftar-panti', [LandingController::class, 'daftarPanti'])->name('daftar-panti');
 Route::get('/daftar-panti/{id}', [LandingController::class, 'pantiDetail'])->name('panti.detail');
 Route::get('/kerjasama',    [LandingController::class, 'kerjasama'])->name('kerjasama');
@@ -73,7 +74,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('pengurus/profil/foto',          [ProfilPengurusController::class, 'uploadFoto'])->name('admin_panti.profil.foto');
         Route::get('/admin-panti/dashboard', [AdminPantiDashboardController::class, 'index'])
             ->name('admin_panti.dashboard');
-
     });
     Route::middleware('role:donatur')->group(function () {
         Route::get('/donatur/dashboard', [DonaturDashboardController::class, 'index'])
@@ -82,16 +82,13 @@ Route::middleware(['auth'])->group(function () {
         Route::put('donatur/profil/update',      [ProfilDonaturController::class, 'update'])->name('donatur.profil.update');
         Route::put('donatur/profil/password',    [ProfilDonaturController::class, 'updatePassword'])->name('donatur.profil.password');
         Route::post('donatur/profil/foto',       [ProfilDonaturController::class, 'uploadFoto'])->name('donatur.profil.foto');
-        Route::get('/laporan/riwayat-donasi', [LaporanController::class, 'riwayatDonasi'])
-            ->name('laporan.riwayat-donasi');
     });
 
 
 
 
     Route::middleware('role:admin_dinsos')->group(function () {
-        Route::get('/laporan/donasi-per-panti', [LaporanController::class, 'laporanDonasiPerPanti'])
-            ->name('laporan.donasi-per-panti');
+
         Route::get('/dinsos/dashboard', [DashboardController::class, 'dinsosDashboard'])->name('dinsos.dashboard');
 
         Route::get('/panti-asuhan/create',            [PantiAsuhanController::class, 'create'])->name('panti-asuhan.create');
@@ -135,6 +132,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/donatur/{donatur}/edit', [DonaturController::class, 'edit'])->name('donatur.edit');
         Route::put('/donatur/{donatur}',      [DonaturController::class, 'update'])->name('donatur.update');
         Route::delete('/donatur/{donatur}',   [DonaturController::class, 'destroy'])->name('donatur.destroy');
+        Route::get('donatur-laporan', [DonaturController::class, 'cetakLaporan'])
+            ->name('donatur.laporan');
 
         Route::get('/setting/website',            [WebsiteSettingController::class, 'edit'])->name('setting.website.edit');
         Route::put('/setting/website',            [WebsiteSettingController::class, 'update'])->name('setting.website.update');
@@ -142,12 +141,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/setting/delete-image',      [WebsiteSettingController::class, 'deleteImage'])->name('setting.delete.image');
     });
 
-        Route::middleware('role:admin_dinsos,donatur')->group(function () {
+    Route::middleware('role:admin_dinsos,donatur')->group(function () {
 
-            Route::get('/panti-asuhan',                   [PantiAsuhanController::class, 'index'])->name('panti-asuhan.index');
-    Route::get('/panti-asuhan/{pantiAsuhan}',     [PantiAsuhanController::class, 'show'])->name('panti-asuhan.show');
-
-        });
+        Route::get('/panti-asuhan',                   [PantiAsuhanController::class, 'index'])->name('panti-asuhan.index');
+        Route::get('/panti-asuhan/{pantiAsuhan}',     [PantiAsuhanController::class, 'show'])->name('panti-asuhan.show');
+    });
 
 
     // =================== Authenticated Routes ===================
@@ -188,9 +186,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/keuangan/{keuangan}',    [KeuanganController::class, 'destroy'])->name('keuangan.destroy');
 
         Route::get('/keuangan-donasi-by-panti',  [KeuanganController::class, 'getDonasiByPanti'])->name('keuangan.donasi-by-panti');
-
-        Route::get('/laporan/keuangan', [LaporanController::class, 'laporanKeuangan'])
-            ->name('laporan.keuangan');
     });
 
 
@@ -218,6 +213,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+    Route::get('/donasi/print', [DonasiController::class, 'printLaporan'])->name('donasi.print');
 
     Route::get('/donasi',          [DonasiController::class, 'index'])->name('donasi.index');
     Route::get('/donasi/create',   [DonasiController::class, 'create'])->name('donasi.create');
@@ -226,6 +222,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/donasi/{donasi}/edit',   [DonasiController::class, 'edit'])->name('donasi.edit');
     Route::put('/donasi/{donasi}',        [DonasiController::class, 'update'])->name('donasi.update');
     Route::delete('/donasi/{donasi}',        [DonasiController::class, 'destroy'])->name('donasi.destroy');
+
 
     // ── Konfirmasi & Tolak (hanya admin & pengurus) ───────────────
     Route::patch('/donasi/{donasi}/konfirmasi', [DonasiController::class, 'konfirmasi'])->name('donasi.konfirmasi');

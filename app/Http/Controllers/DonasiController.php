@@ -7,6 +7,8 @@ use App\Models\DonasiBarang;
 use App\Models\Donatur;
 use App\Models\Keuangan;
 use App\Models\PantiAsuhan;
+use App\Models\WebsiteSetting;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -71,6 +73,11 @@ class DonasiController extends Controller
         $donasis = $query->paginate(15)->withQueryString();
         $pantis  = PantiAsuhan::aktif()->orderBy('nama_panti')->get();
 
+        // Daftar donatur untuk modal cetak laporan (hanya admin_dinsos yg perlu pilih)
+        $donaturList = ($user->role === 'admin_dinsos')
+            ? Donatur::aktif()->orderBy('nama')->get()
+            : collect();
+
         // Stats
         $sq = Donasi::query();
         if ($user->role === 'admin_panti')  $sq->where('panti_asuhan_id', $user->pengurus?->panti_asuhan_id);
@@ -84,7 +91,7 @@ class DonasiController extends Controller
             'nominal'  => (clone $sq)->where('status', 'diterima')->where('jenis_donasi', 'uang')->sum('nominal'),
         ];
 
-        return view('pages.donasi.index', compact('donasis', 'pantis', 'stats'));
+        return view('pages.donasi.index', compact('donasis', 'pantis', 'stats', 'donaturList'));
     }
 
     /* ================================================================== */
@@ -481,5 +488,104 @@ class DonasiController extends Controller
                 'Donasi ini bukan untuk panti Anda.'
             );
         }
+    }
+
+
+    public function printLaporan(Request $request)
+    {
+        $user = auth()->user();
+
+        // ── 1. Tentukan Donatur ───────────────────────────────────────
+        if ($user->role === 'donatur') {
+            // Donatur yang login → pakai data dirinya sendiri
+            $donatur = $user->donatur;
+            abort_if(!$donatur, 403, 'Profil donatur tidak ditemukan.');
+        } else {
+            // admin_dinsos / admin_panti → wajib pilih donatur
+            $request->validate([
+                'donatur_id' => 'required|exists:donatur,id',
+            ], [
+                'donatur_id.required' => 'Silakan pilih donatur.',
+                'donatur_id.exists'   => 'Donatur tidak ditemukan.',
+            ]);
+            $donatur = Donatur::findOrFail($request->donatur_id);
+        }
+
+        // ── 2. Build Query ────────────────────────────────────────────
+        $query = Donasi::with(['pantiAsuhan', 'barang'])
+            ->where('donatur_id', $donatur->id);
+
+        // Filter status (opsional — default semua)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        $statusLabel = $request->filled('status')
+            ? ucfirst($request->status)
+            : 'Semua';
+
+        // ── 3. Filter Periode ─────────────────────────────────────────
+        $periode = $request->input('periode', 'bulanan');
+
+        if ($periode === 'harian') {
+            // ── Per Hari ──
+            $request->validate(['tanggal' => 'required|date']);
+            $tanggal = $request->tanggal;
+            $query->whereDate('tanggal_donasi', $tanggal);
+            $periodeLabel = Carbon::parse($tanggal)->translatedFormat('d F Y');
+        } elseif ($periode === 'bulanan') {
+            // ── Per Bulan ──
+            $request->validate([
+                'bulan' => 'required|integer|between:1,12',
+                'tahun' => 'required|integer|min:2000|max:' . date('Y'),
+            ]);
+            $bulan = (int) $request->bulan;
+            $tahun = (int) $request->tahun;
+            $query->whereMonth('tanggal_donasi', $bulan)
+                ->whereYear('tanggal_donasi', $tahun);
+            $periodeLabel = Carbon::createFromDate($tahun, $bulan, 1)
+                ->translatedFormat('F Y');
+        } elseif ($periode === 'tahunan') {
+            // ── Per Tahun ──
+            $request->validate([
+                'tahun_only' => 'required|integer|min:2000|max:' . date('Y'),
+            ]);
+            $tahun = (int) $request->tahun_only;
+            $query->whereYear('tanggal_donasi', $tahun);
+            $periodeLabel = (string) $tahun;
+        } else {
+            abort(422, 'Periode tidak valid.');
+        }
+
+        // ── 4. Ambil Data ─────────────────────────────────────────────
+        $donasis = $query->orderBy('tanggal_donasi')->get();
+
+        // Total uang yang diterima saja
+        $totalUang = $donasis
+            ->where('jenis_donasi', 'uang')
+            ->where('status', 'diterima')
+            ->sum('nominal');
+
+        // ── 5. Data Pendukung ─────────────────────────────────────────
+        $setting = WebsiteSetting::getSetting();
+
+        // Nama pegawai yang sedang login (jika admin_dinsos)
+        $pegawaiNama = null;
+        if ($user->isAdminDinsos() && $user->pegawai) {
+            $pegawaiNama = $user->pegawai->nama;
+        } elseif ($user->isAdminPanti() && $user->pengurus) {
+            $pegawaiNama = $user->pengurus->nama;
+        }
+
+        // ── 6. Return View ────────────────────────────────────────────
+        return view('pages.donasi.print', compact(
+            'donasis',
+            'donatur',
+            'totalUang',
+            'periode',
+            'periodeLabel',
+            'statusLabel',
+            'setting',
+            'pegawaiNama',
+        ));
     }
 }

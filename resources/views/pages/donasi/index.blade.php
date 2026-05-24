@@ -74,12 +74,35 @@
     .role-banner.donatur { background:#fffbeb; border:1px solid #fde68a; color:#92400e; }
     .role-banner.verifier { background:#e0f2fe; border:1px solid #bae6fd; color:#075985; }
     .empty-icon { width:64px; height:64px; background:#f1f5f9; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+
+    /* ── MODAL PRINT ── */
+    .modal-content { border:none; border-radius:16px; box-shadow:0 8px 40px rgba(0,0,0,.15); }
+    .modal-header { border-bottom:1px solid #f1f5f9; padding:18px 24px; border-radius:16px 16px 0 0; background:#f8fafc; }
+    .modal-title { font-size:.95rem; font-weight:700; color:#1e293b; }
+    .modal-body  { padding:24px; }
+    .modal-footer { border-top:1px solid #f1f5f9; padding:14px 24px; border-radius:0 0 16px 16px; }
+    .form-label { font-size:.8rem; font-weight:600; color:#374151; margin-bottom:6px; }
+
+    /* Periode toggle pills */
+    .periode-pills { display:flex; gap:8px; }
+    .periode-pill  { flex:1; text-align:center; padding:8px 0; border:1.5px solid #e2e8f0; border-radius:10px; font-size:.8rem; font-weight:600; color:#64748b; cursor:pointer; transition:all .18s; user-select:none; }
+    .periode-pill:hover { border-color:#1a73e8; color:#1a73e8; }
+    .periode-pill.active { background:#1a73e8; border-color:#1a73e8; color:#fff; }
+
+    .periode-field { display:none; }
+    .periode-field.show { display:block; }
+
+    .info-donatur { background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 14px; font-size:.8rem; color:#92400e; display:flex; align-items:center; gap:8px; }
+
+    .btn-print { background:linear-gradient(135deg,#16a34a,#15803d); border:none; border-radius:10px; font-weight:600; font-size:.83rem; padding:9px 22px; color:#fff; box-shadow:0 2px 8px rgba(22,163,74,.3); transition:all .2s; }
+    .btn-print:hover { transform:translateY(-1px); color:#fff; }
 </style>
 @endsection
 
 @section('content')
 <div class="container">
 
+    {{-- Page Header --}}
     <div class="ph-card">
         <div class="ph-left">
             <div class="ph-icon"><i class="fas fa-hand-holding-heart"></i></div>
@@ -91,12 +114,16 @@
                 </ol>
             </div>
         </div>
-        <a href="{{ route('donasi.create') }}" class="btn btn-primary btn-sm">
-            <i class="fas fa-plus me-1"></i> Tambah Donasi
-        </a>
-            <a href="{{ route('laporan.donasi-per-panti') }}" class="btn btn-primary btn-sm">
-            <i class="fas fa-plus me-1"></i> Laporan Donasi per Panti
-        </a>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ route('donasi.create') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i> Tambah Donasi
+            </a>
+
+            {{-- ✅ Tombol Cetak Laporan --}}
+            <button type="button" class="btn btn-sm" style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:10px;font-weight:600;font-size:.83rem;padding:8px 18px;box-shadow:0 2px 8px rgba(22,163,74,.3);" data-bs-toggle="modal" data-bs-target="#modalCetakLaporan">
+                <i class="fas fa-print me-1"></i> Cetak Laporan
+            </button>
+        </div>
     </div>
 
     {{-- Role Banner --}}
@@ -270,7 +297,6 @@
                                 @endif
                                 {{ ucfirst($donasi->status) }}
                             </span>
-                            {{-- Label auto jika admin yang input --}}
                             @if($donasi->status==='diterima' && $donasi->dikonfirmasiOleh && in_array($donasi->dikonfirmasiOleh->role,['admin_dinsos','admin_panti']))
                                 <div><span class="badge badge-auto"><i class="fas fa-bolt me-1"></i>Auto</span></div>
                             @endif
@@ -316,10 +342,127 @@
     </div>
 
 </div>
+
+{{-- ============================================================ --}}
+{{-- MODAL CETAK LAPORAN                                          --}}
+{{-- ============================================================ --}}
+<div class="modal fade" id="modalCetakLaporan" tabindex="-1" aria-labelledby="modalCetakLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:460px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCetakLabel">
+                    <i class="fas fa-print me-2 text-success"></i>Cetak Laporan Riwayat Donasi
+                </h5>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="formCetakLaporan" action="{{ route('donasi.print') }}" method="GET" target="_blank">
+
+                <div class="modal-body">
+
+                    {{-- ── Pilih Donatur (hanya admin_dinsos) ── --}}
+                    @if(auth()->user()->role === 'admin_dinsos')
+                    <div class="mb-4">
+                        <label class="form-label"><i class="fas fa-user me-1 text-muted"></i>Pilih Donatur <span class="text-danger">*</span></label>
+                        <select name="donatur_id" id="selectDonatur" class="form-select" required>
+                            <option value="">-- Pilih Donatur --</option>
+                            @foreach($donaturList as $d)
+                                <option value="{{ $d->id }}">{{ $d->nama }} ({{ ucfirst($d->jenis_donatur) }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @else
+                    {{-- Donatur: info saja, id dikirim hidden --}}
+                    <div class="mb-4">
+                        <label class="form-label"><i class="fas fa-user me-1 text-muted"></i>Donatur</label>
+                        <div class="info-donatur">
+                            <i class="fas fa-id-badge"></i>
+                            <strong>{{ auth()->user()->donatur->nama ?? auth()->user()->username }}</strong>
+                            &mdash; {{ ucfirst(auth()->user()->donatur->jenis_donatur ?? '') }}
+                        </div>
+                        <input type="hidden" name="donatur_id" value="{{ auth()->user()->donatur->id ?? '' }}">
+                    </div>
+                    @endif
+
+                    {{-- ── Pilih Periode ── --}}
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-calendar-alt me-1 text-muted"></i>Periode Laporan <span class="text-danger">*</span></label>
+                        <input type="hidden" name="periode" id="inputPeriode" value="bulanan">
+                        <div class="periode-pills">
+                            <div class="periode-pill" data-val="harian">Per Hari</div>
+                            <div class="periode-pill active" data-val="bulanan">Per Bulan</div>
+                            <div class="periode-pill" data-val="tahunan">Per Tahun</div>
+                        </div>
+                    </div>
+
+                    {{-- ── Field: Per Hari ── --}}
+                    <div id="field-harian" class="periode-field mb-3">
+                        <label class="form-label">Pilih Tanggal</label>
+                        <input type="date" name="tanggal" id="inputTanggal" class="form-control" value="{{ date('Y-m-d') }}">
+                    </div>
+
+                    {{-- ── Field: Per Bulan ── --}}
+                    <div id="field-bulanan" class="periode-field show mb-3">
+                        <div class="row g-2">
+                            <div class="col-7">
+                                <label class="form-label">Bulan</label>
+                                <select name="bulan" id="selectBulan" class="form-select">
+                                    @foreach(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'] as $idx => $bln)
+                                        <option value="{{ $idx + 1 }}" {{ (date('n') == $idx+1) ? 'selected' : '' }}>{{ $bln }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label">Tahun</label>
+                                <select name="tahun" id="selectTahunBulan" class="form-select">
+                                    @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                                        <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- ── Field: Per Tahun ── --}}
+                    <div id="field-tahunan" class="periode-field mb-3">
+                        <label class="form-label">Pilih Tahun</label>
+                        <select name="tahun_only" id="selectTahunOnly" class="form-select">
+                            @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                                <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    {{-- ── Filter Status (opsional) ── --}}
+                    <div class="mb-1">
+                        <label class="form-label"><i class="fas fa-filter me-1 text-muted"></i>Filter Status</label>
+                        <select name="status" class="form-select">
+                            <option value="">Semua Status</option>
+                            <option value="diterima">Diterima</option>
+                            <option value="pending">Pending</option>
+                            <option value="ditolak">Ditolak</option>
+                        </select>
+                    </div>
+
+                </div>{{-- end modal-body --}}
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-print btn-sm">
+                        <i class="fas fa-print me-1"></i> Buka & Cetak
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
 <script>
+// ── Hapus Data ──────────────────────────────────────────────────
 document.querySelectorAll('.btn-hapus').forEach(btn => {
     btn.addEventListener('click', function() {
         swal({ title:'Hapus Donasi?', text:`Data donasi dari "${this.dataset.nama}" akan dihapus.`,
@@ -327,5 +470,53 @@ document.querySelectorAll('.btn-hapus').forEach(btn => {
         }).then(ok => { if (ok) document.getElementById('form-hapus-' + this.dataset.id).submit(); });
     });
 });
+
+// ── Modal Cetak: Toggle Periode ─────────────────────────────────
+document.querySelectorAll('.periode-pill').forEach(pill => {
+    pill.addEventListener('click', function () {
+        // update pill UI
+        document.querySelectorAll('.periode-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+
+        const val = this.dataset.val;
+        document.getElementById('inputPeriode').value = val;
+
+        // show/hide fields
+        document.querySelectorAll('.periode-field').forEach(f => f.classList.remove('show'));
+        document.getElementById('field-' + val).classList.add('show');
+
+        // toggle required
+        const tanggal     = document.getElementById('inputTanggal');
+        const selectBulan = document.getElementById('selectBulan');
+        const selectTahunBulan = document.getElementById('selectTahunBulan');
+        const selectTahunOnly  = document.getElementById('selectTahunOnly');
+
+        tanggal.required          = (val === 'harian');
+        selectBulan.required      = (val === 'bulanan');
+        selectTahunBulan.required = (val === 'bulanan');
+        selectTahunOnly.required  = (val === 'tahunan');
+    });
+});
+
+// ── Validasi form sebelum submit ─────────────────────────────────
+document.getElementById('formCetakLaporan').addEventListener('submit', function(e) {
+    const periode    = document.getElementById('inputPeriode').value;
+    const donaturSel = document.getElementById('selectDonatur');
+
+    // Jika admin_dinsos, pastikan donatur dipilih
+    if (donaturSel && !donaturSel.value) {
+        e.preventDefault();
+        alert('Silakan pilih donatur terlebih dahulu.');
+        donaturSel.focus();
+        return;
+    }
+
+    if (periode === 'harian' && !document.getElementById('inputTanggal').value) {
+        e.preventDefault();
+        alert('Silakan pilih tanggal.');
+        return;
+    }
+});
 </script>
+
 @endsection

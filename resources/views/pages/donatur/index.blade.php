@@ -150,6 +150,51 @@
 
     .empty-state { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
     .empty-state i { font-size: 2.5rem; opacity: .3; margin-bottom: 12px; display: block; }
+
+    /* ── Modal Print ── */
+    .modal-print .modal-content {
+        border-radius: 16px; border: none;
+        box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    }
+    .modal-print .modal-header {
+        background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        border-radius: 16px 16px 0 0; padding: 16px 20px;
+        border-bottom: none;
+    }
+    .modal-print .modal-title { color: #fff; font-weight: 700; font-size: .95rem; }
+    .modal-print .btn-close { filter: brightness(0) invert(1); }
+    .modal-print .modal-body { padding: 20px; }
+    .modal-print .modal-footer { border-top: 1px solid #f1f5f9; padding: 14px 20px; border-radius: 0 0 16px 16px; }
+
+    /* Periode toggle pills */
+    .periode-pills { display: flex; gap: 8px; margin-bottom: 18px; }
+    .periode-pill {
+        flex: 1; padding: 8px 0; border-radius: 10px; border: 1.5px solid #e2e8f0;
+        background: #f8fafc; color: #64748b; font-size: .8rem; font-weight: 600;
+        cursor: pointer; text-align: center; transition: all .15s; user-select: none;
+    }
+    .periode-pill.active {
+        background: #0891b2; color: #fff; border-color: #0891b2;
+        box-shadow: 0 3px 10px rgba(8,145,178,.25);
+    }
+    .periode-pill:hover:not(.active) { border-color: #0891b2; color: #0891b2; background: #e0f2fe; }
+
+    .periode-section { display: none; }
+    .periode-section.show { display: block; }
+
+    .form-label-sm { font-size: .78rem; font-weight: 600; color: #475569; margin-bottom: 5px; display: block; }
+    .form-control-print {
+        width: 100%; border: 1.5px solid #e2e8f0; border-radius: 9px;
+        padding: 8px 12px; font-size: .85rem; background: #f8fafc;
+        color: #1e293b; outline: none; transition: border-color .15s;
+    }
+    .form-control-print:focus { border-color: #0891b2; box-shadow: 0 0 0 3px rgba(8,145,178,.12); }
+
+    .info-cetak {
+        background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 9px;
+        padding: 9px 13px; font-size: .78rem; color: #0369a1; margin-bottom: 16px;
+        display: flex; align-items: center; gap: 8px;
+    }
 </style>
 @endsection
 
@@ -168,9 +213,17 @@
                 </ol>
             </div>
         </div>
-        <a href="{{ route('donatur.create') }}" class="btn btn-sm" style="background:#0891b2;color:#fff;">
-            <i class="fas fa-plus me-1"></i> Tambah Donatur
-        </a>
+        {{-- Tombol aksi di kanan header --}}
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button type="button" class="btn btn-sm"
+                    style="background:#f1f5f9;color:#475569;border:1.5px solid #e2e8f0;"
+                    data-bs-toggle="modal" data-bs-target="#modalCetakLaporan">
+                <i class="fas fa-print me-1"></i> Cetak Laporan
+            </button>
+            <a href="{{ route('donatur.create') }}" class="btn btn-sm" style="background:#0891b2;color:#fff;">
+                <i class="fas fa-plus me-1"></i> Tambah Donatur
+            </a>
+        </div>
     </div>
 
     <div class="page-inner">
@@ -276,7 +329,6 @@
         <div class="empty-state">
             <i class="fas fa-hand-holding-heart"></i>
             <p class="mb-1 fw-semibold">Belum ada data donatur</p>
-
         </div>
         @else
         <div class="row g-3">
@@ -306,8 +358,8 @@
                         @if($d->no_telp)
                         <div class="info-row"><i class="fas fa-phone"></i><span>{{ $d->no_telp }}</span></div>
                         @endif
-                        @if($d->email)
-                        <div class="info-row"><i class="fas fa-envelope"></i><span>{{ Str::limit($d->email,26) }}</span></div>
+                        @if($d->user?->email)
+                        <div class="info-row"><i class="fas fa-envelope"></i><span>{{ Str::limit($d->user->email,26) }}</span></div>
                         @endif
 
                         <div class="d-flex gap-1 mt-3">
@@ -341,15 +393,151 @@
 
     </div>{{-- end .page-inner --}}
 </div>
+
+{{-- ══════════════════════════════════════════════
+     MODAL CETAK LAPORAN
+══════════════════════════════════════════════ --}}
+<div class="modal fade modal-print" id="modalCetakLaporan" tabindex="-1" aria-labelledby="modalCetakLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <span class="modal-title">
+                    <i class="fas fa-print me-2"></i> Cetak Laporan Donatur
+                </span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="info-cetak">
+                    <i class="fas fa-info-circle"></i>
+                    Laporan akan dibuka di tab baru dan siap untuk dicetak atau disimpan sebagai PDF.
+                </div>
+
+                {{-- Pilih periode --}}
+                <label class="form-label-sm mb-2">Periode Laporan</label>
+                <div class="periode-pills">
+                    <div class="periode-pill active" data-target="harian">
+                        <i class="fas fa-calendar-day d-block mb-1" style="font-size:.85rem;"></i>
+                        Per Hari
+                    </div>
+                    <div class="periode-pill" data-target="bulanan">
+                        <i class="fas fa-calendar-alt d-block mb-1" style="font-size:.85rem;"></i>
+                        Per Bulan
+                    </div>
+                    <div class="periode-pill" data-target="tahunan">
+                        <i class="fas fa-calendar d-block mb-1" style="font-size:.85rem;"></i>
+                        Per Tahun
+                    </div>
+                </div>
+
+                {{-- PER HARI --}}
+                <div class="periode-section show" id="section-harian">
+                    <label class="form-label-sm">Pilih Tanggal</label>
+                    <input type="date" id="input-tanggal" class="form-control-print"
+                           value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                </div>
+
+                {{-- PER BULAN --}}
+                <div class="periode-section" id="section-bulanan">
+                    <div class="row g-2">
+                        <div class="col-7">
+                            <label class="form-label-sm">Bulan</label>
+                            <select id="input-bulan" class="form-control-print">
+                                @foreach([1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',
+                                          7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember']
+                                          as $num => $nama)
+                                <option value="{{ $num }}" {{ $num == date('n') ? 'selected' : '' }}>{{ $nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label-sm">Tahun</label>
+                            <input type="number" id="input-tahun-bulanan" class="form-control-print"
+                                   value="{{ date('Y') }}" min="2020" max="{{ date('Y') }}">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- PER TAHUN --}}
+                <div class="periode-section" id="section-tahunan">
+                    <label class="form-label-sm">Pilih Tahun</label>
+                    <input type="number" id="input-tahun" class="form-control-print"
+                           value="{{ date('Y') }}" min="2020" max="{{ date('Y') }}">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-sm" id="btnCetak"
+                        style="background:#0891b2;color:#fff;min-width:110px;">
+                    <i class="fas fa-print me-1"></i> Cetak
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
 <script>
+    // ── Select2 init ──
     $('#filter-jenis, #filter-status, #filter-akun').select2({
         minimumResultsForSearch: Infinity,
         width: '100%',
         placeholder: function(){ return $(this).data('placeholder') || 'Pilih...'; },
+    });
+
+    // ── Modal Cetak Laporan ──
+    let currentPeriode = 'harian';
+
+    // Toggle pills
+    document.querySelectorAll('.periode-pill').forEach(pill => {
+        pill.addEventListener('click', function () {
+            document.querySelectorAll('.periode-pill').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.periode-section').forEach(s => s.classList.remove('show'));
+            this.classList.add('active');
+            currentPeriode = this.dataset.target;
+            document.getElementById('section-' + currentPeriode).classList.add('show');
+        });
+    });
+
+    // Reset modal state on open
+    document.getElementById('modalCetakLaporan').addEventListener('show.bs.modal', function () {
+        document.querySelectorAll('.periode-pill').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.periode-section').forEach(s => s.classList.remove('show'));
+        document.querySelector('[data-target="harian"]').classList.add('active');
+        document.getElementById('section-harian').classList.add('show');
+        currentPeriode = 'harian';
+    });
+
+    // Tombol Cetak → buka di tab baru
+    document.getElementById('btnCetak').addEventListener('click', function () {
+        let url = '';
+
+        if (currentPeriode === 'harian') {
+            const tanggal = document.getElementById('input-tanggal').value;
+            if (!tanggal) { alert('Pilih tanggal terlebih dahulu.'); return; }
+            url = `{{ route('donatur.laporan') }}?periode=harian&tanggal=${tanggal}`;
+
+        } else if (currentPeriode === 'bulanan') {
+            const bulan = document.getElementById('input-bulan').value;
+            const tahun = document.getElementById('input-tahun-bulanan').value;
+            if (!bulan || !tahun) { alert('Pilih bulan dan tahun terlebih dahulu.'); return; }
+            url = `{{ route('donatur.laporan') }}?periode=bulanan&bulan=${bulan}&tahun=${tahun}`;
+
+        } else if (currentPeriode === 'tahunan') {
+            const tahun = document.getElementById('input-tahun').value;
+            if (!tahun) { alert('Pilih tahun terlebih dahulu.'); return; }
+            url = `{{ route('donatur.laporan') }}?periode=tahunan&tahun=${tahun}`;
+        }
+
+        window.open(url, '_blank');
+        bootstrap.Modal.getInstance(document.getElementById('modalCetakLaporan')).hide();
     });
 </script>
 @endsection

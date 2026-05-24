@@ -1,359 +1,276 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Keuangan – {{ $panti->nama_panti }}</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="UTF-8"/>
+  <title>Laporan Keuangan – {{ $panti->nama_panti }}</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
 
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 12pt;
-            color: #000;
-            background: #fff;
-        }
+    body {
+      background:#ccc;
+      display:flex; justify-content:center;
+      padding:30px 0 60px;
+      font-family:'Times New Roman', Times, serif;
+      font-size:11pt; color:#000;
+    }
 
-        /* ── Wrapper cetak ── */
-        .page {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            padding: 20mm 20mm 25mm 25mm;
-        }
+    .page {
+      width:210mm; min-height:297mm;
+      background:#fff; padding:15mm 18mm;
+      box-shadow:0 4px 20px rgba(0,0,0,.3);
+    }
 
-        /* ── KOP SURAT ── */
-        .kop {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border-bottom: 3px double #000;
-            padding-bottom: 10px;
-            margin-bottom: 18px;
-        }
-        .kop-logo {
-            width: 70px;
-            height: 70px;
-            border: 1px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 9pt;
-            color: #999;
-        }
-        .kop-logo img { width: 100%; height: 100%; object-fit: contain; }
-        .kop-text { flex: 1; text-align: center; }
-        .kop-instansi { font-size: 14pt; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
-        .kop-alamat   { font-size: 10pt; margin-top: 3px; }
+    /* ── HEADER ── */
+    .header {
+      display:flex; align-items:center; gap:14px;
+      padding-bottom:10px; border-bottom:2.5px solid #000; margin-bottom:6px;
+    }
 
-        /* ── JUDUL LAPORAN ── */
-        .judul-wrap { text-align: center; margin: 18px 0 6px; }
-        .judul-wrap h2 { font-size: 14pt; font-weight: bold; text-transform: uppercase; letter-spacing: .3px; }
-        .judul-wrap .sub-judul { font-size: 11pt; margin-top: 2px; }
+    .logo-box {
+      width:58px; height:58px; border:1px solid #000; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:8pt; flex-shrink:0; overflow:hidden;
+    }
+    .logo-box img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 
-        /* ── INFO PANTI ── */
-        .info-panti {
-            border: 1px solid #000;
-            border-radius: 4px;
-            padding: 8px 12px;
-            margin: 14px 0;
-            font-size: 10.5pt;
-            background: #f9f9f9;
-        }
-        .info-panti table { width: 100%; border-collapse: collapse; }
-        .info-panti td { padding: 2px 6px 2px 0; vertical-align: top; }
-        .info-panti td:first-child { width: 120px; font-weight: bold; white-space: nowrap; }
-        .info-panti td:nth-child(2) { width: 8px; }
+    .org-info  { flex:1; }
+    .org-name  { font-size:15pt; font-weight:bold; line-height:1.2; }
+    .org-slogan{ font-size:9pt; font-style:italic; margin-top:1px; }
+    .org-sub   { font-size:9pt; margin-top:2px; }
+    .org-addr  { font-size:8.5pt; margin-top:2px; color:#333; }
 
-        /* ── TABEL DATA ── */
-        .tabel-data {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 14px;
-            font-size: 10.5pt;
-        }
-        .tabel-data thead tr th {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 7px 8px;
-            text-align: center;
-            font-size: 10pt;
-            border: 1px solid #000;
-        }
-        .tabel-data tbody tr td {
-            padding: 5px 8px;
-            border: 1px solid #555;
-            vertical-align: top;
-        }
-        .tabel-data tbody tr:nth-child(even) td { background: #f5f5f5; }
-        .tabel-data tbody tr:hover td { background: #eef; }
+    .header-right { text-align:right; flex-shrink:0; }
+    .doc-title {
+      font-size:13pt; font-weight:bold;
+      border:2px solid #000; padding:5px 14px; display:inline-block;
+    }
+    .doc-period { font-size:8.5pt; margin-top:5px; }
 
-        .td-no        { text-align: center; width: 36px; }
-        .td-tanggal   { text-align: center; width: 90px; white-space: nowrap; }
-        .td-jenis     { text-align: center; width: 90px; }
-        .td-kategori  { width: 110px; }
-        .td-nominal   { text-align: right; width: 130px; white-space: nowrap; }
-        .td-keterangan { }
+    /* ── META ── */
+    .meta {
+      display:flex; justify-content:space-between;
+      font-size:9pt; padding:5px 0 7px; border-bottom:1px solid #000;
+    }
 
-        .jenis-masuk  { color: #15803d; font-weight: 700; }
-        .jenis-keluar { color: #dc2626; font-weight: 700; }
+    /* ── SUMMARY ── */
+    .summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:10px 0 12px; }
+    .card    { border:1.5px solid #000; padding:8px 10px; text-align:center; }
+    .card-label  { font-size:8pt; text-transform:uppercase; margin-bottom:3px; }
+    .card-amount { font-size:13.5pt; font-weight:bold; }
 
-        /* ── RINGKASAN ── */
-        .ringkasan {
-            margin-top: 14px;
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .ringkasan table {
-            border-collapse: collapse;
-            font-size: 10.5pt;
-            min-width: 280px;
-        }
-        .ringkasan td {
-            padding: 4px 10px;
-            border: 1px solid #555;
-        }
-        .ringkasan .r-label { font-weight: bold; background: #f0f0f0; }
-        .ringkasan .r-val   { text-align: right; white-space: nowrap; }
-        .ringkasan .r-saldo {
-            font-weight: bold; font-size: 11pt;
-            background: #1a1a1a; color: #fff;
-        }
-        .ringkasan .r-saldo-val {
-            font-weight: bold; font-size: 11pt; text-align: right;
-            background: #1a1a1a; color: #fff; white-space: nowrap;
-        }
+    /* ── TABLE ── */
+    table { width:100%; border-collapse:collapse; font-size:9.5pt; margin-top:4px; }
 
-        /* ── TANDA TANGAN ── */
-        .ttd-wrap {
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 10.5pt;
-        }
-        .ttd-box { text-align: center; }
-        .ttd-box .ttd-label { margin-bottom: 60px; }
-        .ttd-box .ttd-name  { font-weight: bold; border-top: 1px solid #000; padding-top: 4px; min-width: 160px; }
+    thead th {
+      background:#000; color:#fff; padding:6px 7px;
+      font-size:8.5pt; text-align:left; text-transform:uppercase;
+    }
+    thead th.center { text-align:center; width:28px; }
+    thead th.right  { text-align:right; }
 
-        /* ── FOOTER ── */
-        .footer-cetak {
-            margin-top: 30px;
-            font-size: 9pt;
-            color: #666;
-            text-align: center;
-            border-top: 1px solid #ccc;
-            padding-top: 6px;
-        }
+    tbody td { padding:5px 7px; border-bottom:0.5px solid #aaa; vertical-align:middle; }
+    tbody tr:nth-child(even) td { background:#f5f5f5; }
 
-        /* ── PRINT ── */
-        @media print {
-            body { background: #fff; }
-            .page { width: 100%; padding: 12mm 15mm 20mm 20mm; margin: 0; }
-            .no-print { display: none !important; }
-        }
+    td.center { text-align:center; }
+    td.right  { text-align:right; font-variant-numeric:tabular-nums; }
 
-        /* ── TOMBOL (layar saja) ── */
-        .toolbar {
-            background: #1e293b;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .toolbar a, .toolbar button {
-            color: #fff; font-family: sans-serif; font-size: .85rem;
-            background: transparent; border: 1px solid #94a3b8;
-            border-radius: 8px; padding: 6px 14px; cursor: pointer;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-        }
-        .toolbar button.print-btn {
-            background: #1a73e8; border-color: #1a73e8; font-weight: 600;
-        }
-        .toolbar button.print-btn:hover { background: #1558b0; }
-        .toolbar span { color: #94a3b8; font-family: sans-serif; font-size: .83rem; }
-    </style>
+    .jenis-box {
+      display:inline-block; border:1px solid #000;
+      padding:1px 8px; font-size:8pt;
+    }
+
+    /* ── TOTALS ── */
+    .totals-table { width:100%; border-collapse:collapse; margin-top:0; }
+    .totals-table td { padding:4px 7px; font-size:9.5pt; border:none; }
+    .totals-table .label { text-align:right; padding-right:12px; }
+    .totals-table .value { text-align:right; font-weight:bold; width:130px; }
+
+    .row-saldo td {
+      background:#000; color:#fff;
+      font-size:11pt; font-weight:bold; padding:6px 7px;
+    }
+    .divider { border-top:1.5px solid #000; margin:2px 0; }
+
+    /* ── SIGNATURE ── */
+    .signature { display:flex; justify-content:space-between; margin-top:22px; font-size:9.5pt; }
+    .sig-block { text-align:center; min-width:140px; }
+    .sig-block .date  { margin-bottom:44px; }
+    .sig-block .line  { border-top:1px solid #000; padding-top:3px; font-weight:bold; }
+    .sig-block .title { font-size:8.5pt; }
+
+    /* ── FOOTER ── */
+    .footer { margin-top:16px; padding-top:6px; border-top:1px solid #000; text-align:center; font-size:8pt; }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background:none; padding:0; }
+      .page { box-shadow:none; }
+    }
+    @page { size:A4; margin:0; }
+  </style>
 </head>
 <body>
 
-{{-- ── TOOLBAR (tidak ikut cetak) ── --}}
-<div class="toolbar no-print">
-    <a href="javascript:history.back()">← Kembali</a>
-    <button class="print-btn" onclick="window.print()">🖨 Cetak / Simpan PDF</button>
-    <span>
-        Laporan: <strong style="color:#fff;">{{ $panti->nama_panti }}</strong>
+  <div class="page">
+
+    <!-- HEADER — data dari WebsiteSetting -->
+    <div class="header">
+
+      <div class="logo-box">
+        @if($setting && $setting->logo)
+          <img src="{{ asset('storage/' . $setting->logo) }}" alt="Logo">
+        @else
+          <span>LOGO</span>
+        @endif
+      </div>
+
+      <div class="org-info">
+        {{-- Nama institusi dari website_settings --}}
+        <div class="org-name">{{ $setting->nama ?? $panti->nama_panti }}</div>
+
+        @if($setting && $setting->slogan)
+          <div class="org-slogan">{{ $setting->slogan }}</div>
+        @endif
+
+        <div class="org-sub">Dinas Sosial Kabupaten / Kota</div>
+
+        <div class="org-addr">
+          {{ $setting->alamat ?? $panti->alamat ?? '-' }}
+          @if($setting && $setting->nomor_telepon)
+            &nbsp;·&nbsp; Telp. {{ $setting->nomor_telepon }}
+          @endif
+          @if($setting && $setting->email)
+            &nbsp;·&nbsp; {{ $setting->email }}
+          @endif
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="doc-title">LAPORAN KEUANGAN</div>
+        <div class="doc-period">
+          @if($tipe === 'harian')    Laporan Harian
+          @elseif($tipe === 'bulanan') Periode Bulanan
+          @else                        Periode Tahunan
+          @endif
+        </div>
+      </div>
+
+    </div>
+
+    <!-- META -->
+    <div class="meta">
+      <span>
+        Panti Asuhan: <b>{{ $panti->nama_panti }}</b>
         &nbsp;|&nbsp;
-        Periode:
-        <strong style="color:#fff;">
-            @if($bulan && $tahun)
-                {{ \Carbon\Carbon::create($tahun, $bulan)->translatedFormat('F Y') }}
-            @elseif($tahun)
-                Tahun {{ $tahun }}
-            @else
-                Semua Periode
-            @endif
-        </strong>
-    </span>
-</div>
-
-<div class="page">
-
-    {{-- ── KOP ── --}}
-    <div class="kop">
-        <div class="kop-logo">
-            @if(!empty($settings?->logo))
-                <img src="{{ asset($settings->logo) }}" alt="Logo">
-            @else
-                Logo
-            @endif
-        </div>
-        <div class="kop-text">
-            <div class="kop-instansi">{{ $settings->nama_instansi ?? 'Dinas Sosial Kota Padang' }}</div>
-            <div class="kop-alamat">{{ $settings->alamat ?? 'Jl. Rasuna Said No.X, Padang, Sumatera Barat' }}</div>
-            @if(!empty($settings?->no_telp))
-            <div class="kop-alamat">Telp. {{ $settings->no_telp }}</div>
-            @endif
-        </div>
+        Periode: <b>{{ $labelPeriode }}</b>
+      </span>
+      <span>Tanggal Cetak: <b>{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</b></span>
     </div>
 
-    {{-- ── JUDUL ── --}}
-    <div class="judul-wrap">
-        <h2>Laporan Keuangan Panti Asuhan</h2>
-        <div class="sub-judul">
-            Periode:
-            @if($bulan && $tahun)
-                {{ \Carbon\Carbon::create($tahun, $bulan)->translatedFormat('F Y') }}
-            @elseif($tahun)
-                Tahun {{ $tahun }}
-            @else
-                Semua Periode
-            @endif
-        </div>
+    <!-- SUMMARY CARDS -->
+    <div class="summary">
+      <div class="card">
+        <div class="card-label">Total Pemasukan</div>
+        <div class="card-amount">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Total Pengeluaran</div>
+        <div class="card-amount">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Saldo</div>
+        <div class="card-amount">Rp {{ number_format($saldo, 0, ',', '.') }}</div>
+      </div>
     </div>
 
-    {{-- ── INFO PANTI ── --}}
-    <div class="info-panti">
-        <table>
-            <tr>
-                <td>Nama Panti</td>
-                <td>:</td>
-                <td><strong>{{ $panti->nama_panti }}</strong></td>
-            </tr>
-            <tr>
-                <td>Alamat</td>
-                <td>:</td>
-                <td>{{ $panti->alamat }}{{ $panti->kelurahan ? ', ' . $panti->kelurahan : '' }}{{ $panti->kecamatan ? ', ' . $panti->kecamatan : '' }}</td>
-            </tr>
-            @if($panti->no_telp)
-            <tr>
-                <td>No. Telepon</td>
-                <td>:</td>
-                <td>{{ $panti->no_telp }}</td>
-            </tr>
-            @endif
-            @if($panti->nama_kontak)
-            <tr>
-                <td>Kontak</td>
-                <td>:</td>
-                <td>{{ $panti->nama_kontak }}</td>
-            </tr>
-            @endif
-        </table>
-    </div>
-
-    {{-- ── TABEL TRANSAKSI ── --}}
-    <table class="tabel-data">
-        <thead>
-            <tr>
-                <th class="td-no">NO</th>
-                <th class="td-tanggal">Tanggal</th>
-                <th class="td-jenis">Jenis</th>
-                <th class="td-kategori">Kategori</th>
-                <th class="td-nominal">Nominal (Rp)</th>
-                <th class="td-keterangan">Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($transaksis as $i => $t)
-            <tr>
-                <td class="td-no">{{ $i + 1 }}</td>
-                <td class="td-tanggal">{{ \Carbon\Carbon::parse($t->tanggal)->translatedFormat('d M Y') }}</td>
-                <td class="td-jenis">
-                    <span class="{{ $t->jenis === 'pemasukan' ? 'jenis-masuk' : 'jenis-keluar' }}">
-                        {{ ucfirst($t->jenis) }}
-                    </span>
-                </td>
-                <td class="td-kategori">{{ $t->kategori ?? '-' }}</td>
-                <td class="td-nominal">
-                    <span class="{{ $t->jenis === 'pemasukan' ? 'jenis-masuk' : 'jenis-keluar' }}">
-                        {{ $t->jenis === 'pengeluaran' ? '(' : '' }}{{ number_format($t->nominal, 0, ',', '.') }}{{ $t->jenis === 'pengeluaran' ? ')' : '' }}
-                    </span>
-                </td>
-                <td class="td-keterangan">{{ $t->keterangan ?? '-' }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" style="text-align:center; padding:16px; color:#666;">
-                    Tidak ada data transaksi pada periode ini.
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
+    <!-- TRANSACTION TABLE -->
+    <table>
+      <thead>
+        <tr>
+          <th class="center">No</th>
+          <th>Tanggal</th>
+          <th>Kategori</th>
+          <th>Keterangan</th>
+          <th>Jenis</th>
+          <th class="right">Nominal (Rp)</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse($transaksi as $i => $item)
+          <tr>
+            <td class="center">{{ $i + 1 }}</td>
+            <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d M Y') }}</td>
+            <td>{{ $item->kategori ?? '-' }}</td>
+            <td>{{ $item->keterangan ?? '-' }}</td>
+            <td><span class="jenis-box">{{ ucfirst($item->jenis) }}</span></td>
+            <td class="right">{{ number_format($item->nominal, 0, ',', '.') }}</td>
+          </tr>
+        @empty
+          <tr>
+            <td colspan="6" style="text-align:center; padding:20px; color:#666; font-style:italic;">
+              Tidak ada transaksi pada periode ini.
+            </td>
+          </tr>
+        @endforelse
+      </tbody>
     </table>
 
-    {{-- ── RINGKASAN ── --}}
-    <div class="ringkasan">
-        <table>
-            <tr>
-                <td class="r-label">Total Pemasukan</td>
-                <td class="r-val jenis-masuk">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td class="r-label">Total Pengeluaran</td>
-                <td class="r-val jenis-keluar">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td class="r-saldo">Saldo Akhir</td>
-                <td class="r-saldo-val">Rp {{ number_format($saldo, 0, ',', '.') }}</td>
-            </tr>
-        </table>
-    </div>
+    <!-- TOTALS -->
+    <div class="divider"></div>
+    <table class="totals-table">
+      <tr>
+        <td class="label">Total Pemasukan :</td>
+        <td class="value">Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</td>
+      </tr>
+      <tr>
+        <td class="label">Total Pengeluaran :</td>
+        <td class="value">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+      </tr>
+      <tr class="row-saldo">
+        <td class="label" style="text-align:right; padding-right:12px;">SALDO :</td>
+        <td class="value" style="text-align:right;">Rp {{ number_format($saldo, 0, ',', '.') }}</td>
+      </tr>
+    </table>
 
-    {{-- ── TANDA TANGAN ── --}}
-    <div class="ttd-wrap">
-        <div class="ttd-box">
-            <div class="ttd-label">Mengetahui,<br>Pengurus Panti Asuhan</div>
-            <div class="ttd-name">{{ $panti->nama_kontak ?? '..............................' }}</div>
+    <!-- SIGNATURE -->
+    <div class="signature">
+      <div class="sig-block">
+        <div>Mengetahui,</div>
+        <div class="date">
+          {{ $panti->kelurahan ?? ($setting->alamat ? '' : 'Kota') }},
+          {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
         </div>
-        <div class="ttd-box">
-            <div class="ttd-label">
-                Padang, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
-                Kepala Dinas Sosial
-            </div>
-            <div class="ttd-name">{{ $kepalaDinsos?->nama ?? '..............................' }}</div>
-            @if($kepalaDinsos?->posisi)
-            <div style="font-size:9.5pt; font-weight:normal; margin-top:2px;">{{ $kepalaDinsos->posisi }}</div>
-            @endif
+        <div class="line">{{ $kepaladinsos ?? '.......................................' }}</div>
+        <div class="title">Kepala Dinas Sosial</div>
+      </div>
+      <div class="sig-block">
+        <div>Dibuat oleh,</div>
+        <div class="date">
+          {{ $panti->kelurahan ?? '' }},
+          {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
         </div>
+        <div class="line">{{ $pengurusNama ?? '.......................................' }}</div>
+        <div class="title">Pengurus Panti</div>
+      </div>
     </div>
 
-    {{-- ── FOOTER ── --}}
-    <div class="footer-cetak no-print">
-        Dicetak pada {{ \Carbon\Carbon::now()->translatedFormat('d F Y, H:i') }}
+    <!-- FOOTER -->
+    <div class="footer">
+      {{ $setting->nama ?? 'Sistem Informasi Donasi Panti Asuhan' }}
+      – Dinas Sosial Kabupaten / Kota
     </div>
 
-</div>
-<script>
-    // Auto print saat halaman dibuka
+  </div>
+
+  {{-- ── Auto-print saat halaman selesai render ── --}}
+  <script>
     window.addEventListener('load', function () {
-        setTimeout(function () {
-            window.print();
-        }, 600); // delay sedikit agar halaman render sempurna
+      // Tunda sedikit agar gambar logo sempat dimuat sebelum dialog print muncul
+      setTimeout(function () {
+        window.print();
+      }, 600);
     });
-</script>
+  </script>
+
 </body>
 </html>
