@@ -6,6 +6,7 @@ use App\Models\Donasi;
 use App\Models\Donatur;
 use App\Models\Keuangan;
 use App\Models\PantiAsuhan;
+use App\Models\Pegawai;
 use App\Models\WebsiteSetting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -429,7 +430,7 @@ class KeuanganController extends Controller
         $pengurusNama = $panti->pengurus()->aktif()->first()?->nama;
 
         // Nama kepala dinas (opsional — dari Pegawai dengan posisi kepala)
-        $kepaladinsos = \App\Models\Pegawai::where('posisi', 'like', '%kepala%')
+        $kepaladinsos = Pegawai::where('posisi', 'like', '%kepala%')
             ->value('nama');
 
         return view('pages.keuangan.laporan-cetak', compact(
