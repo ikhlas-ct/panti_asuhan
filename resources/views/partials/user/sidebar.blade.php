@@ -63,6 +63,7 @@
                     <p>{{ $profilNama }}</p>
                 </a>
             </li>
+
             @if (auth()->user()->role === 'admin_dinsos')
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
@@ -79,6 +80,7 @@
                     </a>
                 </li>
             @endif
+
             @if (auth()->user()->role === 'admin_dinsos' || auth()->user()->role === 'admin_panti')
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
@@ -115,6 +117,7 @@
                     </a>
                 </li>
             @endif
+
             @if (auth()->user()->role === 'admin_dinsos' || auth()->user()->role === 'admin_panti')
                 <li class="nav-item">
                     <a href="{{ route('anak-asuh.index') }}">
@@ -130,6 +133,7 @@
                 </span>
                 <h4 class="text-section">Proses &amp; Kegiatan</h4>
             </li>
+
             @if (auth()->user()->role === 'admin_panti' || auth()->user()->role === 'admin_dinsos')
                 <li class="nav-item">
                     <a href="{{ route('konten.index', 'kegiatan') }}">
@@ -138,16 +142,15 @@
                     </a>
                 </li>
             @endif
-                        @if (auth()->user()->role === 'donatur')
 
-                    <li class="nav-item">
+            @if (auth()->user()->role === 'donatur')
+                <li class="nav-item">
                     <a href="{{ route('panti-asuhan.index') }}">
                         <i class="fas fa-house-user"></i>
                         <p>Panti Asuhan</p>
                     </a>
                 </li>
-                            @endif
-
+            @endif
 
             @if (auth()->user()->role === 'admin_dinsos')
                 <li class="nav-item">
@@ -170,6 +173,23 @@
                     <a href="{{ route('keuangan.index') }}">
                         <i class="fas fa-money-bill-wave"></i>
                         <p>Keuangan</p>
+                    </a>
+                </li>
+            @endif
+
+            {{-- ── Laporan (hanya admin_dinsos) ── --}}
+            @if (auth()->user()->role === 'admin_dinsos')
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Laporan</h4>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
+                    <a href="{{ route('laporan.index') }}">
+                        <i class="fas fa-chart-bar"></i>
+                        <p>Cetak Laporan</p>
                     </a>
                 </li>
             @endif

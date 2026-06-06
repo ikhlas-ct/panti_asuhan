@@ -52,8 +52,9 @@ Route::post('/register', [RegisterDonaturController::class, 'store'])
 
 Route::get('/',             [LandingController::class, 'index'])->name('home');
 Route::get('/berita',       [LandingController::class, 'berita'])->name('berita');
-Route::get('/berita/{slug}', [LandingController::class, 'beritaDetail'])->name('berita.detail');
-
+Route::get('/{jenis}/{slug}', [LandingController::class, 'beritaDetail'])
+    ->name('berita.detail')
+    ->whereIn('jenis', ['berita', 'kegiatan']);
 Route::get('/daftar-panti', [LandingController::class, 'daftarPanti'])->name('daftar-panti');
 Route::get('/daftar-panti/{id}', [LandingController::class, 'pantiDetail'])->name('panti.detail');
 Route::get('/kerjasama',    [LandingController::class, 'kerjasama'])->name('kerjasama');
@@ -88,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::middleware('role:admin_dinsos')->group(function () {
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 
         Route::get('/dinsos/dashboard', [DashboardController::class, 'dinsosDashboard'])->name('dinsos.dashboard');
 
@@ -172,7 +174,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('blog/upload-image', [KontenController::class, 'uploadImage'])->name('blog.upload.image');
         Route::post('blog/delete-image', [KontenController::class, 'deleteImage'])->name('blog.delete.image');
-        Route::post('blog/show', [KontenController::class, 'show'])->name('blog.show');
+
 
 
         Route::get('/keuangan',                  [KeuanganController::class, 'index'])->name('keuangan.index');
@@ -187,30 +189,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/keuangan-donasi-by-panti',  [KeuanganController::class, 'getDonasiByPanti'])->name('keuangan.donasi-by-panti');
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     Route::get('/donasi/print', [DonasiController::class, 'printLaporan'])->name('donasi.print');

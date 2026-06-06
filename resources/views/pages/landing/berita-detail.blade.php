@@ -360,7 +360,11 @@
   <div class="container d-flex align-items-center flex-wrap gap-1">
     <a href="{{ route('home') }}"><i class="bi bi-house-door me-1"></i>Beranda</a>
     <span class="breadcrumb-sep">/</span>
-    <a href="{{ route('berita') }}">Berita</a>
+    @if($jenis === 'kegiatan')
+      <a href="{{ route('kerjasama') }}">Kegiatan</a>
+    @else
+      <a href="{{ route('berita') }}">Berita</a>
+    @endif
     @if($konten->kategori)
       <span class="breadcrumb-sep">/</span>
       <a href="{{ route('berita', ['kategori' => $konten->id_kategori]) }}">
@@ -386,27 +390,57 @@
           {{ $konten->kategori->nama_kategori }}
         </span>
       @endif
-      <span class="hero-badge">
-        <i class="bi bi-newspaper"></i> Berita
-      </span>
-      @if($konten->status === 'berlangsung')
-        <span class="hero-badge" style="background:rgba(255,193,7,.25);border-color:rgba(255,193,7,.4);">
-          <i class="bi bi-circle-fill" style="font-size:.5rem;color:#ffc107;"></i> Berlangsung
+      @if($jenis === 'kegiatan')
+        <span class="hero-badge">
+          <i class="bi bi-calendar-event"></i> Kegiatan
+        </span>
+        @if($konten->status)
+          @php
+            $statusStyle = match($konten->status) {
+              'berlangsung' => 'background:rgba(255,193,7,.25);border-color:rgba(255,193,7,.4);',
+              'selesai'     => 'background:rgba(25,135,84,.2);border-color:rgba(25,135,84,.4);',
+              'dibatalkan'  => 'background:rgba(220,53,69,.2);border-color:rgba(220,53,69,.4);',
+              default       => 'background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);',
+            };
+            $statusIcon = match($konten->status) {
+              'berlangsung' => 'bi-circle-fill',
+              'selesai'     => 'bi-check-circle-fill',
+              'dibatalkan'  => 'bi-x-circle-fill',
+              default       => 'bi-clock-fill',
+            };
+          @endphp
+          <span class="hero-badge" style="{{ $statusStyle }}">
+            <i class="bi {{ $statusIcon }}" style="font-size:.5rem;"></i>
+            {{ ucfirst($konten->status) }}
+          </span>
+        @endif
+      @else
+        <span class="hero-badge">
+          <i class="bi bi-newspaper"></i> Berita
         </span>
       @endif
     </div>
 
     {{-- Judul --}}
-    <h1 class="hero-title-detail fade-up delay-1">{{ $konten->judul ?? 'Judul Berita' }}</h1>
+    <h1 class="hero-title-detail fade-up delay-1">{{ $konten->judul ?? ($jenis === 'kegiatan' ? 'Judul Kegiatan' : 'Judul Berita') }}</h1>
 
     {{-- Info row --}}
     <div class="hero-info-row fade-up delay-2">
-      <span><i class="bi bi-calendar3"></i>{{ $konten->tanggal_publikasi?->translatedFormat('d F Y') ?? $konten->tanggal_publikasi?->format('d M Y') ?? '-' }}</span>
-      <span class="sep">|</span>
+      @if($jenis === 'kegiatan' && $konten->tanggal_mulai)
+        <span><i class="bi bi-calendar-check"></i>{{ $konten->tanggal_mulai->format('d M Y') }}@if($konten->tanggal_selesai && $konten->tanggal_selesai != $konten->tanggal_mulai) – {{ $konten->tanggal_selesai->format('d M Y') }}@endif</span>
+        <span class="sep">|</span>
+      @else
+        <span><i class="bi bi-calendar3"></i>{{ $konten->tanggal_publikasi?->format('d M Y') ?? '-' }}</span>
+        <span class="sep">|</span>
+      @endif
       <span><i class="bi bi-person-circle"></i>{{ $konten->user?->username ?? 'Admin' }}</span>
       @if($konten->viewer > 0)
         <span class="sep">|</span>
         <span><i class="bi bi-eye"></i>{{ number_format($konten->viewer) }} pembaca</span>
+      @endif
+      @if($jenis === 'kegiatan' && $konten->lokasi)
+        <span class="sep">|</span>
+        <span><i class="bi bi-geo-alt"></i>{{ $konten->lokasi }}</span>
       @endif
       @if($konten->pantiAsuhan)
         <span class="sep">|</span>
@@ -482,6 +516,78 @@
 
             <hr class="konten-divider">
 
+            {{-- ── INFO KEGIATAN (hanya tampil jika jenis_konten = kegiatan) ── --}}
+            @if($jenis === 'kegiatan')
+            <div class="mb-4" style="background:var(--green-pale);border-radius:14px;padding:20px 24px;border:1px solid rgba(0,0,0,.06);">
+              <div style="font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--green-dark);margin-bottom:14px;">
+                <i class="bi bi-calendar-event-fill me-2"></i>Detail Kegiatan
+              </div>
+              <div class="row g-3">
+                @if($konten->tanggal_mulai)
+                <div class="col-sm-6">
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Tanggal Mulai</div>
+                  <div style="font-size:.9rem;font-weight:700;color:var(--text-dark);">
+                    <i class="bi bi-calendar-check me-1" style="color:var(--green-dark);"></i>
+                    {{ $konten->tanggal_mulai->format('d M Y') }}
+                  </div>
+                </div>
+                @endif
+                @if($konten->tanggal_selesai)
+                <div class="col-sm-6">
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Tanggal Selesai</div>
+                  <div style="font-size:.9rem;font-weight:700;color:var(--text-dark);">
+                    <i class="bi bi-calendar-x me-1" style="color:var(--orange);"></i>
+                    {{ $konten->tanggal_selesai->format('d M Y') }}
+                  </div>
+                </div>
+                @endif
+                @if($konten->lokasi)
+                <div class="col-sm-6">
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Lokasi</div>
+                  <div style="font-size:.9rem;font-weight:700;color:var(--text-dark);">
+                    <i class="bi bi-geo-alt-fill me-1" style="color:var(--orange);"></i>
+                    {{ $konten->lokasi }}
+                  </div>
+                </div>
+                @endif
+                @if($konten->status)
+                <div class="col-sm-6">
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Status</div>
+                  <div style="font-size:.9rem;font-weight:700;">
+                    @php
+                      $stColor = match($konten->status) {
+                        'berlangsung'  => '#d97706',
+                        'selesai'      => 'var(--green-dark)',
+                        'dibatalkan'   => '#dc3545',
+                        default        => 'var(--text-muted)',
+                      };
+                    @endphp
+                    <span style="color:{{ $stColor }};">{{ ucfirst($konten->status) }}</span>
+                  </div>
+                </div>
+                @endif
+                @if($konten->jumlah_peserta)
+                <div class="col-sm-6">
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Jumlah Peserta</div>
+                  <div style="font-size:.9rem;font-weight:700;color:var(--text-dark);">
+                    <i class="bi bi-people-fill me-1" style="color:var(--green-dark);"></i>
+                    {{ number_format($konten->jumlah_peserta) }} orang
+                  </div>
+                </div>
+                @endif
+                @if($konten->penanggung_jawab)
+                <div class="col-sm-6">
+                  <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Penanggung Jawab</div>
+                  <div style="font-size:.9rem;font-weight:700;color:var(--text-dark);">
+                    <i class="bi bi-person-badge-fill me-1" style="color:var(--green-dark);"></i>
+                    {{ $konten->penanggung_jawab }}
+                  </div>
+                </div>
+                @endif
+              </div>
+            </div>
+            @endif
+
             {{-- Info Panti (jika ada relasi) --}}
             @if($konten->pantiAsuhan)
               <div class="d-flex align-items-center gap-3 p-3 mb-4"
@@ -516,9 +622,15 @@
                   {{ $konten->kategori->nama_kategori }}
                 </a>
               @endif
-              <a href="{{ route('berita') }}" class="tag-pill">
-                <i class="bi bi-newspaper"></i> Berita
-              </a>
+              @if($jenis === 'kegiatan')
+                <a href="{{ route('kerjasama') }}" class="tag-pill">
+                  <i class="bi bi-calendar-event"></i> Kegiatan
+                </a>
+              @else
+                <a href="{{ route('berita') }}" class="tag-pill">
+                  <i class="bi bi-newspaper"></i> Berita
+                </a>
+              @endif
             </div>
 
             {{-- Share Bar --}}
@@ -549,18 +661,10 @@
         </article>
 
         {{-- ── NAVIGASI ARTIKEL (Prev / Next) ── --}}
-        {{--
-          Untuk menambah fitur prev/next, tambahkan query berikut di controller:
-            $prevKonten = Konten::berita()->where('id_konten', '<', $konten->id_konten)
-                            ->latest('id_konten')->first();
-            $nextKonten = Konten::berita()->where('id_konten', '>', $konten->id_konten)
-                            ->oldest('id_konten')->first();
-          Lalu kirim ke view via compact().
-        --}}
         @if(isset($prevKonten) || isset($nextKonten))
         <div class="nav-articles">
           @if(isset($prevKonten) && $prevKonten)
-            <a href="{{ route('berita.detail', $prevKonten->slug) }}" class="nav-art-btn prev">
+            <a href="{{ route('berita.detail', [$jenis, $prevKonten->slug]) }}" class="nav-art-btn prev">
               <i class="bi bi-chevron-left mt-1" style="color:var(--green-dark);flex-shrink:0;"></i>
               <div>
                 <div class="nav-dir">Sebelumnya</div>
@@ -572,7 +676,7 @@
           @endif
 
           @if(isset($nextKonten) && $nextKonten)
-            <a href="{{ route('berita.detail', $nextKonten->slug) }}" class="nav-art-btn next">
+            <a href="{{ route('berita.detail', [$jenis, $nextKonten->slug]) }}" class="nav-art-btn next">
               <div>
                 <div class="nav-dir">Berikutnya</div>
                 <div class="nav-jtitle">{{ Str::limit($nextKonten->judul, 60) }}</div>
@@ -590,14 +694,15 @@
       {{-- ── SIDEBAR ── --}}
       <div class="col-lg-4 fade-up delay-2">
 
-        {{-- Berita Terkait --}}
+        {{-- Berita / Kegiatan Terkait --}}
         @if($artikelTerkait->isNotEmpty())
         <div class="sidebar-card">
           <div class="sidebar-title">
-            <i class="bi bi-collection-fill me-2" style="color:var(--green-dark);"></i>Berita Terkait
+            <i class="bi bi-collection-fill me-2" style="color:var(--green-dark);"></i>
+            {{ $jenis === 'kegiatan' ? 'Kegiatan Terkait' : 'Berita Terkait' }}
           </div>
           @foreach($artikelTerkait as $rel)
-            <a href="{{ route('berita.detail', $rel->slug) }}" class="related-item">
+            <a href="{{ route('berita.detail', [$jenis, $rel->slug]) }}" class="related-item">
               @if($rel->gambar)
                 <img
                   src="{{ asset('storage/' . $rel->gambar) }}"
@@ -606,12 +711,19 @@
                   onerror="this.outerHTML='<div class=\'related-thumb-ph\'><i class=\'bi bi-journal-text\'></i></div>'"
                 />
               @else
-                <div class="related-thumb-ph"><i class="bi bi-journal-text"></i></div>
+                <div class="related-thumb-ph">
+                  <i class="{{ $jenis === 'kegiatan' ? 'bi-calendar-event' : 'bi-journal-text' }}"></i>
+                </div>
               @endif
               <div>
                 <div class="related-title">{{ $rel->judul }}</div>
                 <div class="related-date">
-                  <i class="bi bi-calendar3 me-1"></i>{{ $rel->tanggal_publikasi?->format('d M Y') ?? '-' }}
+                  <i class="bi bi-calendar3 me-1"></i>
+                  @if($jenis === 'kegiatan' && $rel->tanggal_mulai)
+                    {{ $rel->tanggal_mulai->format('d M Y') }}
+                  @else
+                    {{ $rel->tanggal_publikasi?->format('d M Y') ?? '-' }}
+                  @endif
                 </div>
                 @if($rel->viewer > 0)
                   <div class="related-date mt-1">
@@ -621,28 +733,66 @@
               </div>
             </a>
           @endforeach
-          <a href="{{ route('berita') }}" class="link-baca mt-3 d-inline-flex">
-            Lihat Semua Berita <i class="bi bi-arrow-right"></i>
-          </a>
+          @if($jenis === 'kegiatan')
+            <a href="{{ route('kerjasama') }}" class="link-baca mt-3 d-inline-flex">
+              Lihat Semua Kegiatan <i class="bi bi-arrow-right"></i>
+            </a>
+          @else
+            <a href="{{ route('berita') }}" class="link-baca mt-3 d-inline-flex">
+              Lihat Semua Berita <i class="bi bi-arrow-right"></i>
+            </a>
+          @endif
         </div>
         @endif
 
-        {{-- Info Publikasi --}}
+        {{-- Info Publikasi / Kegiatan --}}
         <div class="sidebar-card">
           <div class="sidebar-title">
-            <i class="bi bi-info-circle-fill me-2" style="color:var(--orange);"></i>Info Publikasi
+            <i class="bi bi-info-circle-fill me-2" style="color:var(--orange);"></i>
+            {{ $jenis === 'kegiatan' ? 'Info Kegiatan' : 'Info Publikasi' }}
           </div>
           <div class="d-flex flex-column gap-2" style="font-size:.84rem;">
-            <div class="d-flex justify-content-between">
-              <span style="color:var(--text-muted);">Tanggal Terbit</span>
-              <span style="font-weight:600;color:var(--text-dark);">
-                {{ $konten->tanggal_publikasi?->format('d M Y') ?? '-' }}
-              </span>
-            </div>
-            <div class="d-flex justify-content-between">
-              <span style="color:var(--text-muted);">Penulis</span>
-              <span style="font-weight:600;color:var(--text-dark);">{{ $konten->user?->username ?? 'Admin' }}</span>
-            </div>
+            @if($jenis === 'kegiatan')
+              @if($konten->tanggal_mulai)
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Tanggal Mulai</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ $konten->tanggal_mulai->format('d M Y') }}</span>
+              </div>
+              @endif
+              @if($konten->tanggal_selesai)
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Tanggal Selesai</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ $konten->tanggal_selesai->format('d M Y') }}</span>
+              </div>
+              @endif
+              @if($konten->lokasi)
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Lokasi</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ $konten->lokasi }}</span>
+              </div>
+              @endif
+              @if($konten->jumlah_peserta)
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Peserta</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ number_format($konten->jumlah_peserta) }} orang</span>
+              </div>
+              @endif
+              @if($konten->penanggung_jawab)
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Penanggung Jawab</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ $konten->penanggung_jawab }}</span>
+              </div>
+              @endif
+            @else
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Tanggal Terbit</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ $konten->tanggal_publikasi?->format('d M Y') ?? '-' }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span style="color:var(--text-muted);">Penulis</span>
+                <span style="font-weight:600;color:var(--text-dark);">{{ $konten->user?->username ?? 'Admin' }}</span>
+              </div>
+            @endif
             @if($konten->kategori)
             <div class="d-flex justify-content-between">
               <span style="color:var(--text-muted);">Kategori</span>
@@ -653,7 +803,7 @@
               <span style="color:var(--text-muted);">Total Pembaca</span>
               <span style="font-weight:600;color:var(--text-dark);">{{ number_format($konten->viewer ?? 0) }}</span>
             </div>
-            @if($konten->status)
+            @if($konten->status && $jenis === 'kegiatan')
             <div class="d-flex justify-content-between">
               <span style="color:var(--text-muted);">Status</span>
               <span class="category-badge badge-cerita" style="font-size:.72rem;">{{ ucfirst($konten->status) }}</span>

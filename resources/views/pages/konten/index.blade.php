@@ -418,7 +418,7 @@
                         {{-- Aksi --}}
                         <td>
                             <div class="d-flex gap-1">
-                                <a href="{{ route('blog.show', ['jenis' => $jenis, 'slug' => $item->slug]) }}"
+                                <a href="{{ route('berita.detail', [$item->jenis_konten, $item->slug]) }}"
                                    class="btn btn-action btn-detail" title="Lihat" target="_blank">
                                     <i class="fas fa-eye"></i>
                                 </a>

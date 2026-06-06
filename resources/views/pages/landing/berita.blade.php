@@ -93,7 +93,7 @@
 
             {{-- Link baca --}}
             @if($beritaFeatured->slug)
-              <a href="{{ route('berita.detail', $beritaFeatured->slug) }}" class="link-baca">
+              <a href="{{ route('berita.detail', ['berita', $beritaFeatured->slug]) }}" class="link-baca">
                 Baca Selengkapnya <i class="bi bi-arrow-right"></i>
               </a>
             @else
@@ -152,7 +152,7 @@
 
             {{-- Link baca --}}
             @if($pop->slug)
-              <a href="{{ route('berita.detail', $pop->slug) }}" class="link-baca mt-2 d-inline-flex">
+              <a href="{{ route('berita.detail', ['berita', $pop->slug]) }}" class="link-baca mt-2 d-inline-flex">
                 Baca Selengkapnya <i class="bi bi-arrow-right"></i>
               </a>
             @else
@@ -277,7 +277,7 @@
             {{-- Footer: link baca & bookmark --}}
             <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
               @if($item->slug)
-                <a href="{{ route('berita.detail', $item->slug) }}" class="link-baca">
+                <a href="{{ route('berita.detail', ['berita', $item->slug]) }}" class="link-baca">
                   Baca Selengkapnya <i class="bi bi-arrow-right"></i>
                 </a>
               @else

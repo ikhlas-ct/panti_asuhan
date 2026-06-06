@@ -119,47 +119,50 @@ class LandingController extends Controller
     }
 
     // ══════════════════════════════════════════════════════════
-    //  DETAIL BERITA  /berita/{slug}
+    //  DETAIL BERITA / KEGIATAN  /{jenis}/{slug}
     // ══════════════════════════════════════════════════════════
-    public function beritaDetail(string $slug)
+    public function beritaDetail(string $jenis, string $slug)
     {
         $setting = $this->getSetting();
 
-        // ── 1. Ambil konten berdasarkan slug — jika tidak ditemukan → 404
+        // ── 1. Ambil konten berdasarkan jenis + slug → 404 jika tidak ada
         $konten = Konten::with(['user', 'kategori', 'pantiAsuhan'])
-            ->where('jenis_konten', 'berita')
+            ->where('jenis_konten', $jenis)
             ->where('slug', $slug)
             ->firstOrFail();
 
         // ── 2. Tambah viewer (hit counter)
         $konten->incrementViewer();
 
-        // ── 3. Berita terkait (kategori sama, bukan dirinya sendiri)
+        // ── 3. Konten terkait (jenis sama, kategori sama, bukan dirinya sendiri)
         $artikelTerkait = Konten::with(['user', 'kategori'])
-            ->where('jenis_konten', 'berita')
+            ->where('jenis_konten', $jenis)
             ->where('id_kategori', $konten->id_kategori)
             ->where('id_konten', '!=', $konten->id_konten)
             ->latest('tanggal_publikasi')
             ->limit(4)
             ->get();
 
-        // ── 4. Navigasi artikel: Sebelumnya & Berikutnya
-        $prevKonten = Konten::berita()
-            ->where('tanggal_publikasi', '<', $konten->tanggal_publikasi)
-            ->latest('tanggal_publikasi')
-            ->select('id_konten', 'judul', 'slug', 'gambar', 'tanggal_publikasi')
+        // ── 4. Navigasi: Sebelumnya & Berikutnya (jenis sama)
+        $dateCol = $jenis === 'kegiatan' ? 'tanggal_mulai' : 'tanggal_publikasi';
+        $dateVal = $jenis === 'kegiatan' ? $konten->tanggal_mulai : $konten->tanggal_publikasi;
+
+        $prevKonten = Konten::where('jenis_konten', $jenis)
+            ->where($dateCol, '<', $dateVal)
+            ->latest($dateCol)
+            ->select('id_konten', 'judul', 'slug', 'gambar', 'tanggal_publikasi', 'tanggal_mulai')
             ->first();
 
-        $nextKonten = Konten::berita()
-            ->where('tanggal_publikasi', '>', $konten->tanggal_publikasi)
-            ->oldest('tanggal_publikasi')
-            ->select('id_konten', 'judul', 'slug', 'gambar', 'tanggal_publikasi')
+        $nextKonten = Konten::where('jenis_konten', $jenis)
+            ->where($dateCol, '>', $dateVal)
+            ->oldest($dateCol)
+            ->select('id_konten', 'judul', 'slug', 'gambar', 'tanggal_publikasi', 'tanggal_mulai')
             ->first();
 
-        // ── 5. Render view
         return view('pages.landing.berita-detail', compact(
             'setting',
             'konten',
+            'jenis',
             'artikelTerkait',
             'prevKonten',
             'nextKonten',
