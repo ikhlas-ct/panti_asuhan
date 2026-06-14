@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ $setting?->nama ?? 'TitikKebaikan' }} – Kerjasama Kami</title>
+  <title>{{ $settings?->nama ?? 'TitikKebaikan' }} – Kerjasama Kami</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -123,24 +123,24 @@
     @endif
 
     <div class="row g-4 align-items-start">
-      {{-- Kontak info dari setting --}}
+      {{-- Kontak info dari settings --}}
       <div class="col-lg-5 fade-up delay-1">
-        @if($setting?->email)
+        @if($settings?->email)
         <div class="contact-info-item">
           <div class="ci-box green"><i class="bi bi-envelope-fill"></i></div>
-          <div><div class="ci-label">Email</div><div class="ci-value">{{ $setting->email }}</div></div>
+          <div><div class="ci-label">Email</div><div class="ci-value">{{ $settings->email }}</div></div>
         </div>
         @endif
-        @if($setting?->nomor_telepon)
+        @if($settings?->nomor_telepon)
         <div class="contact-info-item">
           <div class="ci-box orange"><i class="bi bi-telephone-fill"></i></div>
-          <div><div class="ci-label">Telepon</div><div class="ci-value">{{ $setting->nomor_telepon }}</div></div>
+          <div><div class="ci-label">Telepon</div><div class="ci-value">{{ $settings->nomor_telepon }}</div></div>
         </div>
         @endif
-        @if($setting?->alamat)
+        @if($settings?->alamat)
         <div class="contact-info-item">
           <div class="ci-box dark"><i class="bi bi-geo-alt-fill"></i></div>
-          <div><div class="ci-label">Alamat</div><div class="ci-value">{{ $setting->alamat }}</div></div>
+          <div><div class="ci-label">Alamat</div><div class="ci-value">{{ $settings->alamat }}</div></div>
         </div>
         @endif
       </div>
@@ -206,11 +206,11 @@
     <div class="fade-up delay-1">
       <div class="faq-item">
         <button class="faq-question open" onclick="toggleFaq(this)">
-          Apa itu {{ $setting?->nama ?? 'TitikKebaikan' }}?
+          Apa itu {{ $settings?->nama ?? 'TitikKebaikan' }}?
           <i class="bi bi-chevron-down faq-icon-arrow"></i>
         </button>
         <div class="faq-answer open">
-          {{ $setting?->about_us ?? 'TitikKebaikan adalah platform digital yang menghubungkan para donatur, relawan, dan komunitas dengan panti asuhan. Kami hadir untuk memudahkan penyaluran bantuan secara transparan dan terverifikasi.' }}
+          {{ $settings?->about_us ?? 'TitikKebaikan adalah platform digital yang menghubungkan para donatur, relawan, dan komunitas dengan panti asuhan. Kami hadir untuk memudahkan penyaluran bantuan secara transparan dan terverifikasi.' }}
         </div>
       </div>
       <div class="faq-item">

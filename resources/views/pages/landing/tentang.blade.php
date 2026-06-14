@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ $setting?->nama ?? 'TitikKebaikan' }} – Tentang Kami</title>
+  <title>{{ $settings?->nama ?? 'TitikKebaikan' }} – Tentang Kami</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -22,7 +22,7 @@
       <div class="col-lg-6 fade-up">
         <div class="section-badge">Platform Kebaikan</div>
         <h1>
-          {{ $setting?->nama ?? 'Titik' }}<br>
+          {{ $settings?->nama ?? 'Titik' }}<br>
           <span style="display:inline-flex;align-items:center;gap:10px;">
             <span style="background:var(--green-dark);color:var(--white);width:36px;height:36px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;">
               <i class="bi bi-heart-fill"></i>
@@ -33,12 +33,12 @@
             <span style="background:var(--orange);color:var(--white);width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;vertical-align:middle;margin-right:8px;">
               <i class="bi bi-stars"></i>
             </span>
-            {{ $setting?->slogan ?? 'Wujudkan Harapan' }}
+            {{ $settings?->slogan ?? 'Wujudkan Harapan' }}
           </span>
         </h1>
               <p class="lead mt-3">
-          {{ $setting?->paragraf_pengantar
-              ? Str::limit(strip_tags($setting->paragraf_pengantar), 200, '...')
+          {{ $settings?->paragraf_pengantar
+              ? Str::limit(strip_tags($settings->paragraf_pengantar), 200, '...')
               : '-' }}
         </p>
         <div class="d-flex flex-wrap gap-3 mt-4">
@@ -46,15 +46,15 @@
             <i class="bi bi-house-heart"></i> {{ $stats['total_panti'] }}+ Panti Asuhan
           </button>
           <button class="tentang-tag-btn ttag-orange">
-            <i class="bi bi-geo-alt-fill"></i> {{ $setting?->alamat }}
+            <i class="bi bi-geo-alt-fill"></i> {{ $settings?->alamat }}
           </button>
         </div>
       </div>
       <div class="col-lg-6 fade-up delay-2">
         <div class="position-relative">
           <div style="border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.13);">
-            @if($setting?->gambar_pengantar)
-              <img src="{{ asset('storage/'.$setting->gambar_pengantar) }}" alt="Tentang Kami"
+            @if($settings?->gambar_pengantar)
+              <img src="{{ asset('storage/'.$settings->gambar_pengantar) }}" alt="Tentang Kami"
                 style="width:100%;height:340px;object-fit:cover;display:block;"
                 onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:340px\'><i class=\'bi bi-image\'></i></div>'"/>
             @else
@@ -77,16 +77,16 @@
       <div style="width:50px;height:50px;background:var(--green-dark);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.2rem;color:var(--white);">
         <i class="bi bi-heart-fill"></i>
       </div>
-      <h2 class="section-title">Tentang <span>{{ $setting?->nama ?? 'TitikKebaikan' }}</span></h2>
-      <p class="section-sub" style="max-width:580px;margin:0 auto;">{{ $setting?->about_us }}</p>
+      <h2 class="section-title">Tentang <span>{{ $settings?->nama ?? 'TitikKebaikan' }}</span></h2>
+      <p class="section-sub" style="max-width:580px;margin:0 auto;">{{ $settings?->about_us }}</p>
     </div>
 
     {{-- Misi Visi Nilai — dari why_choose_us atau statis --}}
-    @if($setting?->why_choose_us)
+    @if($settings?->why_choose_us)
       <div class="row g-4">
         <div class="col-12 fade-up">
           <div style="background:var(--cream);border-radius:var(--radius);padding:24px;" class="text-center">
-            {!! $setting->why_choose_us !!}
+            {!! $settings->why_choose_us !!}
           </div>
         </div>
       </div>

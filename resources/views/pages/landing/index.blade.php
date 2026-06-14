@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ $setting?->nama ?? 'TitikKebaikan' }} – Beranda</title>
+  <title>{{ $settings?->nama ?? 'TitikKebaikan' }} – Beranda</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -22,20 +22,20 @@
       <div class="col-lg-6 fade-up">
 
         {{-- Badge lokasi: tampil hanya jika alamat tersedia --}}
-        @if($setting?->alamat)
+        @if($settings?->alamat)
           <div class="location-badge">
-            <i class="bi bi-geo-alt-fill"></i> {{ $setting->alamat }}
+            <i class="bi bi-geo-alt-fill"></i> {{ $settings ->alamat }}
           </div>
         @endif
 
         <h1>
-          {{ $setting?->title_pengantar ?? '-' }}<br>
+          {{ $settings?->title_pengantar ?? '-' }}<br>
 
         </h1>
 
         <p class="lead">
-          {{ $setting?->paragraf_pengantar
-              ? Str::limit(strip_tags($setting->paragraf_pengantar), 200, '...')
+          {{ $settings?->paragraf_pengantar
+              ? Str::limit(strip_tags($settings->paragraf_pengantar), 200, '...')
               : 'Bersama kami, bantu anak-anak yatim piatu dan dhuafa mendapatkan kehidupan yang lebih baik.' }}
         </p>
 
@@ -87,7 +87,7 @@
               $heroCaption    = $heroSlides->isNotEmpty()
                                   ? ($heroSlides->first()->description ?? null)
                                   : null;
-              $fallbackImg    = $setting?->gambar_pengantar ?? null;
+              $fallbackImg    = $settings?->gambar_pengantar ?? null;
             @endphp
 
             @if($heroImg)
@@ -101,11 +101,11 @@
             @elseif($fallbackImg)
               <img
                 src="{{ asset('storage/' . $fallbackImg) }}"
-                alt="{{ $setting?->nama ?? 'Gambar Pengantar' }}"
+                alt="{{ $settings?->nama ?? 'Gambar Pengantar' }}"
                 onerror="this.parentElement.innerHTML='<div class=\'img-ph\' style=\'height:320px\'><i class=\'bi bi-image\'></i></div>'"
               />
               <div class="hero-img-caption">
-                {{ $setting?->slogan ?? 'Melayani anak-anak dengan penuh kasih sayang' }}
+                {{ $settings?->slogan ?? 'Melayani anak-anak dengan penuh kasih sayang' }}
               </div>
 
             @else
