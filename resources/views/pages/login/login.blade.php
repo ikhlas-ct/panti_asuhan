@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="icon" href="{{ $settings->logo ? asset($settings->logo) : asset('defaultimage/default_logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ $settings->logo_url }}" type="image/png">
 </head>
 <body>
 <!-- Login 13 - Bootstrap Brain Component -->
@@ -20,7 +20,7 @@
                         <div class="text-center mb-3">
                             <h2 class="mb-2">{{ $settings->nama ?? 'Tidak ada nama' }}</h2>
                             <a href="#!">
-                                <img src="{{ $settings->logo ? asset($settings->logo) : asset('defaultimage/default_logo.png') }}"
+                                <img src="{{ $settings->logo_url }}"
                                      alt="Logo"
                                      height="80">
                             </a>
