@@ -39,7 +39,6 @@ Route::post('/login', [AuthController::class, 'login_post'])->name('login.post')
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/asd', [AuthController::class, 'login'])->name('dashboard');
-Route::get('/logiasdn', [AuthController::class, 'login'])->name('camat.settings.edit');
 
 Route::get('/register', [RegisterDonaturController::class, 'create'])
     ->name('register.donatur')

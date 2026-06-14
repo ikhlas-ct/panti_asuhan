@@ -2,8 +2,9 @@
 <div class="sidebar-logo">
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
-        <a href="index.html" class="logo d-flex align-items-center">
-            <img src="{{ $settings?->logo ? asset($settings->logo) : asset('default-image/default-logo.png') }}"
+        <a href="{{ route('dinsos.dashboard') }}" class="logo d-flex align-items-center">
+            {{-- Gunakan accessor logo_url agar path storage/ selalu benar --}}
+            <img src="{{ $settings->logo_url }}"
                 alt="navbar brand" class="navbar-brand" height="50" />
             <span class="ms-2 text-white">{{ $settings->nama ?? 'Nama Website' }}</span>
         </a>
@@ -32,8 +33,8 @@
                 @php
                     $dashboardRoute = match (auth()->user()->role) {
                         'admin_dinsos' => route('dinsos.dashboard'),
-                        'admin_panti' => route('admin_panti.dashboard'),
-                        default => route('donatur.dashboard'),
+                        'admin_panti'  => route('admin_panti.dashboard'),
+                        default        => route('donatur.dashboard'),
                     };
                 @endphp
                 <a href="{{ $dashboardRoute }}">
@@ -48,14 +49,14 @@
                     $role = auth()->user()->role;
                     $profilRoute = match ($role) {
                         'admin_dinsos' => route('pegawai.profil'),
-                        'admin_panti' => route('admin_panti.profil'),
-                        default => route('donatur.profil'),
+                        'admin_panti'  => route('admin_panti.profil'),
+                        default        => route('donatur.profil'),
                     };
                     $profilNama =
                         match ($role) {
                             'admin_dinsos' => auth()->user()->pegawai?->nama,
-                            'admin_panti' => auth()->user()->pengurus?->nama,
-                            default => auth()->user()->donatur?->nama,
+                            'admin_panti'  => auth()->user()->pengurus?->nama,
+                            default        => auth()->user()->donatur?->nama,
                         } ?? auth()->user()->username;
                 @endphp
                 <a href="{{ $profilRoute }}">
@@ -73,7 +74,7 @@
                 </li>
 
                 <!-- Website Setting -->
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('setting.website.*') ? 'active' : '' }}">
                     <a href="{{ route('setting.website.edit') }}">
                         <i class="fas fa-cogs"></i>
                         <p>Website Setting</p>
@@ -91,26 +92,28 @@
             @endif
 
             @if (auth()->user()->role === 'admin_dinsos')
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('panti-asuhan.*') ? 'active' : '' }}">
                     <a href="{{ route('panti-asuhan.index') }}">
                         <i class="fas fa-house-user"></i>
                         <p>Panti Asuhan</p>
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('pegawai.*') ? 'active' : '' }}">
                     <a href="{{ route('pegawai.index') }}">
                         <i class="fas fa-users"></i>
                         <p>Pegawai</p>
                     </a>
                 </li>
-                <li class="nav-item">
+
+                <li class="nav-item {{ request()->routeIs('pengurus.*') ? 'active' : '' }}">
                     <a href="{{ route('pengurus.index') }}">
                         <i class="fas fa-user-tie"></i>
                         <p>Pengurus</p>
                     </a>
                 </li>
-                <li class="nav-item">
+
+                <li class="nav-item {{ request()->routeIs('donatur.*') ? 'active' : '' }}">
                     <a href="{{ route('donatur.index') }}">
                         <i class="fas fa-hand-holding-heart"></i>
                         <p>Donatur</p>
@@ -119,7 +122,7 @@
             @endif
 
             @if (auth()->user()->role === 'admin_dinsos' || auth()->user()->role === 'admin_panti')
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('anak-asuh.*') ? 'active' : '' }}">
                     <a href="{{ route('anak-asuh.index') }}">
                         <i class="fas fa-child"></i>
                         <p>Anak Asuh</p>
@@ -135,7 +138,7 @@
             </li>
 
             @if (auth()->user()->role === 'admin_panti' || auth()->user()->role === 'admin_dinsos')
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('konten.*') && request()->route('jenis') === 'kegiatan' ? 'active' : '' }}">
                     <a href="{{ route('konten.index', 'kegiatan') }}">
                         <i class="fas fa-calendar-alt"></i>
                         <p>Kegiatan</p>
@@ -144,7 +147,7 @@
             @endif
 
             @if (auth()->user()->role === 'donatur')
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('panti-asuhan.*') ? 'active' : '' }}">
                     <a href="{{ route('panti-asuhan.index') }}">
                         <i class="fas fa-house-user"></i>
                         <p>Panti Asuhan</p>
@@ -153,7 +156,7 @@
             @endif
 
             @if (auth()->user()->role === 'admin_dinsos')
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('konten.*') && request()->route('jenis') === 'berita' ? 'active' : '' }}">
                     <a href="{{ route('konten.index', 'berita') }}">
                         <i class="fas fa-newspaper"></i>
                         <p>Berita</p>
@@ -161,7 +164,7 @@
                 </li>
             @endif
 
-            <li class="nav-item">
+            <li class="nav-item {{ request()->routeIs('donasi.*') ? 'active' : '' }}">
                 <a href="{{ route('donasi.index') }}">
                     <i class="fas fa-donate"></i>
                     <p>Donasi</p>
@@ -169,7 +172,7 @@
             </li>
 
             @if (auth()->user()->role === 'admin_panti' || auth()->user()->role === 'admin_dinsos')
-                <li class="nav-item">
+                <li class="nav-item {{ request()->routeIs('keuangan.*') ? 'active' : '' }}">
                     <a href="{{ route('keuangan.index') }}">
                         <i class="fas fa-money-bill-wave"></i>
                         <p>Keuangan</p>

@@ -27,11 +27,11 @@
     }
 
     .logo-box {
-      width:58px; height:58px; border:1px solid #000; border-radius:50%;
+      width:58px; height:58px;
       display:flex; align-items:center; justify-content:center;
       font-size:8pt; flex-shrink:0; overflow:hidden;
     }
-    .logo-box img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+    .logo-box img { width:100%; height:100%; object-fit:contain; }
 
     .org-info  { flex:1; }
     .org-name  { font-size:15pt; font-weight:bold; line-height:1.2; }

@@ -8,33 +8,24 @@ use App\Models\AnakAsuh;
 use App\Models\Konten;
 use App\Models\Kategori;
 use App\Models\HeroSlide;
-use App\Models\WebsiteSetting;
 use App\Models\Pegawai;
 use App\Models\Keuangan;
 
 class LandingController extends Controller
 {
-    // ══════════════════════════════════════════════════════════
-    //  HELPER — ambil setting website (dipakai semua halaman)
-    // ══════════════════════════════════════════════════════════
-    private function getSetting(): ?WebsiteSetting
-    {
-        return WebsiteSetting::getSetting();
-    }
+    // CATATAN: $settings sudah di-inject global oleh View::composer di
+    // AppServiceProvider, jadi tidak perlu melempar $setting dari sini.
 
     // ══════════════════════════════════════════════════════════
     //  HOME  /
     // ══════════════════════════════════════════════════════════
     public function index()
     {
-        $setting = $this->getSetting();
-
         $heroSlides = HeroSlide::all();
 
         $totalPanti    = PantiAsuhan::aktif()->count();
         $totalAnakAsuh = AnakAsuh::where('status', 'aktif')->count();
 
-        // Status enum kegiatan: direncanakan | berlangsung | selesai | dibatalkan
         $totalKegiatan = Konten::kegiatan()
             ->where('status', '!=', 'dibatalkan')
             ->count();
@@ -45,7 +36,6 @@ class LandingController extends Controller
             ->limit(3)
             ->get();
 
-        // 5 berita terbaru — ambil semua tanpa filter status
         $beritaTerbaru = Konten::berita()
             ->with(['user', 'kategori'])
             ->latest('tanggal_publikasi')
@@ -53,7 +43,6 @@ class LandingController extends Controller
             ->get();
 
         return view('pages.landing.index', compact(
-            'setting',
             'heroSlides',
             'totalPanti',
             'totalAnakAsuh',
@@ -68,18 +57,13 @@ class LandingController extends Controller
     // ══════════════════════════════════════════════════════════
     public function berita(Request $request)
     {
-        $setting = $this->getSetting();
-
-        // Kategori aktif
         $kategoris = Kategori::where('status', 1)->get();
 
-        // Berita featured: 1 paling baru — ambil semua tanpa filter status
         $beritaFeatured = Konten::berita()
             ->with(['user', 'kategori'])
             ->latest('tanggal_publikasi')
             ->first();
 
-        // 2 berita populer (viewer terbanyak, selain featured)
         $beritaPopuler = Konten::berita()
             ->with(['user', 'kategori'])
             ->when($beritaFeatured, fn($q) => $q->where('id_konten', '!=', $beritaFeatured->id_konten))
@@ -87,17 +71,14 @@ class LandingController extends Controller
             ->limit(2)
             ->get();
 
-        // Grid semua berita — tanpa filter status
         $query = Konten::berita()
             ->with(['user', 'kategori'])
             ->latest('tanggal_publikasi');
 
-        // Filter kategori
         if ($request->filled('kategori')) {
             $query->where('id_kategori', $request->kategori);
         }
 
-        // Search: judul, ringkasan, dan isi
         if ($request->filled('q')) {
             $keyword = $request->q;
             $query->where(function ($q) use ($keyword) {
@@ -110,7 +91,6 @@ class LandingController extends Controller
         $beritaList = $query->paginate(9)->withQueryString();
 
         return view('pages.landing.berita', compact(
-            'setting',
             'kategoris',
             'beritaFeatured',
             'beritaPopuler',
@@ -123,18 +103,13 @@ class LandingController extends Controller
     // ══════════════════════════════════════════════════════════
     public function beritaDetail(string $jenis, string $slug)
     {
-        $setting = $this->getSetting();
-
-        // ── 1. Ambil konten berdasarkan jenis + slug → 404 jika tidak ada
         $konten = Konten::with(['user', 'kategori', 'pantiAsuhan'])
             ->where('jenis_konten', $jenis)
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // ── 2. Tambah viewer (hit counter)
         $konten->incrementViewer();
 
-        // ── 3. Konten terkait (jenis sama, kategori sama, bukan dirinya sendiri)
         $artikelTerkait = Konten::with(['user', 'kategori'])
             ->where('jenis_konten', $jenis)
             ->where('id_kategori', $konten->id_kategori)
@@ -143,7 +118,6 @@ class LandingController extends Controller
             ->limit(4)
             ->get();
 
-        // ── 4. Navigasi: Sebelumnya & Berikutnya (jenis sama)
         $dateCol = $jenis === 'kegiatan' ? 'tanggal_mulai' : 'tanggal_publikasi';
         $dateVal = $jenis === 'kegiatan' ? $konten->tanggal_mulai : $konten->tanggal_publikasi;
 
@@ -160,7 +134,6 @@ class LandingController extends Controller
             ->first();
 
         return view('pages.landing.berita-detail', compact(
-            'setting',
             'konten',
             'jenis',
             'artikelTerkait',
@@ -174,8 +147,6 @@ class LandingController extends Controller
     // ══════════════════════════════════════════════════════════
     public function daftarPanti(Request $request)
     {
-        $setting = $this->getSetting();
-
         $totalPanti    = PantiAsuhan::aktif()->count();
         $totalAnakAsuh = AnakAsuh::where('status', 'aktif')->count();
 
@@ -212,7 +183,6 @@ class LandingController extends Controller
         ]);
 
         return view('pages.landing.daftar-panti', compact(
-            'setting',
             'totalPanti',
             'totalAnakAsuh',
             'kecamatanList',
@@ -226,8 +196,6 @@ class LandingController extends Controller
     // ══════════════════════════════════════════════════════════
     public function pantiDetail(int $id)
     {
-        $setting = $this->getSetting();
-
         $panti = PantiAsuhan::aktif()
             ->with([
                 'fotoPanti'  => fn($q) => $q->orderBy('urutan'),
@@ -244,7 +212,6 @@ class LandingController extends Controller
         $saldoPanti = Keuangan::saldo($panti->id);
 
         return view('pages.landing.panti-detail', compact(
-            'setting',
             'panti',
             'saldoPanti',
         ));
@@ -255,8 +222,6 @@ class LandingController extends Controller
     // ══════════════════════════════════════════════════════════
     public function kerjasama()
     {
-        $setting = $this->getSetting();
-
         $jadwalKegiatan = Konten::kegiatan()
             ->with(['user', 'pantiAsuhan'])
             ->whereIn('status', ['direncanakan', 'berlangsung'])
@@ -273,7 +238,6 @@ class LandingController extends Controller
             ->get();
 
         return view('pages.landing.kerjasama', compact(
-            'setting',
             'jadwalKegiatan',
             'kegiatanLalu',
         ));
@@ -302,8 +266,6 @@ class LandingController extends Controller
     // ══════════════════════════════════════════════════════════
     public function tentang()
     {
-        $setting = $this->getSetting();
-
         $timPegawai = Pegawai::with('user')
             ->whereNotNull('posisi')
             ->get();
@@ -316,7 +278,6 @@ class LandingController extends Controller
         ];
 
         return view('pages.landing.tentang', compact(
-            'setting',
             'timPegawai',
             'stats',
         ));

@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Kosongkan, jangan taruh logic berat di sini
+        //
     }
 
     /**
@@ -25,13 +25,15 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
-
+        // Default settings jika tabel belum ada atau masih kosong
+        // logo dibiarkan null supaya accessor getLogoUrlAttribute()
+        // otomatis mengembalikan default_logo.png
         $defaultSettings = new WebsiteSetting([
-            'nama' => 'Website',
-            'logo' => asset('default-image/default_logo.png'),
+            'nama'  => 'Website',
+            'logo'  => null,
         ]);
 
-
+        // Inject variabel $settings ke SEMUA view (admin + public)
         View::composer('*', function ($view) use ($defaultSettings) {
             $settings = $defaultSettings;
 

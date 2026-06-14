@@ -65,13 +65,11 @@
         .header-left { display: flex; align-items: center; gap: 14px; }
         .logo-box {
             width: 58px; height: 58px;
-            border: 2px solid #000;
-            border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 8.5pt; font-weight: bold; flex-shrink: 0;
             overflow: hidden;
         }
-        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
         .org-info h1 { font-size: 13pt; font-weight: bold; letter-spacing: .4px; text-transform: uppercase; }
         .org-info p  { font-size: 9pt; line-height: 1.5; }
         .doc-label   { text-align: right; }

@@ -291,7 +291,7 @@
 
             {{-- Link baca --}}
             @if($berita->slug)
-              <a href="{{ route('berita.detail', $berita->slug) }}" class="link-baca">
+              <a href="{{ route('berita.detail', ['jenis' => 'berita', 'slug' => $berita->slug]) }}" class="link-baca">
                 Baca Selengkapnya <i class="bi bi-arrow-right"></i>
               </a>
             @else

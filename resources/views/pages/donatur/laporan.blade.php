@@ -45,10 +45,9 @@
     }
     .header-left { display: flex; align-items: center; gap: 16px; }
     .logo-box {
-      width: 60px; height: 60px; border-radius: 50%;
-      border: 1.5px solid var(--border-mid);
+      width: 80px; height: 80px;
       display: flex; align-items: center; justify-content: center;
-      overflow: hidden; flex-shrink: 0; background: #f5f5f5;
+      overflow: hidden; flex-shrink: 0;
     }
     .logo-box img { width: 100%; height: 100%; object-fit: contain; }
     .logo-box .logo-placeholder {
@@ -62,7 +61,7 @@
     .header-title .alamat   { font-size: 8pt; color: var(--txt-light); }
 
     .header-badge {
-      border: 1.5px solid var(--border-mid); border-radius: 4px;
+ border-radius: 4px;
       padding: 9px 18px; text-align: center;
     }
     .header-badge h2 {
