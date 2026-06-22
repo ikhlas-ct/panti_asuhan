@@ -142,7 +142,7 @@
             </div>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('blog.show', ['jenis' => $jenis, 'slug' => $konten->slug]) }}"
+            <a href="{{ route('berita.detail', [$jenis, $konten->slug]) }}"
                target="_blank" class="btn btn-outline-secondary btn-sm">
                 <i class="fas fa-eye me-1"></i> Lihat
             </a>
@@ -349,7 +349,7 @@
                              onclick="document.getElementById('gambar-input').click()">
                             @if($konten->gambar)
                                 <img id="gambar-preview"
-                                     src="{{ asset($konten->gambar) }}"
+                                     src="{{ asset('storage/' . $konten->gambar) }}"
                                      alt="{{ $konten->judul }}">
                             @else
                                 <div class="gambar-placeholder" id="gambar-placeholder">
