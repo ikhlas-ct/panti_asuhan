@@ -348,9 +348,14 @@
                         {{-- Sampul --}}
                         <td>
                             @if($item->gambar)
-                                <img src="{{ asset('storage/' . $item->gambar) }}"
-                                     alt="{{ $item->judul }}" class="thumb">
-                            @else
+                                    @php
+                                        $imgSrc = $item->gambar;
+                                        if ($imgSrc && !preg_match('/^(http:|https:|\/\/)/', $imgSrc)) {
+                                            $imgSrc = \Illuminate\Support\Facades\Storage::url($imgSrc);
+                                        }
+                                    @endphp
+                                    <img src="{{ $imgSrc }}" alt="{{ $item->judul }}" class="thumb">
+                                @else
                                 <div class="thumb-placeholder"><i class="fas fa-image"></i></div>
                             @endif
                         </td>
